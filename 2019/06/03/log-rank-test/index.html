@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.55.6" />
+
+
+<title>How to calculate the log-rank statistic - Dominic Magirr</title>
+<meta property="og:title" content="How to calculate the log-rank statistic - Dominic Magirr">
+
+
+  <link href='/favicon.ico' rel='icon' type='image/x-icon'/>
+
+
+
+  
+
+
+
+
+
+
+
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
+<link rel="stylesheet" href="/css/fonts.css" media="all">
+<link rel="stylesheet" href="/css/main.css" media="all">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/images/logo.png"
+         width="50"
+         height="50"
+         alt="Logo">
+  </a>
+
+  <ul class="nav-links">
+    
+    <li><a href="/about/">About</a></li>
+    
+    <li><a href="https://github.com/dominicmagirr">GitHub</a></li>
+    
+  </ul>
+</nav>
+
+      </header>
+
+
+<main class="content" role="main">
+
+  <article class="article">
+    
+    <span class="article-duration">2 min read</span>
+    
+
+    <h1 class="article-title">How to calculate the log-rank statistic</h1>
+
+    
+    <span class="article-date">2019-06-03</span>
+    
+
+    <div class="article-content">
+      
+
+
+<p>Suppose we have the following data.</p>
+<pre class="r"><code>df &lt;- dplyr::tibble(patient_id = as.character(1:12), 
+                    treatment = rep(c(&quot;C&quot;, &quot;E&quot;), each = 6),
+                    survival_time = survival::Surv(time = c(2,6,8,11,17,24,7,9,13,22,23,25),
+                                                   event = c(1,1,1,1,1,0,1,1,1,0,0,0)))
+
+knitr::kable(df)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">patient_id</th>
+<th align="left">treatment</th>
+<th align="right">survival_time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">C</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">C</td>
+<td align="right">6</td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="left">C</td>
+<td align="right">8</td>
+</tr>
+<tr class="even">
+<td align="left">4</td>
+<td align="left">C</td>
+<td align="right">11</td>
+</tr>
+<tr class="odd">
+<td align="left">5</td>
+<td align="left">C</td>
+<td align="right">17</td>
+</tr>
+<tr class="even">
+<td align="left">6</td>
+<td align="left">C</td>
+<td align="right">24+</td>
+</tr>
+<tr class="odd">
+<td align="left">7</td>
+<td align="left">E</td>
+<td align="right">7</td>
+</tr>
+<tr class="even">
+<td align="left">8</td>
+<td align="left">E</td>
+<td align="right">9</td>
+</tr>
+<tr class="odd">
+<td align="left">9</td>
+<td align="left">E</td>
+<td align="right">13</td>
+</tr>
+<tr class="even">
+<td align="left">10</td>
+<td align="left">E</td>
+<td align="right">22+</td>
+</tr>
+<tr class="odd">
+<td align="left">11</td>
+<td align="left">E</td>
+<td align="right">23+</td>
+</tr>
+<tr class="even">
+<td align="left">12</td>
+<td align="left">E</td>
+<td align="right">25+</td>
+</tr>
+</tbody>
+</table>
+<p>Let’s arrange the data in increasing order of survival time.</p>
+<pre class="r"><code>df_ordered &lt;- dplyr::arrange(df, survival_time[,&quot;time&quot;])
+knitr::kable(df_ordered)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">patient_id</th>
+<th align="left">treatment</th>
+<th align="right">survival_time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">C</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">C</td>
+<td align="right">6</td>
+</tr>
+<tr class="odd">
+<td align="left">7</td>
+<td align="left">E</td>
+<td align="right">7</td>
+</tr>
+<tr class="even">
+<td align="left">3</td>
+<td align="left">C</td>
+<td align="right">8</td>
+</tr>
+<tr class="odd">
+<td align="left">8</td>
+<td align="left">E</td>
+<td align="right">9</td>
+</tr>
+<tr class="even">
+<td align="left">4</td>
+<td align="left">C</td>
+<td align="right">11</td>
+</tr>
+<tr class="odd">
+<td align="left">9</td>
+<td align="left">E</td>
+<td align="right">13</td>
+</tr>
+<tr class="even">
+<td align="left">5</td>
+<td align="left">C</td>
+<td align="right">17</td>
+</tr>
+<tr class="odd">
+<td align="left">10</td>
+<td align="left">E</td>
+<td align="right">22+</td>
+</tr>
+<tr class="even">
+<td align="left">11</td>
+<td align="left">E</td>
+<td align="right">23+</td>
+</tr>
+<tr class="odd">
+<td align="left">6</td>
+<td align="left">C</td>
+<td align="right">24+</td>
+</tr>
+<tr class="even">
+<td align="left">12</td>
+<td align="left">E</td>
+<td align="right">25+</td>
+</tr>
+</tbody>
+</table>
+<div id="method-1-scores" class="section level1">
+<h1>Method 1: scores</h1>
+<p>The first step is to estimate the survival probability from the pooled data using the Nelson-Aalen estimator. Then, to get the log-rank scores, we add 1 to the logarithm of the pooled survival estimate for all observed events. For censored events we do not add 1.</p>
+<pre class="r"><code>pooled_fit &lt;- survival::survfit(survival_time ~ 1, data = df_ordered)
+df_logrank &lt;- dplyr::mutate(df_ordered, 
+                            pooled_s = exp(-cumsum(pooled_fit$n.event / pooled_fit$n.risk)),
+                            logrank_score = log(pooled_s) + survival_time[,&quot;status&quot;])
+
+knitr::kable(df_logrank, digits = 3)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">patient_id</th>
+<th align="left">treatment</th>
+<th align="right">survival_time</th>
+<th align="right">pooled_s</th>
+<th align="right">logrank_score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">C</td>
+<td align="right">2</td>
+<td align="right">0.920</td>
+<td align="right">0.917</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">C</td>
+<td align="right">6</td>
+<td align="right">0.840</td>
+<td align="right">0.826</td>
+</tr>
+<tr class="odd">
+<td align="left">7</td>
+<td align="left">E</td>
+<td align="right">7</td>
+<td align="right">0.760</td>
+<td align="right">0.726</td>
+</tr>
+<tr class="even">
+<td align="left">3</td>
+<td align="left">C</td>
+<td align="right">8</td>
+<td align="right">0.680</td>
+<td align="right">0.615</td>
+</tr>
+<tr class="odd">
+<td align="left">8</td>
+<td align="left">E</td>
+<td align="right">9</td>
+<td align="right">0.600</td>
+<td align="right">0.490</td>
+</tr>
+<tr class="even">
+<td align="left">4</td>
+<td align="left">C</td>
+<td align="right">11</td>
+<td align="right">0.520</td>
+<td align="right">0.347</td>
+</tr>
+<tr class="odd">
+<td align="left">9</td>
+<td align="left">E</td>
+<td align="right">13</td>
+<td align="right">0.440</td>
+<td align="right">0.180</td>
+</tr>
+<tr class="even">
+<td align="left">5</td>
+<td align="left">C</td>
+<td align="right">17</td>
+<td align="right">0.361</td>
+<td align="right">-0.020</td>
+</tr>
+<tr class="odd">
+<td align="left">10</td>
+<td align="left">E</td>
+<td align="right">22+</td>
+<td align="right">0.361</td>
+<td align="right">-1.020</td>
+</tr>
+<tr class="even">
+<td align="left">11</td>
+<td align="left">E</td>
+<td align="right">23+</td>
+<td align="right">0.361</td>
+<td align="right">-1.020</td>
+</tr>
+<tr class="odd">
+<td align="left">6</td>
+<td align="left">C</td>
+<td align="right">24+</td>
+<td align="right">0.361</td>
+<td align="right">-1.020</td>
+</tr>
+<tr class="even">
+<td align="left">12</td>
+<td align="left">E</td>
+<td align="right">25+</td>
+<td align="right">0.361</td>
+<td align="right">-1.020</td>
+</tr>
+</tbody>
+</table>
+<p>To calculate the logrank score statistic we add up all the scores on the control arm.</p>
+<pre class="r"><code>logrank_score &lt;- dplyr::summarise(dplyr::group_by(df_logrank, treatment), sum(logrank_score))
+logrank_score</code></pre>
+<pre><code>## # A tibble: 2 x 2
+##   treatment `sum(logrank_score)`
+##   &lt;chr&gt;                    &lt;dbl&gt;
+## 1 C                         1.66
+## 2 E                        -1.66</code></pre>
+</div>
+<div id="method-2-observed---expected" class="section level1">
+<h1>Method 2: observed - expected</h1>
+<p>The score statistic is equivalent to the sum of “observed” - “expected” events at each event time. This is implemented in the survival package.</p>
+<pre class="r"><code>logrank_fit &lt;- survival::survdiff(survival_time ~ treatment, data = df)
+rbind(logrank_fit$n, logrank_fit$obs - logrank_fit$exp)[2,]</code></pre>
+<pre><code>## treatment=C treatment=E 
+##    1.664105   -1.664105</code></pre>
+</div>
+
+    </div>
+  </article>
+
+  
+
+
+</main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          <li>
+            <a href="/index.xml" type="application/rss+xml" target="_blank">RSS feed</a>
+          </li>
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="/images/hugo-logo.png" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
+
+    
+<script src="/js/math-code.js"></script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+    
+  </body>
+</html>
+

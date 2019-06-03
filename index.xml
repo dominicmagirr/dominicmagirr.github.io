@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Dominic Magirr</title>
+    <link>/</link>
+    <description>Recent content on Dominic Magirr</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 03 Jun 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>About</title>
+      <link>/about/</link>
+      <pubDate>Mon, 03 Jun 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/about/</guid>
+      <description>Dominic Magirr is a medical statistician at Cambridge Cancer Genomics, a precision-oncology start-up.
+Built with the blogdown package.</description>
+    </item>
+    
+    <item>
+      <title>How to calculate the log-rank statistic</title>
+      <link>/2019/06/03/log-rank-test/</link>
+      <pubDate>Mon, 03 Jun 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/06/03/log-rank-test/</guid>
+      <description>Suppose we have the following data.
+df &amp;lt;- dplyr::tibble(patient_id = as.character(1:12), treatment = rep(c(&amp;quot;C&amp;quot;, &amp;quot;E&amp;quot;), each = 6), survival_time = survival::Surv(time = c(2,6,8,11,17,24,7,9,13,22,23,25), event = c(1,1,1,1,1,0,1,1,1,0,0,0))) knitr::kable(df)   patient_id treatment survival_time    1 C 2  2 C 6  3 C 8  4 C 11  5 C 17  6 C 24+  7 E 7  8 E 9  9 E 13  10 E 22+  11 E 23+  12 E 25+    Let’s arrange the data in increasing order of survival time.</description>
+    </item>
+    
+  </channel>
+</rss>
