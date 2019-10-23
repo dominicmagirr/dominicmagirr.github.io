@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.58.3" />
+
+
+<title>Longitudinal hurdle models - Dominic Magirr</title>
+<meta property="og:title" content="Longitudinal hurdle models - Dominic Magirr">
+
+
+  <link href='/favicon.ico' rel='icon' type='image/x-icon'/>
+
+
+
+  
+
+
+
+
+
+
+
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
+<link rel="stylesheet" href="/css/fonts.css" media="all">
+<link rel="stylesheet" href="/css/main.css" media="all">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/images/logo.png"
+         width="50"
+         height="50"
+         alt="Logo">
+  </a>
+
+  <ul class="nav-links">
+    
+    <li><a href="/about/">About</a></li>
+    
+    <li><a href="https://github.com/dominicmagirr">GitHub</a></li>
+    
+  </ul>
+</nav>
+
+      </header>
+
+
+<main class="content" role="main">
+
+  <article class="article">
+    
+    <span class="article-duration">4 min read</span>
+    
+
+    <h1 class="article-title">Longitudinal hurdle models</h1>
+
+    
+    <span class="article-date">2019-10-16</span>
+    
+
+    <div class="article-content">
+      
+
+
+<div id="data" class="section level2">
+<h2>Data</h2>
+<p>Recently I have been modelling data that is longitudinal, contains excess zeros, and where the non-zero data that is right-skewed and measured on a continuous scale, rather than being count data.</p>
+<p>I’ll simulate a semi-realistic example data set from a lognormal hurdle model. The “random effects” for the pr(zero) and non-zero parts of the model are negatively correlated.</p>
+<pre class="r"><code>set.seed(180)
+
+## 100 patients
+id &lt;- 1:100
+
+## 2 timepoints
+time &lt;- c(&quot;1&quot;, &quot;2&quot;)
+
+## random effects
+u &lt;- rnorm(100, sd = 2)
+v &lt;- rnorm(100, mean = -0.95 * u, sd = sqrt((1 - 0.95^2) * 4)) # p(zero) is negatively correlated with Y*
+
+## non-zero data (4 obs per id, at two timepoints)
+ystar1 &lt;- exp(rnorm(400, mean = u, sd = 1))
+ystar2 &lt;- exp(rnorm(400, mean = -0.5 + u, sd = 1))
+
+## z = 1 if &quot;cross hurdle&quot;, i.e. if not zero
+z1 &lt;- rbinom(400, size = 1, prob = 1 - plogis(-2 + v)) # p(cross hurdle) = 1 - p(zero)
+z2 &lt;- rbinom(400, size = 1, prob = 1 - plogis(-1 + v))
+
+dat &lt;- data.frame(y = c(z1 * ystar1, z2 * ystar2),
+                  time = rep(time, each = 400),
+                  id = rep(id, 8))</code></pre>
+<p>In this data set there are 100 patients and two timepoints. For each patient, at each timepoint, I have simulated 4 independent observations (I’ve only done this to make model convergence a bit easier). The important point is that the data is correlated within patient, and also z (hurdle part) and ystar (non-zero part) are correlated, so that patients who start with a smaller (non-zero) y at the first timepoint are more likely to have y = 0 at the second timepoint. This can be clearly seen in the plot below.</p>
+<pre class="r"><code>library(tidyverse)
+ggplot(data = dat,
+                mapping = aes(x = time, y = y, group = id)) +
+  geom_point() +
+  geom_line() +
+  scale_y_log10()</code></pre>
+<p><img src="/post/2019-10-16-longitudinal-hurdle-models_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+</div>
+<div id="fit-the-model" class="section level2">
+<h2>Fit the model</h2>
+<p>To fit the model I’m using the excellent <code>brms</code> package (<a href="https://github.com/paul-buerkner/brms" class="uri">https://github.com/paul-buerkner/brms</a>)</p>
+<p>Bürkner P. C. (2018). Advanced Bayesian Multilevel Modeling with the R Package brms. The R Journal. 10(1), 395-411. doi.org/10.32614/RJ-2018-017</p>
+<pre class="r"><code>library(brms)
+
+fit_hurdle &lt;- brm(bf(y ~  time + (1 | q | id),
+                     hu ~ time + (1 | q | id)),
+                  data = dat,
+                  iter = 4000,
+                  family = hurdle_lognormal(),
+                  refresh = 0)</code></pre>
+<pre class="r"><code>summary(fit_hurdle)</code></pre>
+<pre><code>##  Family: hurdle_lognormal 
+##   Links: mu = identity; sigma = identity; hu = logit 
+## Formula: y ~ time + (1 | q | id) 
+##          hu ~ time + (1 | q | id)
+##    Data: dat (Number of observations: 800) 
+## Samples: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;
+##          total post-warmup samples = 8000
+## 
+## Group-Level Effects: 
+## ~id (Number of levels: 100) 
+##                             Estimate Est.Error l-95% CI u-95% CI Rhat
+## sd(Intercept)                   1.96      0.16     1.69     2.29 1.00
+## sd(hu_Intercept)                2.47      0.30     1.93     3.11 1.00
+## cor(Intercept,hu_Intercept)    -0.90      0.04    -0.97    -0.81 1.00
+##                             Bulk_ESS Tail_ESS
+## sd(Intercept)                   1452     2688
+## sd(hu_Intercept)                2979     5484
+## cor(Intercept,hu_Intercept)     2539     4394
+## 
+## Population-Level Effects: 
+##              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept        0.07      0.20    -0.34     0.45 1.00      885     1970
+## hu_Intercept    -2.72      0.34    -3.43    -2.07 1.00     1662     3089
+## time2           -0.33      0.08    -0.49    -0.18 1.00    14798     5985
+## hu_time2         1.26      0.24     0.80     1.73 1.00    12452     5627
+## 
+## Family Specific Parameters: 
+##       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## sigma     0.94      0.03     0.88     1.00 1.00    11293     6175
+## 
+## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
+## is a crude measure of effective sample size, and Rhat is the potential 
+## scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
+</div>
+<div id="inference" class="section level2">
+<h2>Inference</h2>
+<p>From the output I can see that I have more-or-less recovered the parameters from my model. In practice, I could use this to make inference on the two parts of the model separately. In a future post I’ll discuss how to make inference/predictions when combining the two parts of the model.</p>
+</div>
+
+    </div>
+  </article>
+
+  
+
+
+</main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          <li>
+            <a href="/index.xml" type="application/rss+xml" target="_blank">RSS feed</a>
+          </li>
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="/images/hugo-logo.png" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
+
+    
+
+    
+  </body>
+</html>
+
