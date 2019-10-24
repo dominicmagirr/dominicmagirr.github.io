@@ -6,10 +6,20 @@
     <description>Recent content on Dominic Magirr</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 16 Oct 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 23 Oct 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Longitudinal hurdle models 2</title>
+      <link>/2019/10/23/longitudinal-hurdle-models-2/</link>
+      <pubDate>Wed, 23 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/10/23/longitudinal-hurdle-models-2/</guid>
+      <description>In a previous post I fit a longitudinal hurdle model using the brms package.
+library(brms) summary(fit_hurdle) ## Family: hurdle_lognormal ## Links: mu = identity; sigma = identity; hu = logit ## Formula: y ~ time + (1 | q | id) ## hu ~ time + (1 | q | id) ## Data: dat (Number of observations: 800) ## Samples: 4 chains, each with iter = 4000; warmup = 2000; thin = 1; ## total post-warmup samples = 8000 ## ## Group-Level Effects: ## ~id (Number of levels: 100) ## Estimate Est.</description>
+    </item>
     
     <item>
       <title>Longitudinal hurdle models</title>
@@ -17,7 +27,7 @@
       <pubDate>Wed, 16 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>/2019/10/16/longitudinal-hurdle-models/</guid>
-      <description>Data Recently I have been modelling data that is longitudinal, contains excess zeros, and where the non-zero data that is right-skewed and measured on a continuous scale, rather than being count data.
+      <description>Data Recently I have been modelling data that is longitudinal, contains excess zeros, and where the non-zero data is right-skewed and measured on a continuous scale, rather than being count data.
 I’ll simulate a semi-realistic example data set from a lognormal hurdle model. The “random effects” for the pr(zero) and non-zero parts of the model are negatively correlated.
 set.seed(180) ## 100 patients id &amp;lt;- 1:100 ## 2 timepoints time &amp;lt;- c(&amp;quot;1&amp;quot;, &amp;quot;2&amp;quot;) ## random effects u &amp;lt;- rnorm(100, sd = 2) v &amp;lt;- rnorm(100, mean = -0.</description>
     </item>
@@ -28,8 +38,8 @@ set.seed(180) ## 100 patients id &amp;lt;- 1:100 ## 2 timepoints time &amp;lt;- 
       <pubDate>Mon, 03 Jun 2019 00:00:00 +0000</pubDate>
       
       <guid>/about/</guid>
-      <description>Dominic Magirr is a medical statistician at Cambridge Cancer Genomics, a precision-oncology start-up.
-Built with the blogdown package.</description>
+      <description>I&amp;rsquo;m a medical statistician. This blog is a place to record ideas/analysis methods so I don&amp;rsquo;t forget them.
+I built this website with the blogdown package.</description>
     </item>
     
     <item>

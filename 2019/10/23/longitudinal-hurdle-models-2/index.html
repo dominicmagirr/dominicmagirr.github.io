@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.58.3" />
+
+
+<title>Longitudinal hurdle models 2 - Dominic Magirr</title>
+<meta property="og:title" content="Longitudinal hurdle models 2 - Dominic Magirr">
+
+
+  <link href='/favicon.ico' rel='icon' type='image/x-icon'/>
+
+
+
+  
+
+
+
+
+
+
+
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
+<link rel="stylesheet" href="/css/fonts.css" media="all">
+<link rel="stylesheet" href="/css/main.css" media="all">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/images/logo.png"
+         width="50"
+         height="50"
+         alt="Logo">
+  </a>
+
+  <ul class="nav-links">
+    
+    <li><a href="/about/">About</a></li>
+    
+    <li><a href="https://github.com/dominicmagirr">GitHub</a></li>
+    
+  </ul>
+</nav>
+
+      </header>
+
+
+<main class="content" role="main">
+
+  <article class="article">
+    
+    <span class="article-duration">6 min read</span>
+    
+
+    <h1 class="article-title">Longitudinal hurdle models 2</h1>
+
+    
+    <span class="article-date">2019-10-23</span>
+    
+
+    <div class="article-content">
+      
+
+
+<p>In a previous post I fit a longitudinal hurdle model using the <code>brms</code> package.</p>
+<pre class="r"><code>library(brms)
+summary(fit_hurdle)</code></pre>
+<pre><code>##  Family: hurdle_lognormal 
+##   Links: mu = identity; sigma = identity; hu = logit 
+## Formula: y ~ time + (1 | q | id) 
+##          hu ~ time + (1 | q | id)
+##    Data: dat (Number of observations: 800) 
+## Samples: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;
+##          total post-warmup samples = 8000
+## 
+## Group-Level Effects: 
+## ~id (Number of levels: 100) 
+##                             Estimate Est.Error l-95% CI u-95% CI Rhat
+## sd(Intercept)                   1.96      0.16     1.67     2.30 1.00
+## sd(hu_Intercept)                2.46      0.30     1.94     3.10 1.00
+## cor(Intercept,hu_Intercept)    -0.90      0.04    -0.97    -0.80 1.00
+##                             Bulk_ESS Tail_ESS
+## sd(Intercept)                   1475     2467
+## sd(hu_Intercept)                3265     4837
+## cor(Intercept,hu_Intercept)     1949     3570
+## 
+## Population-Level Effects: 
+##              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept        0.07      0.21    -0.34     0.48 1.01      770     1487
+## hu_Intercept    -2.73      0.35    -3.44    -2.07 1.00     1484     3476
+## time2           -0.33      0.08    -0.48    -0.18 1.00    11586     5606
+## hu_time2         1.27      0.24     0.81     1.73 1.00    11668     5524
+## 
+## Family Specific Parameters: 
+##       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## sigma     0.94      0.03     0.88     1.00 1.00     8823     5708
+## 
+## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
+## is a crude measure of effective sample size, and Rhat is the potential 
+## scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
+<p>I’d now like to do some inference on the model, combining its zero and non-zero parts.</p>
+<p>The model is: for observation <span class="math inline">\(j\)</span> from patient <span class="math inline">\(i\)</span>,</p>
+<p><span class="math display">\[Y_{i,j} = Z_{i,j}Y^*_{i,j},\]</span> <span class="math display">\[\text{logit}\left\lbrace P(Z_{i,j} = 0) \right\rbrace = x_{i,j}^T\xi + u_i,\]</span></p>
+<p><span class="math display">\[\log (Y^*_{i,j})  \sim N(x_{i,j}^T\eta + v_i, ~\sigma^2), \]</span></p>
+<p><span class="math display">\[\left( \begin{array}{c}  u_i \\ v_i \\ \end{array} \right) \sim N\left(\left( \begin{array}{c}  0 \\ 0 \\ \end{array} \right), \left( \begin{array}{c c} \sigma_u^2 &amp; \rho \sigma_u\sigma_v \\ \rho \sigma_u \sigma_v &amp; \sigma_v ^ 2\end{array}\right)\right),\]</span> where <span class="math inline">\(x_{i,j}^T = (1, t_{i,j})\)</span>. Also let <span class="math inline">\(\theta = (\xi, \eta, \sigma, \sigma_u, \sigma_v, \rho)\)</span>.</p>
+<div id="how-to-use-fitted.brmsfit" class="section level3">
+<h3>How to use <code>fitted.brmsfit</code></h3>
+<p>Having obtained posterior samples from <span class="math inline">\((\theta, u_1,\ldots,u_n,v_1,\ldots,v_n)\)</span>, we <em>might</em> want to look at samples from:</p>
+<p><span class="math display">\[\begin{align} h(u_i, v_i, \theta; x) &amp; = E(Y \mid u_i, v_i, \theta; x) \\ &amp;= \left\lbrace 1 - \text{logit}^{-1} ( x^T \xi + u_i) \right\rbrace \exp(x^T\eta + v_i + \frac{\sigma^2}{2}).\end{align}\]</span></p>
+<p>This is some kind of patient-specific expectation of <span class="math inline">\(Y\)</span>, conditional on the “random effects”. If patient <span class="math inline">\(i\)</span> is already in the model, then we can just take samples directly from the posterior. This can be achieved with the <code>fitted</code> method:</p>
+<pre class="r"><code>fitted(fit_hurdle, 
+       newdata = data.frame(id = 1, time = &quot;2&quot;), 
+       robust = TRUE)</code></pre>
+<pre><code>##       Estimate Est.Error      Q2.5     Q97.5
+## [1,] 0.4034682  0.150417 0.1796645 0.8248473</code></pre>
+<p>will give the median and (2.5, 97.5) quantiles of <span class="math inline">\(h(u_1, v_1, \theta ; x)\)</span> at timepoint “2”.</p>
+<p>Alternatively, we <em>might</em> be more interested in <span class="math inline">\(h(0, 0, \theta ; x)\)</span>, which in some sense is the patient-specific expectation of <span class="math inline">\(Y\)</span> for an “average” patient with “random effects” fixed at zero. We can get this by setting <code>re_formula = NA</code>:</p>
+<pre class="r"><code>fitted(fit_hurdle, 
+       newdata = data.frame(time = &quot;2&quot;), 
+       robust = TRUE, 
+       re_formula = NA)</code></pre>
+<pre><code>##       Estimate Est.Error      Q2.5    Q97.5
+## [1,] 0.9615294 0.2401395 0.5689127 1.569304</code></pre>
+<p>Or, we <em>might</em> be more interested in <span class="math inline">\(h(u_{i&#39;}, v_{i&#39;}, \theta ; x)\)</span> for a new patient <span class="math inline">\(i&#39;\)</span>. Now we need to generate samples from the posterior distribution</p>
+<p><span class="math display">\[f(u_{i&#39;}, v_{i&#39;}, \theta \mid \mathbf{y}) = f(u_{i&#39;}, v_{i&#39;} \mid \theta, \mathbf{y}) f(\theta \mid \mathbf{y})\]</span></p>
+<p>we can do this by going through our posterior samples <span class="math inline">\(\theta^{(k)}\)</span> for <span class="math inline">\(k = 1,\ldots,K\)</span> and each time simulating</p>
+<p><span class="math display">\[\left( \begin{array}{c}  u_{i&#39;}^{(k)} \\ v_{i&#39;}^{(k)} \\ \end{array} \right) \sim N\left(\left( \begin{array}{c}  0 \\ 0 \\ \end{array} \right), \left( \begin{array}{c c} (\sigma^{(k)}_u)^2 &amp; \rho \sigma^{(k)}_u\sigma^{(k)}_v \\ \rho \sigma^{(k)}_u \sigma^{(k)}_v &amp; (\sigma^{(k)}_v)^2\end{array}\right)\right).\]</span></p>
+<p>The way I expected this to be done is</p>
+<pre class="r"><code>fitted(fit_hurdle, newdata = data.frame(id = NA, time = &quot;2&quot;), 
+       allow_new_levels = TRUE,
+       sample_new_levels = &quot;gaussian&quot;,
+       robust = TRUE)</code></pre>
+<pre><code>##       Estimate Est.Error        Q2.5    Q97.5
+## [1,] 0.6861731 0.9437843 0.006417736 39.68782</code></pre>
+<p>however, after experimenting with this function for a while, I realised it is using <span class="math inline">\(\rho = 0\)</span>. We can see this by going through the steps manually</p>
+<pre class="r"><code>ps &lt;- posterior_samples(fit_hurdle)
+
+sigma_error &lt;- ps[,&quot;sigma&quot;]
+sigma_u &lt;- ps[,&quot;sd_id__hu_Intercept&quot;]
+sigma_v &lt;- ps[,&quot;sd_id__Intercept&quot;]
+rho &lt;- ps[,&quot;cor_id__Intercept__hu_Intercept&quot;]
+
+n_mcmc &lt;- length(rho)
+
+x &lt;- data.frame(id = NA, time = &quot;2&quot;)
+
+### simulate u_i&#39; and v_i&#39; (ignore rho)
+u &lt;- rnorm(n_mcmc, sd = sigma_u)
+v &lt;- rnorm(n_mcmc, sd = sigma_v)
+
+### extract draws from xi
+xi &lt;- qlogis(fitted(fit_hurdle, 
+                    newdata = x, 
+                    re_formula = NA, 
+                    dpar = &quot;hu&quot;,
+                    summary = FALSE))
+
+### extract draws from eta
+eta &lt;- fitted(fit_hurdle, 
+              newdata = x, 
+              re_formula = NA, 
+              dpar = &quot;mu&quot;,
+              summary = FALSE)
+
+ey &lt;- (1 - plogis(xi + u)) * exp(eta + v + sigma_error ^ 2 / 2)
+
+quantile(ey, probs = c(0.025, 0.5, 0.975))</code></pre>
+<pre><code>##         2.5%          50%        97.5% 
+##  0.007284344  0.700705097 40.016871767</code></pre>
+<p>This gives me something similar to the fitted method, whereas if I include <span class="math inline">\(\rho\)</span> (as is correct) I get a very different answer…</p>
+<pre class="r"><code>### include correlation 
+v &lt;- rnorm(n_mcmc, 
+           mean = u * sigma_v / sigma_u * rho,
+           sd = sqrt((1 - rho^2) * sigma_v ^ 2))
+
+### extract draws from xi
+xi &lt;- qlogis(fitted(fit_hurdle, 
+                    newdata = x, 
+                    re_formula = NA, 
+                    dpar = &quot;hu&quot;,
+                    summary = FALSE))
+
+### extract draws from eta
+eta &lt;- fitted(fit_hurdle, 
+              newdata = x, 
+              re_formula = NA, 
+              dpar = &quot;mu&quot;,
+              summary = FALSE)
+
+ey &lt;- (1 - plogis(xi + u)) * exp(eta + v + sigma_error ^ 2 / 2)
+
+round(quantile(ey, probs = c(0.025, 0.5, 0.975)), 3)</code></pre>
+<pre><code>##   2.5%    50%  97.5% 
+##  0.001  0.933 60.336</code></pre>
+</div>
+<div id="unconditional-expectation" class="section level3">
+<h3>Unconditional expectation</h3>
+<p>Instead of a patient-specific expectation, conditional on “random effects”, we might be more interested in targeting an overall expectation (for a new patient) where we integrate out the random effects. In other words, we want to take samples from</p>
+<p><span class="math display">\[\begin{align} g(\theta; x) &amp; = E(Y \mid  \theta; x) \\
+&amp; = \int   E(Y \mid u_{i&#39;}, v_{i&#39;}, \theta; x) f(u_{i&#39;}, v_{i&#39;} \mid \theta, \mathbf{y}) du_{i&#39;}dv_{i&#39;} \\ 
+&amp;\approx  L^{-1}\sum_{l = 1}^{L}E(Y \mid u_{i&#39;}^{(l)}, v_{i&#39;}^{(l)}, \theta; x)\\
+&amp;=  L^{-1}\sum_{l = 1}^{L}\left\lbrace 1 - \text{logit}^{-1} ( x^T \xi + u_{i&#39;}^{(l)}) \right\rbrace \exp(x^T\eta + v_{i&#39;}^{(l)} + \frac{\sigma^2}{2}).\end{align}\]</span></p>
+<p>That is, I take <span class="math inline">\(g(\theta^{(k)}; x)\)</span> for <span class="math inline">\(k = 1,\ldots,K\)</span>. At each <span class="math inline">\(k\)</span>, for <span class="math inline">\(l= 1 \ldots,L\)</span>, I take indpendent draws</p>
+<p><span class="math display">\[\left( \begin{array}{c}  u_{i&#39;}^{(l)} \\ v_{i&#39;}^{(l)} \\ \end{array} \right) \sim N\left(\left( \begin{array}{c}  0 \\ 0 \\ \end{array} \right), \left( \begin{array}{c c} (\sigma^{(k)}_u)^2 &amp; \rho \sigma^{(k)}_u\sigma^{(k)}_v \\ \rho \sigma^{(k)}_u \sigma^{(k)}_v &amp; (\sigma^{(k)}_v)^2\end{array}\right)\right).\]</span></p>
+<p>to perform the inner Monte Carlo integration (probably not the best method for this 2-d example). I don’t think it’s possible to do this with <code>brms</code> so I’ve written my own code (which only works for this specific model).</p>
+<pre class="r"><code>devtools::install_github(&quot;dominicmagirr/hurlong&quot;)</code></pre>
+<pre class="r"><code>hurlong::marg_mean_q(newdata = x, 
+                     nsims = 1000, 
+                     fit = fit_hurdle)</code></pre>
+<pre><code>##   id time     2.5%      50%    97.5%
+## 1 NA    2 3.850677 7.546222 19.46409</code></pre>
+</div>
+
+    </div>
+  </article>
+
+  
+
+
+</main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          <li>
+            <a href="/index.xml" type="application/rss+xml" target="_blank">RSS feed</a>
+          </li>
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="/images/hugo-logo.png" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
+
+    
+<script src="/js/math-code.js"></script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+    
+  </body>
+</html>
+
