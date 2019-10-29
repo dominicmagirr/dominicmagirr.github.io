@@ -60,7 +60,7 @@
 
   <article class="article">
     
-    <span class="article-duration">6 min read</span>
+    <span class="article-duration">5 min read</span>
     
 
     <h1 class="article-title">Longitudinal hurdle models 2</h1>
@@ -141,9 +141,9 @@ summary(fit_hurdle)</code></pre>
        allow_new_levels = TRUE,
        sample_new_levels = &quot;gaussian&quot;,
        robust = TRUE)</code></pre>
-<pre><code>##       Estimate Est.Error        Q2.5    Q97.5
-## [1,] 0.7021722  0.964239 0.007954327 37.70354</code></pre>
-<p>however, after experimenting with this function for a while, I realised it is using <span class="math inline">\(\rho = 0\)</span>. We can see this by going through the steps manually</p>
+<pre><code>##      Estimate Est.Error         Q2.5    Q97.5
+## [1,] 0.891329  1.283139 0.0009321145 51.98191</code></pre>
+<p>and this is indeed what’s happening, as can be seen by going through the steps manually</p>
 <pre class="r"><code>ps &lt;- posterior_samples(fit_hurdle)
 
 sigma_error &lt;- ps[,&quot;sigma&quot;]
@@ -155,9 +155,13 @@ n_mcmc &lt;- length(rho)
 
 x &lt;- data.frame(id = NA, time = &quot;2&quot;)
 
-### simulate u_i&#39; and v_i&#39; (ignore rho)
+### simulate u_i&#39; and v_i&#39; 
 u &lt;- rnorm(n_mcmc, sd = sigma_u)
-v &lt;- rnorm(n_mcmc, sd = sigma_v)
+### include correlation 
+v &lt;- rnorm(n_mcmc, 
+           mean = u * sigma_v / sigma_u * rho,
+           sd = sqrt((1 - rho^2) * sigma_v ^ 2))
+
 
 ### extract draws from xi = x*gamma
 xi &lt;- qlogis(fitted(fit_hurdle, 
@@ -175,34 +179,9 @@ eta &lt;- fitted(fit_hurdle,
 
 ey &lt;- (1 - plogis(xi + u)) * exp(eta + v + sigma_error ^ 2 / 2)
 
-quantile(ey, probs = c(0.025, 0.5, 0.975))</code></pre>
-<pre><code>##         2.5%          50%        97.5% 
-##  0.006986924  0.669249654 47.202715674</code></pre>
-<p>This gives me something similar to the fitted method, whereas if I include <span class="math inline">\(\rho\)</span> (as is correct) I get a very different answer…</p>
-<pre class="r"><code>### include correlation 
-v &lt;- rnorm(n_mcmc, 
-           mean = u * sigma_v / sigma_u * rho,
-           sd = sqrt((1 - rho^2) * sigma_v ^ 2))
-
-### extract draws from xi
-xi &lt;- qlogis(fitted(fit_hurdle, 
-                    newdata = x, 
-                    re_formula = NA, 
-                    dpar = &quot;hu&quot;,
-                    summary = FALSE))
-
-### extract draws from eta
-eta &lt;- fitted(fit_hurdle, 
-              newdata = x, 
-              re_formula = NA, 
-              dpar = &quot;mu&quot;,
-              summary = FALSE)
-
-ey &lt;- (1 - plogis(xi + u)) * exp(eta + v + sigma_error ^ 2 / 2)
-
 round(quantile(ey, probs = c(0.025, 0.5, 0.975)), 3)</code></pre>
 <pre><code>##   2.5%    50%  97.5% 
-##  0.001  0.934 57.474</code></pre>
+##  0.001  0.911 59.296</code></pre>
 </div>
 <div id="unconditional-expectation" class="section level3">
 <h3>Unconditional expectation</h3>
@@ -218,8 +197,8 @@ round(quantile(ey, probs = c(0.025, 0.5, 0.975)), 3)</code></pre>
 <pre class="r"><code>hurlong::marg_mean_q(newdata = x, 
                      nsims = 1000, 
                      fit = fit_hurdle)</code></pre>
-<pre><code>##   id time     2.5%      50%    97.5%
-## 1 NA    2 3.881155 7.561388 19.16427</code></pre>
+<pre><code>##   id time    2.5%      50%    97.5%
+## 1 NA    2 3.86033 7.494943 18.90352</code></pre>
 </div>
 
     </div>
