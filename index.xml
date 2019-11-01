@@ -6,10 +6,21 @@
     <description>Recent content on Dominic Magirr</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 28 Oct 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 01 Nov 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>flexsurv 2</title>
+      <link>/2019/11/01/flexsurv-2/</link>
+      <pubDate>Fri, 01 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/11/01/flexsurv-2/</guid>
+      <description>Previously, I started discussing the flexsurv package. I used it to fit a Weibull model. This is implemented as an accelerated failure time model. It is also a proportional hazards model (although, as I found previously, converting between the two is not so straightforward, but it can be done by SurvRegCensCov).
+Now let’s compare Weibull regression with Cox regression. Firstly, Weibull regression:
+ assumes proportional hazards; the number of parameters is equal to \(k + 2\), where \(k\) is the number of covariates; we can estimate things like the median, \(P(S&amp;gt;s^*)\), etc.</description>
+    </item>
     
     <item>
       <title>flexsurv</title>
