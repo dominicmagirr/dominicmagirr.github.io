@@ -3,84 +3,1664 @@
   <channel>
     <title>Dominic Magirr</title>
     <link>/</link>
-    <description>Recent content on Dominic Magirr</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Fri, 01 Nov 2019 00:00:00 +0000</lastBuildDate>
+      <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <description>Dominic Magirr</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 01 Jun 2030 13:00:00 +0000</lastBuildDate>
+    <image>
+      <url>/img/icon-192.png</url>
+      <title>Dominic Magirr</title>
+      <link>/</link>
+    </image>
     
-	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Example Page 1</title>
+      <link>/courses/example/example1/</link>
+      <pubDate>Sun, 05 May 2019 00:00:00 +0100</pubDate>
+      <guid>/courses/example/example1/</guid>
+      <description>
+
+&lt;p&gt;In this tutorial, I&amp;rsquo;ll share my top 10 tips for getting started with Academic:&lt;/p&gt;
+
+&lt;h2 id=&#34;tip-1&#34;&gt;Tip 1&lt;/h2&gt;
+
+&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis posuere tellus ac convallis placerat. Proin tincidunt magna sed ex sollicitudin condimentum. Sed ac faucibus dolor, scelerisque sollicitudin nisi. Cras purus urna, suscipit quis sapien eu, pulvinar tempor diam. Quisque risus orci, mollis id ante sit amet, gravida egestas nisl. Sed ac tempus magna. Proin in dui enim. Donec condimentum, sem id dapibus fringilla, tellus enim condimentum arcu, nec volutpat est felis vel metus. Vestibulum sit amet erat at nulla eleifend gravida.&lt;/p&gt;
+
+&lt;p&gt;Nullam vel molestie justo. Curabitur vitae efficitur leo. In hac habitasse platea dictumst. Sed pulvinar mauris dui, eget varius purus congue ac. Nulla euismod, lorem vel elementum dapibus, nunc justo porta mi, sed tempus est est vel tellus. Nam et enim eleifend, laoreet sem sit amet, elementum sem. Morbi ut leo congue, maximus velit ut, finibus arcu. In et libero cursus, rutrum risus non, molestie leo. Nullam congue quam et volutpat malesuada. Sed risus tortor, pulvinar et dictum nec, sodales non mi. Phasellus lacinia commodo laoreet. Nam mollis, erat in feugiat consectetur, purus eros egestas tellus, in auctor urna odio at nibh. Mauris imperdiet nisi ac magna convallis, at rhoncus ligula cursus.&lt;/p&gt;
+
+&lt;p&gt;Cras aliquam rhoncus ipsum, in hendrerit nunc mattis vitae. Duis vitae efficitur metus, ac tempus leo. Cras nec fringilla lacus. Quisque sit amet risus at ipsum pharetra commodo. Sed aliquam mauris at consequat eleifend. Praesent porta, augue sed viverra bibendum, neque ante euismod ante, in vehicula justo lorem ac eros. Suspendisse augue libero, venenatis eget tincidunt ut, malesuada at lorem. Donec vitae bibendum arcu. Aenean maximus nulla non pretium iaculis. Quisque imperdiet, nulla in pulvinar aliquet, velit quam ultrices quam, sit amet fringilla leo sem vel nunc. Mauris in lacinia lacus.&lt;/p&gt;
+
+&lt;p&gt;Suspendisse a tincidunt lacus. Curabitur at urna sagittis, dictum ante sit amet, euismod magna. Sed rutrum massa id tortor commodo, vitae elementum turpis tempus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean purus turpis, venenatis a ullamcorper nec, tincidunt et massa. Integer posuere quam rutrum arcu vehicula imperdiet. Mauris ullamcorper quam vitae purus congue, quis euismod magna eleifend. Vestibulum semper vel augue eget tincidunt. Fusce eget justo sodales, dapibus odio eu, ultrices lorem. Duis condimentum lorem id eros commodo, in facilisis mauris scelerisque. Morbi sed auctor leo. Nullam volutpat a lacus quis pharetra. Nulla congue rutrum magna a ornare.&lt;/p&gt;
+
+&lt;p&gt;Aliquam in turpis accumsan, malesuada nibh ut, hendrerit justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque sed erat nec justo posuere suscipit. Donec ut efficitur arcu, in malesuada neque. Nunc dignissim nisl massa, id vulputate nunc pretium nec. Quisque eget urna in risus suscipit ultricies. Pellentesque odio odio, tincidunt in eleifend sed, posuere a diam. Nam gravida nisl convallis semper elementum. Morbi vitae felis faucibus, vulputate orci placerat, aliquet nisi. Aliquam erat volutpat. Maecenas sagittis pulvinar purus, sed porta quam laoreet at.&lt;/p&gt;
+
+&lt;h2 id=&#34;tip-2&#34;&gt;Tip 2&lt;/h2&gt;
+
+&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis posuere tellus ac convallis placerat. Proin tincidunt magna sed ex sollicitudin condimentum. Sed ac faucibus dolor, scelerisque sollicitudin nisi. Cras purus urna, suscipit quis sapien eu, pulvinar tempor diam. Quisque risus orci, mollis id ante sit amet, gravida egestas nisl. Sed ac tempus magna. Proin in dui enim. Donec condimentum, sem id dapibus fringilla, tellus enim condimentum arcu, nec volutpat est felis vel metus. Vestibulum sit amet erat at nulla eleifend gravida.&lt;/p&gt;
+
+&lt;p&gt;Nullam vel molestie justo. Curabitur vitae efficitur leo. In hac habitasse platea dictumst. Sed pulvinar mauris dui, eget varius purus congue ac. Nulla euismod, lorem vel elementum dapibus, nunc justo porta mi, sed tempus est est vel tellus. Nam et enim eleifend, laoreet sem sit amet, elementum sem. Morbi ut leo congue, maximus velit ut, finibus arcu. In et libero cursus, rutrum risus non, molestie leo. Nullam congue quam et volutpat malesuada. Sed risus tortor, pulvinar et dictum nec, sodales non mi. Phasellus lacinia commodo laoreet. Nam mollis, erat in feugiat consectetur, purus eros egestas tellus, in auctor urna odio at nibh. Mauris imperdiet nisi ac magna convallis, at rhoncus ligula cursus.&lt;/p&gt;
+
+&lt;p&gt;Cras aliquam rhoncus ipsum, in hendrerit nunc mattis vitae. Duis vitae efficitur metus, ac tempus leo. Cras nec fringilla lacus. Quisque sit amet risus at ipsum pharetra commodo. Sed aliquam mauris at consequat eleifend. Praesent porta, augue sed viverra bibendum, neque ante euismod ante, in vehicula justo lorem ac eros. Suspendisse augue libero, venenatis eget tincidunt ut, malesuada at lorem. Donec vitae bibendum arcu. Aenean maximus nulla non pretium iaculis. Quisque imperdiet, nulla in pulvinar aliquet, velit quam ultrices quam, sit amet fringilla leo sem vel nunc. Mauris in lacinia lacus.&lt;/p&gt;
+
+&lt;p&gt;Suspendisse a tincidunt lacus. Curabitur at urna sagittis, dictum ante sit amet, euismod magna. Sed rutrum massa id tortor commodo, vitae elementum turpis tempus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean purus turpis, venenatis a ullamcorper nec, tincidunt et massa. Integer posuere quam rutrum arcu vehicula imperdiet. Mauris ullamcorper quam vitae purus congue, quis euismod magna eleifend. Vestibulum semper vel augue eget tincidunt. Fusce eget justo sodales, dapibus odio eu, ultrices lorem. Duis condimentum lorem id eros commodo, in facilisis mauris scelerisque. Morbi sed auctor leo. Nullam volutpat a lacus quis pharetra. Nulla congue rutrum magna a ornare.&lt;/p&gt;
+
+&lt;p&gt;Aliquam in turpis accumsan, malesuada nibh ut, hendrerit justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque sed erat nec justo posuere suscipit. Donec ut efficitur arcu, in malesuada neque. Nunc dignissim nisl massa, id vulputate nunc pretium nec. Quisque eget urna in risus suscipit ultricies. Pellentesque odio odio, tincidunt in eleifend sed, posuere a diam. Nam gravida nisl convallis semper elementum. Morbi vitae felis faucibus, vulputate orci placerat, aliquet nisi. Aliquam erat volutpat. Maecenas sagittis pulvinar purus, sed porta quam laoreet at.&lt;/p&gt;
+</description>
+    </item>
     
+    <item>
+      <title>Example Page 2</title>
+      <link>/courses/example/example2/</link>
+      <pubDate>Sun, 05 May 2019 00:00:00 +0100</pubDate>
+      <guid>/courses/example/example2/</guid>
+      <description>
+
+&lt;p&gt;Here are some more tips for getting started with Academic:&lt;/p&gt;
+
+&lt;h2 id=&#34;tip-3&#34;&gt;Tip 3&lt;/h2&gt;
+
+&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis posuere tellus ac convallis placerat. Proin tincidunt magna sed ex sollicitudin condimentum. Sed ac faucibus dolor, scelerisque sollicitudin nisi. Cras purus urna, suscipit quis sapien eu, pulvinar tempor diam. Quisque risus orci, mollis id ante sit amet, gravida egestas nisl. Sed ac tempus magna. Proin in dui enim. Donec condimentum, sem id dapibus fringilla, tellus enim condimentum arcu, nec volutpat est felis vel metus. Vestibulum sit amet erat at nulla eleifend gravida.&lt;/p&gt;
+
+&lt;p&gt;Nullam vel molestie justo. Curabitur vitae efficitur leo. In hac habitasse platea dictumst. Sed pulvinar mauris dui, eget varius purus congue ac. Nulla euismod, lorem vel elementum dapibus, nunc justo porta mi, sed tempus est est vel tellus. Nam et enim eleifend, laoreet sem sit amet, elementum sem. Morbi ut leo congue, maximus velit ut, finibus arcu. In et libero cursus, rutrum risus non, molestie leo. Nullam congue quam et volutpat malesuada. Sed risus tortor, pulvinar et dictum nec, sodales non mi. Phasellus lacinia commodo laoreet. Nam mollis, erat in feugiat consectetur, purus eros egestas tellus, in auctor urna odio at nibh. Mauris imperdiet nisi ac magna convallis, at rhoncus ligula cursus.&lt;/p&gt;
+
+&lt;p&gt;Cras aliquam rhoncus ipsum, in hendrerit nunc mattis vitae. Duis vitae efficitur metus, ac tempus leo. Cras nec fringilla lacus. Quisque sit amet risus at ipsum pharetra commodo. Sed aliquam mauris at consequat eleifend. Praesent porta, augue sed viverra bibendum, neque ante euismod ante, in vehicula justo lorem ac eros. Suspendisse augue libero, venenatis eget tincidunt ut, malesuada at lorem. Donec vitae bibendum arcu. Aenean maximus nulla non pretium iaculis. Quisque imperdiet, nulla in pulvinar aliquet, velit quam ultrices quam, sit amet fringilla leo sem vel nunc. Mauris in lacinia lacus.&lt;/p&gt;
+
+&lt;p&gt;Suspendisse a tincidunt lacus. Curabitur at urna sagittis, dictum ante sit amet, euismod magna. Sed rutrum massa id tortor commodo, vitae elementum turpis tempus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean purus turpis, venenatis a ullamcorper nec, tincidunt et massa. Integer posuere quam rutrum arcu vehicula imperdiet. Mauris ullamcorper quam vitae purus congue, quis euismod magna eleifend. Vestibulum semper vel augue eget tincidunt. Fusce eget justo sodales, dapibus odio eu, ultrices lorem. Duis condimentum lorem id eros commodo, in facilisis mauris scelerisque. Morbi sed auctor leo. Nullam volutpat a lacus quis pharetra. Nulla congue rutrum magna a ornare.&lt;/p&gt;
+
+&lt;p&gt;Aliquam in turpis accumsan, malesuada nibh ut, hendrerit justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque sed erat nec justo posuere suscipit. Donec ut efficitur arcu, in malesuada neque. Nunc dignissim nisl massa, id vulputate nunc pretium nec. Quisque eget urna in risus suscipit ultricies. Pellentesque odio odio, tincidunt in eleifend sed, posuere a diam. Nam gravida nisl convallis semper elementum. Morbi vitae felis faucibus, vulputate orci placerat, aliquet nisi. Aliquam erat volutpat. Maecenas sagittis pulvinar purus, sed porta quam laoreet at.&lt;/p&gt;
+
+&lt;h2 id=&#34;tip-4&#34;&gt;Tip 4&lt;/h2&gt;
+
+&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis posuere tellus ac convallis placerat. Proin tincidunt magna sed ex sollicitudin condimentum. Sed ac faucibus dolor, scelerisque sollicitudin nisi. Cras purus urna, suscipit quis sapien eu, pulvinar tempor diam. Quisque risus orci, mollis id ante sit amet, gravida egestas nisl. Sed ac tempus magna. Proin in dui enim. Donec condimentum, sem id dapibus fringilla, tellus enim condimentum arcu, nec volutpat est felis vel metus. Vestibulum sit amet erat at nulla eleifend gravida.&lt;/p&gt;
+
+&lt;p&gt;Nullam vel molestie justo. Curabitur vitae efficitur leo. In hac habitasse platea dictumst. Sed pulvinar mauris dui, eget varius purus congue ac. Nulla euismod, lorem vel elementum dapibus, nunc justo porta mi, sed tempus est est vel tellus. Nam et enim eleifend, laoreet sem sit amet, elementum sem. Morbi ut leo congue, maximus velit ut, finibus arcu. In et libero cursus, rutrum risus non, molestie leo. Nullam congue quam et volutpat malesuada. Sed risus tortor, pulvinar et dictum nec, sodales non mi. Phasellus lacinia commodo laoreet. Nam mollis, erat in feugiat consectetur, purus eros egestas tellus, in auctor urna odio at nibh. Mauris imperdiet nisi ac magna convallis, at rhoncus ligula cursus.&lt;/p&gt;
+
+&lt;p&gt;Cras aliquam rhoncus ipsum, in hendrerit nunc mattis vitae. Duis vitae efficitur metus, ac tempus leo. Cras nec fringilla lacus. Quisque sit amet risus at ipsum pharetra commodo. Sed aliquam mauris at consequat eleifend. Praesent porta, augue sed viverra bibendum, neque ante euismod ante, in vehicula justo lorem ac eros. Suspendisse augue libero, venenatis eget tincidunt ut, malesuada at lorem. Donec vitae bibendum arcu. Aenean maximus nulla non pretium iaculis. Quisque imperdiet, nulla in pulvinar aliquet, velit quam ultrices quam, sit amet fringilla leo sem vel nunc. Mauris in lacinia lacus.&lt;/p&gt;
+
+&lt;p&gt;Suspendisse a tincidunt lacus. Curabitur at urna sagittis, dictum ante sit amet, euismod magna. Sed rutrum massa id tortor commodo, vitae elementum turpis tempus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean purus turpis, venenatis a ullamcorper nec, tincidunt et massa. Integer posuere quam rutrum arcu vehicula imperdiet. Mauris ullamcorper quam vitae purus congue, quis euismod magna eleifend. Vestibulum semper vel augue eget tincidunt. Fusce eget justo sodales, dapibus odio eu, ultrices lorem. Duis condimentum lorem id eros commodo, in facilisis mauris scelerisque. Morbi sed auctor leo. Nullam volutpat a lacus quis pharetra. Nulla congue rutrum magna a ornare.&lt;/p&gt;
+
+&lt;p&gt;Aliquam in turpis accumsan, malesuada nibh ut, hendrerit justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque sed erat nec justo posuere suscipit. Donec ut efficitur arcu, in malesuada neque. Nunc dignissim nisl massa, id vulputate nunc pretium nec. Quisque eget urna in risus suscipit ultricies. Pellentesque odio odio, tincidunt in eleifend sed, posuere a diam. Nam gravida nisl convallis semper elementum. Morbi vitae felis faucibus, vulputate orci placerat, aliquet nisi. Aliquam erat volutpat. Maecenas sagittis pulvinar purus, sed porta quam laoreet at.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Example Talk</title>
+      <link>/talk/example/</link>
+      <pubDate>Sat, 01 Jun 2030 13:00:00 +0000</pubDate>
+      <guid>/talk/example/</guid>
+      <description>&lt;div class=&#34;alert alert-note&#34;&gt;
+  &lt;div&gt;
+    Click on the &lt;strong&gt;Slides&lt;/strong&gt; button above to view the built-in slides feature.
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Slides can be added in a few ways:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Create&lt;/strong&gt; slides using Academic&amp;rsquo;s &lt;a href=&#34;https://sourcethemes.com/academic/docs/managing-content/#create-slides&#34; target=&#34;_blank&#34;&gt;&lt;em&gt;Slides&lt;/em&gt;&lt;/a&gt; feature and link using &lt;code&gt;slides&lt;/code&gt; parameter in the front matter of the talk file&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Upload&lt;/strong&gt; an existing slide deck to &lt;code&gt;static/&lt;/code&gt; and link using &lt;code&gt;url_slides&lt;/code&gt; parameter in the front matter of the talk file&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Embed&lt;/strong&gt; your slides (e.g. Google Slides) or presentation video on this page using &lt;a href=&#34;https://sourcethemes.com/academic/docs/writing-markdown-latex/&#34; target=&#34;_blank&#34;&gt;shortcodes&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Further talk details can easily be added to this page using &lt;em&gt;Markdown&lt;/em&gt; and $\rm \LaTeX$ math code.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>flexsurv 2</title>
-      <link>/2019/11/01/flexsurv-2/</link>
+      <link>/post/flexsurv-2/</link>
       <pubDate>Fri, 01 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/2019/11/01/flexsurv-2/</guid>
-      <description>Previously, I started discussing the flexsurv package. I used it to fit a Weibull model. This is implemented as an accelerated failure time model. It is also a proportional hazards model (although, as I found previously, converting between the two is not so straightforward, but it can be done by SurvRegCensCov).
-Now let’s compare Weibull regression with Cox regression. Firstly, Weibull regression:
- assumes proportional hazards; the number of parameters is equal to \(k + 2\), where \(k\) is the number of covariates; we can estimate things like the median, \(P(S&amp;gt;s^*)\), etc.</description>
+      <guid>/post/flexsurv-2/</guid>
+      <description>
+
+
+&lt;p&gt;&lt;a href=&#34;/2019/10/28/flexsurv&#34;&gt;Previously,&lt;/a&gt; I started discussing the &lt;code&gt;flexsurv&lt;/code&gt; package. I used it to fit a Weibull model. This is implemented as an accelerated failure time model. It is also a proportional hazards model (although, as I found previously, converting between the two is not so straightforward, but it can be done by &lt;code&gt;SurvRegCensCov&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;Now let’s compare Weibull regression with Cox regression. Firstly, Weibull regression:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;assumes proportional hazards;&lt;/li&gt;
+&lt;li&gt;the number of parameters is equal to &lt;span class=&#34;math inline&#34;&gt;\(k + 2\)&lt;/span&gt;, where &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt; is the number of covariates;&lt;/li&gt;
+&lt;li&gt;we can estimate things like the median, &lt;span class=&#34;math inline&#34;&gt;\(P(S&amp;gt;s^*)\)&lt;/span&gt;, etc. from the model…&lt;/li&gt;
+&lt;li&gt;but the model might be too restrictive – we won’t estimate these things very well.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Cox regression:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;assumes proportional hazards;&lt;/li&gt;
+&lt;li&gt;there are &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt; parameters (one for each covariate);&lt;/li&gt;
+&lt;li&gt;we don’t estimate the baseline hazard…&lt;/li&gt;
+&lt;li&gt;which means we don’t get estimates for things like the median, &lt;span class=&#34;math inline&#34;&gt;\(P(S&amp;gt;s^*)\)&lt;/span&gt;, etc.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;flexsurv&lt;/code&gt; has a function &lt;code&gt;flexsurvspline&lt;/code&gt; which allows one to bridge the gap between Weibull regression and Cox regresssion.&lt;/p&gt;
+&lt;div id=&#34;from-weibull-regression-to-cox-regression.&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;From Weibull regression to Cox regression.&lt;/h2&gt;
+&lt;p&gt;For a Weibull distribution with shape &lt;span class=&#34;math inline&#34;&gt;\(a\)&lt;/span&gt;, scale &lt;span class=&#34;math inline&#34;&gt;\(b\)&lt;/span&gt;, covariates &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt;, and regression coefficents &lt;span class=&#34;math inline&#34;&gt;\(\gamma\)&lt;/span&gt;, the survival probability is&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[S(t; x) = \exp\left\lbrace - \left( \frac{t}{b \cdot \exp(x^T\gamma)} \right) ^ a\right\rbrace\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Since survival is related to the log-cumulative hazard via &lt;span class=&#34;math inline&#34;&gt;\(S=\exp(-H)\)&lt;/span&gt;, this means that&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\log H(t;x) = a\log t - a\log(b) - a x^T\gamma\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;In words, the log-cumulative hazard has a linear relationship with (log-) time, with the intercept depending on the value of &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt;. For a given data set, we can check if this is reasonable by looking at non-paramteric estimates, &lt;span class=&#34;math inline&#34;&gt;\(\log \hat{H}(t; x)\)&lt;/span&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(survival)
+library(flexsurv)
+library(ggplot2)
+
+### Non-parametric analysis
+fit_km &amp;lt;- survfit(Surv(futime, death) ~ trt,
+                  data = myeloid)
+t_seq &amp;lt;- seq(1, 2500, length.out = 1000)
+km_sum &amp;lt;- summary(fit_km, times = t_seq, extend = TRUE)
+
+### Weibull regression
+fit_weibull &amp;lt;- flexsurvreg(Surv(futime, death) ~ trt, 
+                           dist = &amp;quot;weibull&amp;quot;, 
+                           data = myeloid)
+
+a &amp;lt;- fit_weibull$res[&amp;quot;shape&amp;quot;, &amp;quot;est&amp;quot;]
+b &amp;lt;- fit_weibull$res[&amp;quot;scale&amp;quot;, &amp;quot;est&amp;quot;]
+trtB &amp;lt;- fit_weibull$res[&amp;quot;trtB&amp;quot;, &amp;quot;est&amp;quot;]
+
+
+### plot log-cumulative hazard against log-time
+df &amp;lt;- data.frame(log_time = log(rep(t_seq, 2)),
+                 logcumhaz = log(-log(km_sum$surv)),
+                 trt = rep(c(&amp;quot;A&amp;quot;, &amp;quot;B&amp;quot;), each = 1000),
+                 logcumhaz_w = c(a * (log(t_seq) - log(b)),
+                                 a * (log(t_seq) - log(b) - trtB)))
+
+ggplot(data = df,
+       mapping = aes(x = log_time,
+                     y = logcumhaz,
+                     colour = trt)) +
+  geom_line() +
+  geom_line(mapping = aes(x = log_time,
+                          y = logcumhaz_w,
+                          colour = trt),
+            linetype = 2) +
+  theme_bw() +
+  scale_x_continuous(limits = c(2,8)) +
+  scale_y_continuous(limits = c(-6,0))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-11-01-flexsurv-2_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;What’s going on here? Well, the first thing to acknowledge is that the hazards only appear to be proportional after about 150 (&lt;span class=&#34;math inline&#34;&gt;\(e^5\)&lt;/span&gt;) days. I’m not sure I would immediately abandon a proportional-hazards model, though, as most of the events happen when the hazards are proportional (only 10-15% of the events happen before day 150), so the right-hand-side of the plot is far more important. Looking to the right then: the relationship between the log-cumulative hazard and log-time is not really linear. The distance between the two lines is roughly the same for the two models (Weibull and non-parametric), suggesting that the Weibull model does ok at estimating the hazard ratio. However, the lack of linearity will lead to poor estimates for the medians, &lt;span class=&#34;math inline&#34;&gt;\(P(S&amp;gt;s^*)\)&lt;/span&gt;, etc., as can be confirmed by plotting the survival curves:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ggplot(data = df,
+       mapping = aes(x = exp(log_time),
+                     y = exp(-exp(logcumhaz)),
+                     colour = trt)) +
+  geom_line() +
+  geom_line(mapping = aes(x = exp(log_time),
+                          y = exp(-exp(logcumhaz_w)),
+                          colour = trt),
+            linetype = 2) +
+  theme_bw()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-11-01-flexsurv-2_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;To improve the model, given this lack of linearity, it seems quite natural to change from&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\log H(t;x) = a\log t - a\log(b) - a x^T\gamma\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;to&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\log H(t;x) = s(\log t) + x^T\beta\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;where &lt;span class=&#34;math inline&#34;&gt;\(s(\log t)\)&lt;/span&gt; is a natural cubic spline function of (log) time. One can make the model more/less flexible by choosing a large/small number of knots. By default, the knots are placed at quantiles of the uncensored event times. How many knots are required? I don’t really have a good answer for this: one or two. At most, three? In this example, I’m using two inner knots, placed at 33% and 66% of the uncensored event times (indicated by vertical lines):&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;fit_spline_2 &amp;lt;- flexsurvspline(Surv(futime, death) ~ trt, 
+                               data = myeloid,
+                               k = 2,
+                               scale = &amp;quot;hazard&amp;quot;)
+
+spline_2_sum &amp;lt;- summary(fit_spline_2, t = t_seq, type = &amp;quot;cumhaz&amp;quot;)
+
+df2 &amp;lt;- cbind(df,
+      data.frame(logcumhaz_s2 = log(c(spline_2_sum$`trt=A`[&amp;quot;est&amp;quot;]$est,
+                                  spline_2_sum$`trt=B`[&amp;quot;est&amp;quot;]$est))))
+
+ggplot(data = df2,
+       mapping = aes(x = log_time,
+                     y = logcumhaz,
+                     colour = trt)) +
+  geom_line() +
+  geom_line(mapping = aes(x = log_time,
+                          y = logcumhaz_s2,
+                          colour = trt),
+            linetype = 2) +
+  theme_bw() +
+  scale_x_continuous(limits = c(2,8)) +
+  scale_y_continuous(limits = c(-6,0)) +
+  geom_vline(xintercept = fit_spline_2$knots)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-11-01-flexsurv-2_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;This looks a lot better, and we can see the improvement in the survival curves:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ggplot(data = df2,
+       mapping = aes(x = exp(log_time),
+                     y = exp(-exp(logcumhaz)),
+                     colour = trt)) +
+  geom_line() +
+  geom_line(mapping = aes(x = exp(log_time),
+                          y = exp(-exp(logcumhaz_s2)),
+                          colour = trt),
+            linetype = 2) +
+  theme_bw()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-11-01-flexsurv-2_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;from-cox-regression-to-weibull-regression.&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;From Cox regression to Weibull regression.&lt;/h2&gt;
+&lt;p&gt;If we start out from Cox regression&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[h(t;x)=h_0(t)\exp(x^T\beta)\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;this means that&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\log H(t;x) = \log H_0(t;x) + x^T\beta\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;We estimate the parameters &lt;span class=&#34;math inline&#34;&gt;\(\beta\)&lt;/span&gt; from the partial likelihood, and don’t estimate &lt;span class=&#34;math inline&#34;&gt;\(\log H_0(t;x)\)&lt;/span&gt;. So &lt;span class=&#34;math inline&#34;&gt;\(\log H_0(t;x)\)&lt;/span&gt; can be anything. However, with the &lt;code&gt;flexsurvspline&lt;/code&gt; function, as long as we use enough knots, &lt;span class=&#34;math inline&#34;&gt;\(s(\log(t))\)&lt;/span&gt; can be more-or-less anything (smooth), so the two methods will give the same information about &lt;span class=&#34;math inline&#34;&gt;\(\beta\)&lt;/span&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;conclusions&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Conclusions&lt;/h2&gt;
+&lt;p&gt;I can’t really see any reason not to switch from a Cox model to &lt;code&gt;flexsurvspline&lt;/code&gt;. You don’t lose anything in terms of inference on &lt;span class=&#34;math inline&#34;&gt;\(\beta\)&lt;/span&gt;, only gain a nice estimate for the baseline hazard. Also, inference is all based on maximum likelihood. No special theory required.&lt;/p&gt;
+&lt;p&gt;From the other side, if you start out from Weibull regression, and then realise that Weibull is the wrong model, you don’t have to think too hard about how to choose a better model, you &lt;em&gt;know&lt;/em&gt; that &lt;code&gt;flexsurvspline&lt;/code&gt; will be good (assuming proportional hazards is correct: for non-proportional hazards you may have to think harder).&lt;/p&gt;
+&lt;p&gt;What can go wrong? In small sample sizes, I guess there could be issues with over-fitting if too many knots are chosen. But given a decent sample size, I can’t see any problems. I would be interested to see a &lt;span class=&#34;math inline&#34;&gt;\(\log H_0(t;x)\)&lt;/span&gt; that is highly wiggly – doesn’t seem likely in practice.&lt;/p&gt;
+&lt;/div&gt;
+</description>
     </item>
     
     <item>
       <title>flexsurv</title>
-      <link>/2019/10/28/flexsurv/</link>
+      <link>/post/flexsurv/</link>
       <pubDate>Mon, 28 Oct 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/2019/10/28/flexsurv/</guid>
-      <description>I’m going to write about some of my favourite R packages. I’ll start with flexsurv (https://github.com/chjackson/flexsurv-dev) by Chris Jackson, which can be used to fit all kinds of parametric models to survival data. It can really do a lot, but I’ll pick out just 2 cool things I like about it:
-Fit a standard survival model, but where it’s slightly easier to work out what the parameters mean. Fit a proportional hazards model, which is a lot like a Cox model, but where you also model the baseline hazard using a spline.</description>
+      <guid>/post/flexsurv/</guid>
+      <description>
+
+
+&lt;p&gt;I’m going to write about some of my favourite R packages. I’ll start with &lt;code&gt;flexsurv&lt;/code&gt; (&lt;a href=&#34;https://github.com/chjackson/flexsurv-dev&#34; class=&#34;uri&#34;&gt;https://github.com/chjackson/flexsurv-dev&lt;/a&gt;) by Chris Jackson, which can be used to fit all kinds of parametric models to survival data. It can really do a lot, but I’ll pick out just 2 cool things I like about it:&lt;/p&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;Fit a standard survival model, but where it’s &lt;em&gt;slightly&lt;/em&gt; easier to work out what the parameters mean.&lt;/li&gt;
+&lt;li&gt;Fit a proportional hazards model, which is a lot like a Cox model, but where you also model the baseline hazard using a spline.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div id=&#34;consistent-parameter-values&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;1. Consistent parameter values&lt;/h2&gt;
+&lt;p&gt;As mentioned in the tutorial (&lt;a href=&#34;https://www.jstatsoft.org/article/view/v070i08&#34; class=&#34;uri&#34;&gt;https://www.jstatsoft.org/article/view/v070i08&lt;/a&gt;), for simple models &lt;code&gt;flexsurvreg&lt;/code&gt; acts as a wrapper for &lt;code&gt;survival::survreg&lt;/code&gt;, but where the parameters in the output match those of &lt;code&gt;dweibull&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;With &lt;code&gt;survival::survreg&lt;/code&gt; I would do, e.g.:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dat_ovarian &amp;lt;- survival::ovarian
+dat_ovarian$rx &amp;lt;- factor(dat_ovarian$rx)
+
+library(survival)
+fit_survreg = survreg(Surv(futime, fustat) ~ rx, 
+                      dist = &amp;quot;weibull&amp;quot;,
+                      data = dat_ovarian)
+
+summary(fit_survreg)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## 
+## Call:
+## survreg(formula = Surv(futime, fustat) ~ rx, data = dat_ovarian, 
+##     dist = &amp;quot;weibull&amp;quot;)
+##              Value Std. Error     z      p
+## (Intercept)  6.825      0.344 19.84 &amp;lt;2e-16
+## rx2          0.559      0.529  1.06   0.29
+## Log(scale)  -0.121      0.251 -0.48   0.63
+## 
+## Scale= 0.886 
+## 
+## Weibull distribution
+## Loglik(model)= -97.4   Loglik(intercept only)= -98
+##  Chisq= 1.18 on 1 degrees of freedom, p= 0.28 
+## Number of Newton-Raphson Iterations: 5 
+## n= 26&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Then I would look around online for an explanation of the output e.g. (&lt;a href=&#34;https://stats.stackexchange.com/questions/159044/weibull-survival-model-in-r&#34; class=&#34;uri&#34;&gt;https://stats.stackexchange.com/questions/159044/weibull-survival-model-in-r&lt;/a&gt;). There is also an explanation in &lt;code&gt;?survreg&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;On the other hand, using &lt;code&gt;flexsurv&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(flexsurv)
+fit_flexsurvreg = flexsurvreg(Surv(futime, fustat) ~ rx, 
+                              dist = &amp;quot;weibull&amp;quot;,
+                              data = dat_ovarian)
+
+fit_flexsurvreg&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Call:
+## flexsurvreg(formula = Surv(futime, fustat) ~ rx, data = dat_ovarian, 
+##     dist = &amp;quot;weibull&amp;quot;)
+## 
+## Estimates: 
+##        data mean  est       L95%      U95%      se        exp(est)
+## shape        NA      1.129     0.690     1.848     0.284        NA
+## scale        NA    920.128   468.868  1805.704   316.508        NA
+## rx2       0.500      0.559    -0.478     1.597     0.529     1.749
+##        L95%      U95%    
+## shape        NA        NA
+## scale        NA        NA
+## rx2       0.620     4.936
+## 
+## N = 26,  Events: 12,  Censored: 14
+## Total time at risk: 15588
+## Log-likelihood = -97.36415, df = 3
+## AIC = 200.7283&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The parameters &lt;code&gt;shape&lt;/code&gt; and &lt;code&gt;scale&lt;/code&gt; correspond to &lt;code&gt;dweibull&lt;/code&gt;. So I don’t have to think any further? Not quite: I still have to work out what the estimate of &lt;code&gt;rx2&lt;/code&gt; is doing. I might look at &lt;code&gt;exp(est) = 1.749&lt;/code&gt; and somehow expect this to be a hazard ratio. It’s not. It’s a multiplicative effect on the scale parameter. So when &lt;code&gt;rx = 1&lt;/code&gt; the scale is &lt;code&gt;920.1&lt;/code&gt;, and when &lt;code&gt;rx = 2&lt;/code&gt; the scale is &lt;code&gt;920.1 * 1.749&lt;/code&gt;. The hazard ratio (treatment 2 vs treatment 1) is&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\begin{align} \frac{h_2(x)}{h_1(x)} &amp;amp; = \left( \frac{b_1}{b_2} \right)^a \\
+                                      &amp;amp; = \left( \frac{920.1}{920.1 \times 1.749} \right)^{1.129}\\
+                                      &amp;amp; = 0.53 \end{align} \]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;where &lt;span class=&#34;math inline&#34;&gt;\(a\)&lt;/span&gt; is the common shape parameter, and &lt;span class=&#34;math inline&#34;&gt;\(b_1\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(b_2\)&lt;/span&gt; are the scale parameters.&lt;/p&gt;
+&lt;p&gt;Once I had started writing this post, I realized that it’s actually not straightforward to make inference on the hazard ratio using &lt;code&gt;flexsurv&lt;/code&gt;. For working out variances/covariances, the &lt;code&gt;survreg&lt;/code&gt; parameterization is indeed better. I looked around for other R packages in this space, and found &lt;code&gt;SurvRegCensCov&lt;/code&gt;, which can do this conversion automatically for you:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(SurvRegCensCov)
+ConvertWeibull(fit_survreg)$HR&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##            HR        LB       UB
+## rx2 0.5318051 0.1683444 1.679989&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;For completeness, using &lt;code&gt;flexsurv&lt;/code&gt;, the log-hazard ratio is&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\begin{align} \log\left( \frac{h_2(x)}{h_1(x) }\right) &amp;amp; = a\left\lbrace \log(b_1) - \log(b_2) \right\rbrace \\
+                                                         &amp;amp; = -\exp(\log(a)) \times \left\lbrace \log(b_2) - \log(b_1)  \right\rbrace \end{align}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;I can extract the terms &lt;span class=&#34;math inline&#34;&gt;\(\alpha:=\log(a)\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(\beta:=\log(b_2) - \log(b_1)\)&lt;/span&gt; from the &lt;code&gt;fit_flexsurvreg&lt;/code&gt; object, as well as their (co)variance.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;alpha &amp;lt;- fit_flexsurvreg$res.t[&amp;quot;shape&amp;quot;, &amp;quot;est&amp;quot;]
+beta &amp;lt;- fit_flexsurvreg$res.t[&amp;quot;rx2&amp;quot;, &amp;quot;est&amp;quot;]
+cov_alpha_beta &amp;lt;- vcov(fit_flexsurvreg)[c(&amp;quot;shape&amp;quot;, &amp;quot;rx2&amp;quot;), c(&amp;quot;shape&amp;quot;, &amp;quot;rx2&amp;quot;)]&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Then work out the variance of the log-hazard ratio using the delta method.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\text{var}\left\lbrace -\beta\exp(\alpha) \right\rbrace = (-\beta\exp(\alpha), -\exp(\alpha)) \text{Cov}(\alpha, \beta) \left( \begin{array}{c} -\beta\exp(\alpha) \\ -\exp(\alpha) \end{array}\right)\]&lt;/span&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;grad &amp;lt;- matrix(c(-beta*exp(alpha),
+                 -exp(alpha)), 
+               ncol = 1)
+var_lhr = t(grad) %*% cov_alpha_beta %*% grad
+se_lhr = sqrt(var_lhr)
+se_lhr&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##           [,1]
+## [1,] 0.5868807&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;And to get a 95% confidence interval for the hazard ratio…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;log_hr = -exp(alpha) * beta
+log_hr_upr = log_hr + qnorm(0.975) * se_lhr
+log_hr_lwr = log_hr - qnorm(0.975) * se_lhr
+
+data.frame(HR = exp(log_hr),
+           LB = exp(log_hr_lwr),
+           UB = exp(log_hr_upr))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##          HR        LB       UB
+## 1 0.5318051 0.1683444 1.679988&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;splines&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Splines&lt;/h2&gt;
+&lt;p&gt;The second thing I really like about &lt;code&gt;flexsurv&lt;/code&gt; is the proportional hazards model with a spline for the baseline hazard. I’ll explore this in &lt;a href=&#34;/2019/11/01/flexsurv-2&#34;&gt;another post&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+</description>
     </item>
     
     <item>
       <title>Longitudinal hurdle models 3</title>
-      <link>/2019/10/25/longitudinal-hurdle-models-3/</link>
+      <link>/post/longitudinal-hurdle-models-3/</link>
       <pubDate>Fri, 25 Oct 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/2019/10/25/longitudinal-hurdle-models-3/</guid>
-      <description>In the last post on longitudinal hurdle models, I had just taken samples from the marginal mean
-\[\begin{align} g(\theta; x) &amp;amp; = E(Y \mid \theta; x) \\ &amp;amp; = \int E(Y \mid u_{i&amp;#39;}, v_{i&amp;#39;}, \theta; x) f(u_{i&amp;#39;}, v_{i&amp;#39;} \mid \theta, \mathbf{y}) du_{i&amp;#39;}dv_{i&amp;#39;} \\ &amp;amp;\approx L^{-1}\sum_{l = 1}^{L}E(Y \mid u_{i&amp;#39;}^{(l)}, v_{i&amp;#39;}^{(l)}, \theta; x)\\ &amp;amp;= L^{-1}\sum_{l = 1}^{L}\left\lbrace 1 - \text{logit}^{-1} ( x^T \gamma + u_{i&amp;#39;}^{(l)}) \right\rbrace \exp(x^T\beta + v_{i&amp;#39;}^{(l)} + \frac{\sigma^2}{2}).</description>
+      <guid>/post/longitudinal-hurdle-models-3/</guid>
+      <description>
+
+
+&lt;p&gt;In the &lt;a href=&#34;/2019/10/23/longitudinal-hurdle-models-2&#34;&gt;last&lt;/a&gt; post on longitudinal hurdle models, I had just taken samples from the marginal mean&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\begin{align} g(\theta; x) &amp;amp; = E(Y \mid  \theta; x) \\
+&amp;amp; = \int   E(Y \mid u_{i&amp;#39;}, v_{i&amp;#39;}, \theta; x) f(u_{i&amp;#39;}, v_{i&amp;#39;} \mid \theta, \mathbf{y}) du_{i&amp;#39;}dv_{i&amp;#39;} \\ 
+&amp;amp;\approx  L^{-1}\sum_{l = 1}^{L}E(Y \mid u_{i&amp;#39;}^{(l)}, v_{i&amp;#39;}^{(l)}, \theta; x)\\
+&amp;amp;=  L^{-1}\sum_{l = 1}^{L}\left\lbrace 1 - \text{logit}^{-1} ( x^T \gamma + u_{i&amp;#39;}^{(l)}) \right\rbrace \exp(x^T\beta + v_{i&amp;#39;}^{(l)} + \frac{\sigma^2}{2}).\end{align}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;One of the issues with lognormal data is that it is highly skewed, so the mean can be very large. In a small sample, the sample mean can change a lot based on just 1 or 2 large observations. For this reason I would like to sample from other summary measures of &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt;.&lt;/p&gt;
+&lt;div id=&#34;samples-from-py-leq-k-mid-theta-x&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Samples from &lt;span class=&#34;math inline&#34;&gt;\(p(Y \leq k \mid \theta; x)\)&lt;/span&gt;&lt;/h3&gt;
+&lt;p&gt;This is quite similar to taking samples from the marginal mean.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\begin{align} r(\theta; x, k) &amp;amp; = p(Y &amp;lt; k \mid  \theta; x) \\
+&amp;amp; = \int   p(Y &amp;lt; k \mid u_{i&amp;#39;}, v_{i&amp;#39;}, \theta; x) f(u_{i&amp;#39;}, v_{i&amp;#39;} \mid \theta, \mathbf{y}) du_{i&amp;#39;}dv_{i&amp;#39;} \\ 
+&amp;amp;\approx  L^{-1}\sum_{l = 1}^{L}p(Y &amp;lt; k \mid u_{i&amp;#39;}^{(l)}, v_{i&amp;#39;}^{(l)}, \theta; x)\\
+&amp;amp;=  L^{-1}\sum_{l = 1}^{L}\ \left[ \pi^{(l)}(x) + \left\lbrace 1 - \pi^{(l)}(x)\right\rbrace \Phi \left\lbrace \frac{\log(k) - x^T\beta - v_{i&amp;#39;}^{(l)}}{\sigma} \right\rbrace \right].\end{align}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;where &lt;span class=&#34;math inline&#34;&gt;\(\pi^{(l)}(x):= \text{logit}^{-1} ( x^T \gamma + u_{i&amp;#39;}^{(l)})\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;Again, I don’t know of any functions for doing this, so I built my own.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;devtools::install_github(&amp;quot;dominicmagirr/hurlong&amp;quot;)
+library(brms)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;x &amp;lt;- data.frame(id = NA, time = &amp;quot;2&amp;quot;)
+hurlong::marg_pyk_q(k = 0.5,
+                    newdata = x, 
+                    nsims = 1000, 
+                    fit = fit_hurdle)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   id time      2.5%       50%    97.5%
+## 1 NA    2 0.4227881 0.5017131 0.578657&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;samples-from-textmediany-mid-theta-x&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Samples from &lt;span class=&#34;math inline&#34;&gt;\(\text{median}(Y \mid \theta; x)\)&lt;/span&gt;&lt;/h3&gt;
+&lt;p&gt;Finally, I am interested in samples from the marginal median.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\begin{align} s(\theta; x) &amp;amp; = \text{median}(Y  \mid  \theta; x) \\
+&amp;amp; = \int   \text{median}(Y \mid u_{i&amp;#39;}, v_{i&amp;#39;}, \theta; x) f(u_{i&amp;#39;}, v_{i&amp;#39;} \mid \theta, \mathbf{y}) du_{i&amp;#39;}dv_{i&amp;#39;} \\ 
+&amp;amp;\approx  L^{-1}\sum_{l = 1}^{L}\text{median}(Y\mid u_{i&amp;#39;}^{(l)}, v_{i&amp;#39;}^{(l)}, \theta; x) \end{align}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;To evaluate &lt;span class=&#34;math inline&#34;&gt;\(\text{median}(Y\mid u_{i&amp;#39;}^{(l)}, v_{i&amp;#39;}^{(l)}, \theta; x)\)&lt;/span&gt; at each &lt;span class=&#34;math inline&#34;&gt;\(l\)&lt;/span&gt;, I do a search for &lt;span class=&#34;math inline&#34;&gt;\(m^{(l)}\)&lt;/span&gt; such that&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[p(Y &amp;lt; m^{(l)} \mid u_{i&amp;#39;}^{(l)}, v_{i&amp;#39;}^{(l)}, \theta; x) = 0.5.\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Again, I’ve made a function that can do this (for this specific longitudinal hurdle model).&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;hurlong::marg_med(newdata = x, 
+                  nsims = 1000, 
+                  ks = exp(seq(log(0.01), 
+                               log(100), 
+                               length.out = 15)), # where to evaluate p(Y&amp;lt;k)
+                  fit = fit_hurdle)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   id time     2.5%       50%     97.5%
+## 1 NA    2 0.230754 0.4891672 0.8776129&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;predictions&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Predictions&lt;/h2&gt;
+&lt;p&gt;To round off this series on longitudinal hurdle models, I want to show how to simulate draws (and find quantiles) from the posterior predictive distribution for a new observation (&lt;span class=&#34;math inline&#34;&gt;\(\tilde{Y}\)&lt;/span&gt;). Firstly for a patient &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt; already in the data set, where we draw from&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[ f(\tilde{y} \mid \mathbf{y} ; x) = f(\tilde{y} \mid u_i, v_i, \theta, \mathbf{y} ; x)f(u_i, v_i, \theta \mid \mathbf{y}) \]&lt;/span&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(brms)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;predict(fit_hurdle,
+        newdata = data.frame(id = 1, time = &amp;quot;2&amp;quot;),
+        robust = TRUE)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##       Estimate Est.Error Q2.5    Q97.5
+## [1,] 0.2450599 0.3136891    0 2.083267&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;and, secondly, for a new patient &lt;span class=&#34;math inline&#34;&gt;\(i&amp;#39;\)&lt;/span&gt;, where we draw from&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[ f(\tilde{y} \mid \mathbf{y} ; x) = f(\tilde{y} \mid u_{i&amp;#39;}, v_{i&amp;#39;}, \theta, \mathbf{y} ; x)f(u_{i&amp;#39;}, v_{i&amp;#39;} \mid \theta,  \mathbf{y}) f(\theta \mid \mathbf{y}) \]&lt;/span&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;predict(fit_hurdle,
+        newdata = data.frame(id = NA, time = &amp;quot;2&amp;quot;),
+        allow_new_levels = TRUE,
+        sample_new_levels = &amp;quot;gaussian&amp;quot;,
+        robust = TRUE)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##       Estimate Est.Error Q2.5  Q97.5
+## [1,] 0.4485192 0.6649746    0 54.552&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</description>
     </item>
     
     <item>
       <title>Longitudinal hurdle models 2</title>
-      <link>/2019/10/23/longitudinal-hurdle-models-2/</link>
+      <link>/post/longitudinal-hurdle-models-2/</link>
       <pubDate>Wed, 23 Oct 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/2019/10/23/longitudinal-hurdle-models-2/</guid>
-      <description>In a previous post I fit a longitudinal hurdle model using the brms package.
-library(brms) summary(fit_hurdle) ## Family: hurdle_lognormal ## Links: mu = identity; sigma = identity; hu = logit ## Formula: y ~ time + (1 | q | id) ## hu ~ time + (1 | q | id) ## Data: dat (Number of observations: 800) ## Samples: 4 chains, each with iter = 4000; warmup = 2000; thin = 1; ## total post-warmup samples = 8000 ## ## Group-Level Effects: ## ~id (Number of levels: 100) ## Estimate Est.</description>
+      <guid>/post/longitudinal-hurdle-models-2/</guid>
+      <description>
+
+
+&lt;p&gt;In a &lt;a href=&#34;/2019/10/16/longitudinal-hurdle-models&#34;&gt;previous&lt;/a&gt; post I fit a longitudinal hurdle model using the &lt;code&gt;brms&lt;/code&gt; package.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(brms)
+summary(fit_hurdle)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##  Family: hurdle_lognormal 
+##   Links: mu = identity; sigma = identity; hu = logit 
+## Formula: y ~ time + (1 | q | id) 
+##          hu ~ time + (1 | q | id)
+##    Data: dat (Number of observations: 800) 
+## Samples: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;
+##          total post-warmup samples = 8000
+## 
+## Group-Level Effects: 
+## ~id (Number of levels: 100) 
+##                             Estimate Est.Error l-95% CI u-95% CI Rhat
+## sd(Intercept)                   1.96      0.16     1.67     2.30 1.00
+## sd(hu_Intercept)                2.46      0.30     1.94     3.10 1.00
+## cor(Intercept,hu_Intercept)    -0.90      0.04    -0.97    -0.80 1.00
+##                             Bulk_ESS Tail_ESS
+## sd(Intercept)                   1475     2467
+## sd(hu_Intercept)                3265     4837
+## cor(Intercept,hu_Intercept)     1949     3570
+## 
+## Population-Level Effects: 
+##              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept        0.07      0.21    -0.34     0.48 1.01      770     1487
+## hu_Intercept    -2.73      0.35    -3.44    -2.07 1.00     1484     3476
+## time2           -0.33      0.08    -0.48    -0.18 1.00    11586     5606
+## hu_time2         1.27      0.24     0.81     1.73 1.00    11668     5524
+## 
+## Family Specific Parameters: 
+##       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## sigma     0.94      0.03     0.88     1.00 1.00     8823     5708
+## 
+## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
+## is a crude measure of effective sample size, and Rhat is the potential 
+## scale reduction factor on split chains (at convergence, Rhat = 1).&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;I’d now like to do some inference on the model, combining its zero and non-zero parts.&lt;/p&gt;
+&lt;p&gt;The model is: for observation &lt;span class=&#34;math inline&#34;&gt;\(j\)&lt;/span&gt; from patient &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt;,&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[Y_{i,j} = Z_{i,j}Y^*_{i,j},\]&lt;/span&gt; &lt;span class=&#34;math display&#34;&gt;\[\text{logit}\left\lbrace P(Z_{i,j} = 0) \right\rbrace = x_{i,j}^T\gamma + u_i,\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\log (Y^*_{i,j})  \sim N(x_{i,j}^T\beta + v_i, ~\sigma^2), \]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\left( \begin{array}{c}  u_i \\ v_i \\ \end{array} \right) \sim N\left(\left( \begin{array}{c}  0 \\ 0 \\ \end{array} \right), \left( \begin{array}{c c} \sigma_u^2 &amp;amp; \rho \sigma_u\sigma_v \\ \rho \sigma_u \sigma_v &amp;amp; \sigma_v ^ 2\end{array}\right)\right),\]&lt;/span&gt; where &lt;span class=&#34;math inline&#34;&gt;\(x_{i,j}^T = (1, t_{i,j})\)&lt;/span&gt;. Also let &lt;span class=&#34;math inline&#34;&gt;\(\theta = (\gamma, \beta, \sigma, \sigma_u, \sigma_v, \rho)\)&lt;/span&gt;.&lt;/p&gt;
+&lt;div id=&#34;how-to-use-fitted.brmsfit&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;How to use &lt;code&gt;fitted.brmsfit&lt;/code&gt;&lt;/h3&gt;
+&lt;p&gt;Having obtained posterior samples from &lt;span class=&#34;math inline&#34;&gt;\((\theta, u_1,\ldots,u_n,v_1,\ldots,v_n)\)&lt;/span&gt;, we &lt;em&gt;might&lt;/em&gt; want to look at samples from:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\begin{align} h(u_i, v_i, \theta; x) &amp;amp; = E(Y \mid u_i, v_i, \theta; x) \\ &amp;amp;= \left\lbrace 1 - \text{logit}^{-1} ( x^T \gamma + u_i) \right\rbrace \exp(x^T\beta + v_i + \frac{\sigma^2}{2}).\end{align}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;This is some kind of patient-specific expectation of &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt;, conditional on the random effects. If patient &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt; is already in the model, then we can just take samples directly from the posterior. This can be achieved with the &lt;code&gt;fitted&lt;/code&gt; method:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;fitted(fit_hurdle, 
+       newdata = data.frame(id = 1, time = &amp;quot;2&amp;quot;), 
+       robust = TRUE)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##       Estimate Est.Error      Q2.5     Q97.5
+## [1,] 0.4034682  0.150417 0.1796645 0.8248473&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;will give the median and (2.5, 97.5) quantiles of &lt;span class=&#34;math inline&#34;&gt;\(h(u_1, v_1, \theta ; x)\)&lt;/span&gt; at timepoint “2”.&lt;/p&gt;
+&lt;p&gt;Alternatively, we &lt;em&gt;might&lt;/em&gt; be more interested in &lt;span class=&#34;math inline&#34;&gt;\(h(0, 0, \theta ; x)\)&lt;/span&gt;, which in some sense is the patient-specific expectation of &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt; for an “average” patient with random effects fixed at zero. We can get this by setting &lt;code&gt;re_formula = NA&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;fitted(fit_hurdle, 
+       newdata = data.frame(time = &amp;quot;2&amp;quot;), 
+       robust = TRUE, 
+       re_formula = NA)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##       Estimate Est.Error      Q2.5    Q97.5
+## [1,] 0.9615294 0.2401395 0.5689127 1.569304&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Or, we &lt;em&gt;might&lt;/em&gt; be more interested in &lt;span class=&#34;math inline&#34;&gt;\(h(u_{i&amp;#39;}, v_{i&amp;#39;}, \theta ; x)\)&lt;/span&gt; for a new patient &lt;span class=&#34;math inline&#34;&gt;\(i&amp;#39;\)&lt;/span&gt;. Now we need to generate samples from the posterior distribution&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[f(u_{i&amp;#39;}, v_{i&amp;#39;}, \theta \mid \mathbf{y}) = f(u_{i&amp;#39;}, v_{i&amp;#39;} \mid \theta, \mathbf{y}) f(\theta \mid \mathbf{y})\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;we can do this by going through our posterior samples &lt;span class=&#34;math inline&#34;&gt;\(\theta^{(k)}\)&lt;/span&gt; for &lt;span class=&#34;math inline&#34;&gt;\(k = 1,\ldots,K\)&lt;/span&gt; and each time simulating&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\left( \begin{array}{c}  u_{i&amp;#39;}^{(k)} \\ v_{i&amp;#39;}^{(k)} \\ \end{array} \right) \sim N\left(\left( \begin{array}{c}  0 \\ 0 \\ \end{array} \right), \left( \begin{array}{c c} (\sigma^{(k)}_u)^2 &amp;amp; \rho \sigma^{(k)}_u\sigma^{(k)}_v \\ \rho \sigma^{(k)}_u \sigma^{(k)}_v &amp;amp; (\sigma^{(k)}_v)^2\end{array}\right)\right).\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;The way I expected this to be done is&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;fitted(fit_hurdle, newdata = data.frame(id = NA, time = &amp;quot;2&amp;quot;), 
+       allow_new_levels = TRUE,
+       sample_new_levels = &amp;quot;gaussian&amp;quot;,
+       robust = TRUE)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##      Estimate Est.Error       Q2.5    Q97.5
+## [1,] 0.949522  1.365514 0.00130835 60.70721&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;and this is indeed what’s happening, as can be seen by going through the steps manually&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ps &amp;lt;- posterior_samples(fit_hurdle)
+
+sigma_error &amp;lt;- ps[,&amp;quot;sigma&amp;quot;]
+sigma_u &amp;lt;- ps[,&amp;quot;sd_id__hu_Intercept&amp;quot;]
+sigma_v &amp;lt;- ps[,&amp;quot;sd_id__Intercept&amp;quot;]
+rho &amp;lt;- ps[,&amp;quot;cor_id__Intercept__hu_Intercept&amp;quot;]
+
+n_mcmc &amp;lt;- length(rho)
+
+x &amp;lt;- data.frame(id = NA, time = &amp;quot;2&amp;quot;)
+
+### simulate u_i&amp;#39; and v_i&amp;#39; 
+u &amp;lt;- rnorm(n_mcmc, sd = sigma_u)
+### include correlation 
+v &amp;lt;- rnorm(n_mcmc, 
+           mean = u * sigma_v / sigma_u * rho,
+           sd = sqrt((1 - rho^2) * sigma_v ^ 2))
+
+
+### extract draws from xi = x*gamma
+xi &amp;lt;- qlogis(fitted(fit_hurdle, 
+                    newdata = x, 
+                    re_formula = NA, 
+                    dpar = &amp;quot;hu&amp;quot;,
+                    summary = FALSE))
+
+### extract draws from eta = x*beta
+eta &amp;lt;- fitted(fit_hurdle, 
+              newdata = x, 
+              re_formula = NA, 
+              dpar = &amp;quot;mu&amp;quot;,
+              summary = FALSE)
+
+ey &amp;lt;- (1 - plogis(xi + u)) * exp(eta + v + sigma_error ^ 2 / 2)
+
+round(quantile(ey, probs = c(0.025, 0.5, 0.975)), 3)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   2.5%    50%  97.5% 
+##  0.001  0.938 58.035&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;unconditional-expectation&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Unconditional expectation&lt;/h3&gt;
+&lt;p&gt;Instead of a patient-specific expectation, conditional on random effects, we might be more interested in targeting an overall expectation (for a new patient) where we integrate out the random effects. In other words, we want to take samples from&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\begin{align} g(\theta; x) &amp;amp; = E(Y \mid  \theta; x) \\
+&amp;amp; = \int   E(Y \mid u_{i&amp;#39;}, v_{i&amp;#39;}, \theta; x) f(u_{i&amp;#39;}, v_{i&amp;#39;} \mid \theta, \mathbf{y}) du_{i&amp;#39;}dv_{i&amp;#39;} \\ 
+&amp;amp;\approx  L^{-1}\sum_{l = 1}^{L}E(Y \mid u_{i&amp;#39;}^{(l)}, v_{i&amp;#39;}^{(l)}, \theta; x)\\
+&amp;amp;=  L^{-1}\sum_{l = 1}^{L}\left\lbrace 1 - \text{logit}^{-1} ( x^T \gamma + u_{i&amp;#39;}^{(l)}) \right\rbrace \exp(x^T\beta + v_{i&amp;#39;}^{(l)} + \frac{\sigma^2}{2}).\end{align}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;That is, I take &lt;span class=&#34;math inline&#34;&gt;\(g(\theta^{(k)}; x)\)&lt;/span&gt; for &lt;span class=&#34;math inline&#34;&gt;\(k = 1,\ldots,K\)&lt;/span&gt;. At each &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt;, for &lt;span class=&#34;math inline&#34;&gt;\(l= 1 \ldots,L\)&lt;/span&gt;, I take indpendent draws&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\left( \begin{array}{c}  u_{i&amp;#39;}^{(l)} \\ v_{i&amp;#39;}^{(l)} \\ \end{array} \right) \sim N\left(\left( \begin{array}{c}  0 \\ 0 \\ \end{array} \right), \left( \begin{array}{c c} (\sigma^{(k)}_u)^2 &amp;amp; \rho \sigma^{(k)}_u\sigma^{(k)}_v \\ \rho \sigma^{(k)}_u \sigma^{(k)}_v &amp;amp; (\sigma^{(k)}_v)^2\end{array}\right)\right).\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;to perform the inner Monte Carlo integration (probably not the best method for this 2-d example). I don’t think it’s possible to do this with &lt;code&gt;brms&lt;/code&gt; so I’ve written my own code (which only works for this specific model).&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;devtools::install_github(&amp;quot;dominicmagirr/hurlong&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;hurlong::marg_mean_q(newdata = x, 
+                     nsims = 1000, 
+                     fit = fit_hurdle)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   id time     2.5%      50%    97.5%
+## 1 NA    2 3.896907 7.451117 18.86412&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</description>
     </item>
     
     <item>
       <title>Longitudinal hurdle models</title>
-      <link>/2019/10/16/longitudinal-hurdle-models/</link>
+      <link>/post/longitudinal-hurdle-models/</link>
       <pubDate>Wed, 16 Oct 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/2019/10/16/longitudinal-hurdle-models/</guid>
-      <description>Data Recently, I have been modelling data that is longitudinal, contains excess zeros, and where the non-zero data is right-skewed and measured on a continuous scale, rather than being count data.
-I’ll simulate a semi-realistic example data set from a lognormal hurdle model. The “random effects” for the pr(zero) and non-zero parts of the model are negatively correlated.
-set.seed(180) ## 100 patients id &amp;lt;- 1:100 ## 2 timepoints time &amp;lt;- c(&amp;quot;1&amp;quot;, &amp;quot;2&amp;quot;) ## random effects u &amp;lt;- rnorm(100, sd = 2) v &amp;lt;- rnorm(100, mean = -0.</description>
+      <guid>/post/longitudinal-hurdle-models/</guid>
+      <description>
+
+
+&lt;div id=&#34;data&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Data&lt;/h2&gt;
+&lt;p&gt;Recently, I have been modelling data that is longitudinal, contains excess zeros, and where the non-zero data is right-skewed and measured on a continuous scale, rather than being count data.&lt;/p&gt;
+&lt;p&gt;I’ll simulate a semi-realistic example data set from a lognormal hurdle model. The “random effects” for the pr(zero) and non-zero parts of the model are negatively correlated.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;set.seed(180)
+
+## 100 patients
+id &amp;lt;- 1:100
+
+## 2 timepoints
+time &amp;lt;- c(&amp;quot;1&amp;quot;, &amp;quot;2&amp;quot;)
+
+## random effects
+u &amp;lt;- rnorm(100, sd = 2)
+v &amp;lt;- rnorm(100, mean = -0.95 * u, sd = sqrt((1 - 0.95^2) * 4)) # p(zero) is negatively correlated with Y*
+
+## non-zero data (4 obs per id, at two timepoints)
+ystar1 &amp;lt;- exp(rnorm(400, mean = u, sd = 1))
+ystar2 &amp;lt;- exp(rnorm(400, mean = -0.5 + u, sd = 1))
+
+## z = 1 if &amp;quot;cross hurdle&amp;quot;, i.e. if not zero
+z1 &amp;lt;- rbinom(400, size = 1, prob = 1 - plogis(-2 + v)) # p(cross hurdle) = 1 - p(zero)
+z2 &amp;lt;- rbinom(400, size = 1, prob = 1 - plogis(-1 + v))
+
+dat &amp;lt;- data.frame(y = c(z1 * ystar1, z2 * ystar2),
+                  time = rep(time, each = 400),
+                  id = rep(id, 8))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;In this data set there are 100 patients and two timepoints. For each patient, at each timepoint, I have simulated 4 independent observations (I’ve only done this to make model convergence a bit easier). The important point is that the data is correlated within patient, and also z (hurdle part) and ystar (non-zero part) are correlated, so that patients who start with a smaller (non-zero) y at the first timepoint are more likely to have y = 0 at the second timepoint. This can be clearly seen in the plot below.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse)
+ggplot(data = dat,
+                mapping = aes(x = time, y = y, group = id)) +
+  geom_point() +
+  geom_line() +
+  scale_y_log10()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-10-16-longitudinal-hurdle-models_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;fit-the-model&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Fit the model&lt;/h2&gt;
+&lt;p&gt;To fit the model I’m using the excellent &lt;code&gt;brms&lt;/code&gt; package (&lt;a href=&#34;https://github.com/paul-buerkner/brms&#34; class=&#34;uri&#34;&gt;https://github.com/paul-buerkner/brms&lt;/a&gt;)&lt;/p&gt;
+&lt;p&gt;Bürkner P. C. (2018). Advanced Bayesian Multilevel Modeling with the R Package brms. The R Journal. 10(1), 395-411. doi.org/10.32614/RJ-2018-017&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(brms)
+
+fit_hurdle &amp;lt;- brm(bf(y ~  time + (1 | q | id),
+                     hu ~ time + (1 | q | id)),
+                  data = dat,
+                  iter = 4000,
+                  family = hurdle_lognormal(),
+                  refresh = 0)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;summary(fit_hurdle)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##  Family: hurdle_lognormal 
+##   Links: mu = identity; sigma = identity; hu = logit 
+## Formula: y ~ time + (1 | q | id) 
+##          hu ~ time + (1 | q | id)
+##    Data: dat (Number of observations: 800) 
+## Samples: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;
+##          total post-warmup samples = 8000
+## 
+## Group-Level Effects: 
+## ~id (Number of levels: 100) 
+##                             Estimate Est.Error l-95% CI u-95% CI Rhat
+## sd(Intercept)                   1.96      0.16     1.69     2.29 1.00
+## sd(hu_Intercept)                2.47      0.30     1.93     3.11 1.00
+## cor(Intercept,hu_Intercept)    -0.90      0.04    -0.97    -0.81 1.00
+##                             Bulk_ESS Tail_ESS
+## sd(Intercept)                   1452     2688
+## sd(hu_Intercept)                2979     5484
+## cor(Intercept,hu_Intercept)     2539     4394
+## 
+## Population-Level Effects: 
+##              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept        0.07      0.20    -0.34     0.45 1.00      885     1970
+## hu_Intercept    -2.72      0.34    -3.43    -2.07 1.00     1662     3089
+## time2           -0.33      0.08    -0.49    -0.18 1.00    14798     5985
+## hu_time2         1.26      0.24     0.80     1.73 1.00    12452     5627
+## 
+## Family Specific Parameters: 
+##       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## sigma     0.94      0.03     0.88     1.00 1.00    11293     6175
+## 
+## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
+## is a crude measure of effective sample size, and Rhat is the potential 
+## scale reduction factor on split chains (at convergence, Rhat = 1).&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;inference&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Inference&lt;/h2&gt;
+&lt;p&gt;From the output I can see that I have more-or-less recovered the parameters from my model. In practice, I could use this to make inference on the two parts of the model separately. In &lt;a href=&#34;/2019/10/23/longitudinal-hurdle-models-2&#34;&gt;future&lt;/a&gt; posts I’ll discuss how to make inference/predictions when combining the two parts of the model.&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Writing technical content in Academic</title>
+      <link>/post/writing-technical-content/</link>
+      <pubDate>Fri, 12 Jul 2019 00:00:00 +0000</pubDate>
+      <guid>/post/writing-technical-content/</guid>
+      <description>&lt;p&gt;Academic is designed to give technical content creators a seamless experience. You can focus on the content and Academic handles the rest.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Highlight your code snippets, take notes on math classes, and draw diagrams from textual representation.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;On this page, you&#39;ll find some examples of the types of technical content that can be rendered with Academic.&lt;/p&gt;
+
+&lt;h2 id=&#34;examples&#34;&gt;Examples&lt;/h2&gt;
+
+&lt;h3 id=&#34;code&#34;&gt;Code&lt;/h3&gt;
+
+&lt;p&gt;Academic supports a Markdown extension for highlighting code syntax. You can enable this feature by toggling the &lt;code&gt;highlight&lt;/code&gt; option in your &lt;code&gt;config/_default/params.toml&lt;/code&gt; file.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;```python
+import pandas as pd
+data = pd.read_csv(&amp;quot;data.csv&amp;quot;)
+data.head()
+```
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;renders as&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import pandas as pd
+data = pd.read_csv(&amp;quot;data.csv&amp;quot;)
+data.head()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;math&#34;&gt;Math&lt;/h3&gt;
+
+&lt;p&gt;Academic supports a Markdown extension for $\LaTeX$ math. You can enable this feature by toggling the &lt;code&gt;math&lt;/code&gt; option in your &lt;code&gt;config/_default/params.toml&lt;/code&gt; file and adding &lt;code&gt;markup: mmark&lt;/code&gt; to your page front matter.&lt;/p&gt;
+
+&lt;p&gt;To render &lt;em&gt;inline&lt;/em&gt; or &lt;em&gt;block&lt;/em&gt; math, wrap your LaTeX math with &lt;code&gt;$$...$$&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Example &lt;strong&gt;math block&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-tex&#34;&gt;$$\gamma_{n} = \frac{ 
+\left | \left (\mathbf x_{n} - \mathbf x_{n-1} \right )^T 
+\left [\nabla F (\mathbf x_{n}) - \nabla F (\mathbf x_{n-1}) \right ] \right |}
+{\left \|\nabla F(\mathbf{x}_{n}) - \nabla F(\mathbf{x}_{n-1}) \right \|^2}$$
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;renders as&lt;/p&gt;
+
+&lt;p&gt;&lt;span  class=&#34;math&#34;&gt;\[\gamma_{n} = \frac{ \left | \left (\mathbf x_{n} - \mathbf x_{n-1} \right )^T \left [\nabla F (\mathbf x_{n}) - \nabla F (\mathbf x_{n-1}) \right ] \right |}{\left \|\nabla F(\mathbf{x}_{n}) - \nabla F(\mathbf{x}_{n-1}) \right \|^2}\]&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;Example &lt;strong&gt;inline math&lt;/strong&gt; &lt;code&gt;$$\left \|\nabla F(\mathbf{x}_{n}) - \nabla F(\mathbf{x}_{n-1}) \right \|^2$$&lt;/code&gt; renders as &lt;span  class=&#34;math&#34;&gt;\(\left \|\nabla F(\mathbf{x}_{n}) - \nabla F(\mathbf{x}_{n-1}) \right \|^2\)&lt;/span&gt; .&lt;/p&gt;
+
+&lt;p&gt;Example &lt;strong&gt;multi-line math&lt;/strong&gt; using the &lt;code&gt;\\&lt;/code&gt; math linebreak:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-tex&#34;&gt;$$f(k;p_0^*) = \begin{cases} p_0^* &amp;amp; \text{if }k=1, \\
+1-p_0^* &amp;amp; \text {if }k=0.\end{cases}$$
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;renders as&lt;/p&gt;
+
+&lt;p&gt;&lt;span  class=&#34;math&#34;&gt;\[f(k;p_0^*) = \begin{cases} p_0^* &amp; \text{if }k=1, \\
+1-p_0^* &amp; \text {if }k=0.\end{cases}\]&lt;/span&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;diagrams&#34;&gt;Diagrams&lt;/h3&gt;
+
+&lt;p&gt;Academic supports a Markdown extension for diagrams. You can enable this feature by toggling the &lt;code&gt;diagram&lt;/code&gt; option in your &lt;code&gt;config/_default/params.toml&lt;/code&gt; file or by adding &lt;code&gt;diagram: true&lt;/code&gt; to your page front matter.&lt;/p&gt;
+
+&lt;p&gt;An example &lt;strong&gt;flowchart&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;```mermaid
+graph TD;
+  A--&amp;gt;B;
+  A--&amp;gt;C;
+  B--&amp;gt;D;
+  C--&amp;gt;D;
+```
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;renders as&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-mermaid&#34;&gt;graph TD;
+  A--&amp;gt;B;
+  A--&amp;gt;C;
+  B--&amp;gt;D;
+  C--&amp;gt;D;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;An example &lt;strong&gt;sequence diagram&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;```mermaid
+sequenceDiagram
+  participant Alice
+  participant Bob
+  Alice-&amp;gt;John: Hello John, how are you?
+  loop Healthcheck
+      John-&amp;gt;John: Fight against hypochondria
+  end
+  Note right of John: Rational thoughts &amp;lt;br/&amp;gt;prevail...
+  John--&amp;gt;Alice: Great!
+  John-&amp;gt;Bob: How about you?
+  Bob--&amp;gt;John: Jolly good!
+```
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;renders as&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-mermaid&#34;&gt;sequenceDiagram
+  participant Alice
+  participant Bob
+  Alice-&amp;gt;John: Hello John, how are you?
+  loop Healthcheck
+      John-&amp;gt;John: Fight against hypochondria
+  end
+  Note right of John: Rational thoughts &amp;lt;br/&amp;gt;prevail...
+  John--&amp;gt;Alice: Great!
+  John-&amp;gt;Bob: How about you?
+  Bob--&amp;gt;John: Jolly good!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;An example &lt;strong&gt;Gantt diagram&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;```mermaid
+gantt
+  dateFormat  YYYY-MM-DD
+  section Section
+  A task           :a1, 2014-01-01, 30d
+  Another task     :after a1  , 20d
+  section Another
+  Task in sec      :2014-01-12  , 12d
+  another task      : 24d
+```
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;renders as&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-mermaid&#34;&gt;gantt
+  dateFormat  YYYY-MM-DD
+  section Section
+  A task           :a1, 2014-01-01, 30d
+  Another task     :after a1  , 20d
+  section Another
+  Task in sec      :2014-01-12  , 12d
+  another task      : 24d
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;todo-lists&#34;&gt;Todo lists&lt;/h3&gt;
+
+&lt;p&gt;You can even write your todo lists in Academic too:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-markdown&#34;&gt;- [x] Write math example
+- [x] Write diagram example
+- [ ] Do something else
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;renders as&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;input type=&#34;checkbox&#34; checked=&#34;&#34; disabled=&#34;&#34;&gt; Write math example&lt;/li&gt;
+&lt;li&gt;&lt;input type=&#34;checkbox&#34; checked=&#34;&#34; disabled=&#34;&#34;&gt; Write diagram example&lt;/li&gt;
+&lt;li&gt;&lt;input type=&#34;checkbox&#34; disabled=&#34;&#34;&gt; Do something else&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;tables&#34;&gt;Tables&lt;/h3&gt;
+
+&lt;p&gt;Represent your data in tables:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-markdown&#34;&gt;| First Header  | Second Header |
+| ------------- | ------------- |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;renders as&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;First Header&lt;/th&gt;
+&lt;th&gt;Second Header&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Content Cell&lt;/td&gt;
+&lt;td&gt;Content Cell&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;Content Cell&lt;/td&gt;
+&lt;td&gt;Content Cell&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&#34;asides&#34;&gt;Asides&lt;/h3&gt;
+
+&lt;p&gt;Academic supports a Markdown extension for asides, also referred to as &lt;em&gt;notices&lt;/em&gt; or &lt;em&gt;hints&lt;/em&gt;. By prefixing a paragraph with &lt;code&gt;A&amp;gt;&lt;/code&gt;, it will render as an aside. You can enable this feature by adding &lt;code&gt;markup: mmark&lt;/code&gt; to your page front matter, or alternatively using the &lt;a href=&#34;https://sourcethemes.com/academic/docs/writing-markdown-latex/#alerts&#34;&gt;&lt;em&gt;Alert&lt;/em&gt; shortcode&lt;/a&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-markdown&#34;&gt;A&amp;gt; A Markdown aside is useful for displaying notices, hints, or definitions to your readers.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;renders as&lt;/p&gt;
+
+&lt;aside&gt;
+&lt;p&gt;A Markdown aside is useful for displaying notices, hints, or definitions to your readers.&lt;/p&gt;
+&lt;/aside&gt;
+
+&lt;h3 id=&#34;did-you-find-this-page-helpful-consider-sharing-it-&#34;&gt;Did you find this page helpful? Consider sharing it 🙌&lt;/h3&gt;
+</description>
     </item>
     
     <item>
       <title>About</title>
       <link>/about/</link>
       <pubDate>Mon, 03 Jun 2019 00:00:00 +0000</pubDate>
-      
       <guid>/about/</guid>
-      <description>I&amp;rsquo;m a medical statistician. Quite simply, I&amp;rsquo;m interested in clinical trial design, analysis and interpretation.
-When I was around 16 or 17, I planned to study medicine. However, after doing some work experience and realizing how difficult that path would be, I decided to do a maths degree. Towards the end of my studies, I was fortunate to see a careers talk on Medical Statistics that led me to Lancaster University to do their MSc course &amp;ndash; a fantastic year, and I carried on to do a PhD.</description>
+      <description>&lt;p&gt;I&amp;rsquo;m a medical statistician. Quite simply, I&amp;rsquo;m interested in clinical trial design, analysis and interpretation.&lt;/p&gt;
+
+&lt;p&gt;When I was around 16 or 17, I planned to study medicine. However, after doing some work experience and realizing how difficult that path would be, I decided to do a maths degree. Towards the end of my studies, I was fortunate to see a careers talk on Medical Statistics that led me to Lancaster University to do their MSc course &amp;ndash; a fantastic year, and I carried on to do a PhD. My research was on:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;group sequential trials&lt;/li&gt;
+&lt;li&gt;multiple hypothesis testing&lt;/li&gt;
+&lt;li&gt;adaptive designs&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://scholar.google.co.uk/citations?user=obri2xMAAAAJ&amp;hl=en&#34;&gt;Google scholar&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;I stayed in Lancaster a little longer, and also had a wonderful year postdoccing at the Medical University of Vienna. This time allowed me to publish some more papers, teach, and start my statistical consultancy career.&lt;/p&gt;
+
+&lt;p&gt;I came back to the UK in 2015 to work at AstraZeneca. For two years, I worked in the early-phase oncology group, as part of clinical teams, contributing to the design of trials, and overseeing the statistical analyses conducted by CRO partners. For a further year, I worked as an internal statistical consultant as part of AstraZeneca&amp;rsquo;s Statistical Innovation team. This was an intense, but rewarding, experience that allowed me to work on trials in many different therapy areas. A highlight was working on &lt;a href=&#34;https://onlinelibrary.wiley.com/doi/abs/10.1002/sim.8186&#34;&gt;new methods for dealing with non-proportional hazards in immuno-oncology&lt;/a&gt;. (Preprint &lt;a href=&#34;https://arxiv.org/pdf/1807.11097.pdf&#34; target=&#34;_blank&#34;&gt;here&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;Since January 2019 I have been working at a start-up company &lt;a href=&#34;https://www.ccg.ai&#34; target=&#34;_blank&#34;&gt;Cambridge Cancer Genomics&lt;/a&gt;, where I have become very interested in statistical modelling of longitudinal circulating-tumour DNA measurements.&lt;/p&gt;
+
+&lt;p&gt;I built this website with the &lt;a href=&#34;https://github.com/rstudio/blogdown&#34; target=&#34;_blank&#34;&gt;&lt;strong&gt;blogdown&lt;/strong&gt;&lt;/a&gt; package.&lt;/p&gt;
+</description>
     </item>
     
     <item>
       <title>How to calculate the log-rank statistic</title>
-      <link>/2019/06/03/log-rank-test/</link>
+      <link>/post/log-rank-test/</link>
       <pubDate>Mon, 03 Jun 2019 00:00:00 +0000</pubDate>
+      <guid>/post/log-rank-test/</guid>
+      <description>
+
+
+&lt;p&gt;Suppose we have the following data.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;df &amp;lt;- dplyr::tibble(patient_id = as.character(1:12), 
+                    treatment = rep(c(&amp;quot;C&amp;quot;, &amp;quot;E&amp;quot;), each = 6),
+                    survival_time = survival::Surv(time = c(2,6,8,11,17,24,7,9,13,22,23,25),
+                                                   event = c(1,1,1,1,1,0,1,1,1,0,0,0)))
+
+knitr::kable(df)&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;patient_id&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;treatment&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;survival_time&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;C&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;C&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;6&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;3&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;C&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;8&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;4&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;C&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;11&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;5&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;C&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;17&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;6&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;C&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;24+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;7&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;E&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;7&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;8&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;E&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;9&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;9&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;E&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;13&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;10&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;E&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;22+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;11&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;E&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;23+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;12&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;E&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;25+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Let’s arrange the data in increasing order of survival time.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;df_ordered &amp;lt;- dplyr::arrange(df, survival_time[,&amp;quot;time&amp;quot;])
+knitr::kable(df_ordered)&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;patient_id&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;treatment&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;survival_time&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;C&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;C&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;6&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;7&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;E&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;7&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;3&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;C&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;8&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;8&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;E&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;9&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;4&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;C&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;11&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;9&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;E&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;13&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;5&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;C&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;17&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;10&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;E&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;22+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;11&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;E&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;23+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;6&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;C&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;24+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;12&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;E&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;25+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;div id=&#34;method-1-scores&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Method 1: scores&lt;/h1&gt;
+&lt;p&gt;The first step is to estimate the survival probability from the pooled data using the Nelson-Aalen estimator. Then, to get the log-rank scores, we add 1 to the logarithm of the pooled survival estimate for all observed events. For censored events we do not add 1.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;pooled_fit &amp;lt;- survival::survfit(survival_time ~ 1, data = df_ordered)
+df_logrank &amp;lt;- dplyr::mutate(df_ordered, 
+                            pooled_s = exp(-cumsum(pooled_fit$n.event / pooled_fit$n.risk)),
+                            logrank_score = log(pooled_s) + survival_time[,&amp;quot;status&amp;quot;])
+
+knitr::kable(df_logrank, digits = 3)&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;patient_id&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;treatment&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;survival_time&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;pooled_s&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;logrank_score&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;C&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.920&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.917&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;2&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;C&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;6&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.840&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.826&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;7&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;E&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;7&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.760&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.726&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;3&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;C&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;8&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.680&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.615&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;8&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;E&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;9&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.600&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.490&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;4&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;C&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;11&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.520&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.347&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;9&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;E&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;13&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.440&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.180&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;5&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;C&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;17&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.361&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.020&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;10&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;E&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;22+&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.361&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-1.020&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;11&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;E&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;23+&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.361&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-1.020&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;6&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;C&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;24+&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.361&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-1.020&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;12&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;E&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;25+&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.361&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-1.020&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;To calculate the logrank score statistic we add up all the scores on the control arm.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;logrank_score &amp;lt;- dplyr::summarise(dplyr::group_by(df_logrank, treatment), sum(logrank_score))
+logrank_score&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 2 x 2
+##   treatment `sum(logrank_score)`
+##   &amp;lt;chr&amp;gt;                    &amp;lt;dbl&amp;gt;
+## 1 C                         1.66
+## 2 E                        -1.66&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;method-2-observed---expected&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Method 2: observed - expected&lt;/h1&gt;
+&lt;p&gt;The score statistic is equivalent to the sum of “observed” - “expected” events at each event time. This is implemented in the survival package.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;logrank_fit &amp;lt;- survival::survdiff(survival_time ~ treatment, data = df)
+rbind(logrank_fit$n, logrank_fit$obs - logrank_fit$exp)[2,]&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## treatment=C treatment=E 
+##    1.664105   -1.664105&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>An example preprint / working paper</title>
+      <link>/publication/preprint/</link>
+      <pubDate>Sun, 07 Apr 2019 00:00:00 +0000</pubDate>
+      <guid>/publication/preprint/</guid>
+      <description>&lt;div class=&#34;alert alert-note&#34;&gt;
+  &lt;div&gt;
+    Click the &lt;em&gt;Slides&lt;/em&gt; button above to demo Academic&amp;rsquo;s Markdown slides feature.
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Supplementary notes can be added here, including &lt;a href=&#34;https://sourcethemes.com/academic/docs/writing-markdown-latex/&#34; target=&#34;_blank&#34;&gt;code and math&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Display Jupyter Notebooks with Academic</title>
+      <link>/post/jupyter/</link>
+      <pubDate>Tue, 05 Feb 2019 00:00:00 +0000</pubDate>
+      <guid>/post/jupyter/</guid>
+      <description>
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from IPython.core.display import Image
+Image(&#39;https://www.python.org/static/community_logos/python-logo-master-v3-TM-flattened.png&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&#34;./index_1_0.png&#34; alt=&#34;png&#34; /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;print(&amp;quot;Welcome to Academic!&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;Welcome to Academic!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;install-python-and-jupyterlab&#34;&gt;Install Python and JupyterLab&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.anaconda.com/distribution/#download-section&#34; target=&#34;_blank&#34;&gt;Install Anaconda&lt;/a&gt; which includes Python 3 and JupyterLab.&lt;/p&gt;
+
+&lt;p&gt;Alternatively, install JupyterLab with &lt;code&gt;pip3 install jupyterlab&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;create-or-upload-a-jupyter-notebook&#34;&gt;Create or upload a Jupyter notebook&lt;/h2&gt;
+
+&lt;p&gt;Run the following commands in your Terminal, substituting &lt;code&gt;&amp;lt;MY-WEBSITE-FOLDER&amp;gt;&lt;/code&gt; and &lt;code&gt;&amp;lt;SHORT-POST-TITLE&amp;gt;&lt;/code&gt; with the file path to your Academic website folder and a short title for your blog post (use hyphens instead of spaces), respectively:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;mkdir -p &amp;lt;MY-WEBSITE-FOLDER&amp;gt;/content/post/&amp;lt;SHORT-POST-TITLE&amp;gt;/
+cd &amp;lt;MY-WEBSITE-FOLDER&amp;gt;/content/post/&amp;lt;SHORT-POST-TITLE&amp;gt;/
+jupyter lab index.ipynb
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The &lt;code&gt;jupyter&lt;/code&gt; command above will launch the JupyterLab editor, allowing us to add Academic metadata and write the content.&lt;/p&gt;
+
+&lt;h2 id=&#34;edit-your-post-metadata&#34;&gt;Edit your post metadata&lt;/h2&gt;
+
+&lt;p&gt;The first cell of your Jupter notebook will contain your post metadata (&lt;a href=&#34;https://sourcethemes.com/academic/docs/front-matter/&#34; target=&#34;_blank&#34;&gt;front matter&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;In Jupter, choose &lt;em&gt;Markdown&lt;/em&gt; as the type of the first cell and wrap your Academic metadata in three dashes, indicating that it is YAML front matter:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;---
+title: My post&#39;s title
+date: 2019-09-01
+
+# Put any other Academic metadata here...
+---
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Edit the metadata of your post, using the &lt;a href=&#34;https://sourcethemes.com/academic/docs/managing-content&#34; target=&#34;_blank&#34;&gt;documentation&lt;/a&gt; as a guide to the available options.&lt;/p&gt;
+
+&lt;p&gt;To set a &lt;a href=&#34;https://sourcethemes.com/academic/docs/managing-content/#featured-image&#34; target=&#34;_blank&#34;&gt;featured image&lt;/a&gt;, place an image named &lt;code&gt;featured&lt;/code&gt; into your post&amp;rsquo;s folder.&lt;/p&gt;
+
+&lt;p&gt;For other tips, such as using math, see the guide on &lt;a href=&#34;https://sourcethemes.com/academic/docs/writing-markdown-latex/&#34; target=&#34;_blank&#34;&gt;writing content with Academic&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;convert-notebook-to-markdown&#34;&gt;Convert notebook to Markdown&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;jupyter nbconvert index.ipynb --to markdown --NbConvertApp.output_files_dir=.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;example&#34;&gt;Example&lt;/h2&gt;
+
+&lt;p&gt;This post was created with Jupyter. The orginal files can be found at &lt;a href=&#34;https://github.com/gcushen/hugo-academic/tree/master/exampleSite/content/post/jupyter&#34; target=&#34;_blank&#34;&gt;https://github.com/gcushen/hugo-academic/tree/master/exampleSite/content/post/jupyter&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Slides</title>
+      <link>/slides/example/</link>
+      <pubDate>Tue, 05 Feb 2019 00:00:00 +0000</pubDate>
+      <guid>/slides/example/</guid>
+      <description>
+
+&lt;h1 id=&#34;welcome-to-slides&#34;&gt;Welcome to Slides&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://sourcethemes.com/academic/&#34; target=&#34;_blank&#34;&gt;Academic&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;features&#34;&gt;Features&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Efficiently write slides in Markdown&lt;/li&gt;
+&lt;li&gt;3-in-1: Create, Present, and Publish your slides&lt;/li&gt;
+&lt;li&gt;Supports speaker notes&lt;/li&gt;
+&lt;li&gt;Mobile friendly slides&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;controls&#34;&gt;Controls&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Next: &lt;code&gt;Right Arrow&lt;/code&gt; or &lt;code&gt;Space&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Previous: &lt;code&gt;Left Arrow&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Start: &lt;code&gt;Home&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Finish: &lt;code&gt;End&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Overview: &lt;code&gt;Esc&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Speaker notes: &lt;code&gt;S&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Fullscreen: &lt;code&gt;F&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Zoom: &lt;code&gt;Alt + Click&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/hakimel/reveal.js#pdf-export&#34; target=&#34;_blank&#34;&gt;PDF Export&lt;/a&gt;: &lt;code&gt;E&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;code-highlighting&#34;&gt;Code Highlighting&lt;/h2&gt;
+
+&lt;p&gt;Inline code: &lt;code&gt;variable&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Code block:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;porridge = &amp;quot;blueberry&amp;quot;
+if porridge == &amp;quot;blueberry&amp;quot;:
+    print(&amp;quot;Eating...&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;math&#34;&gt;Math&lt;/h2&gt;
+
+&lt;p&gt;In-line math: $x + y = z$&lt;/p&gt;
+
+&lt;p&gt;Block math:&lt;/p&gt;
+
+&lt;p&gt;$$
+f\left( x \right) = \;\frac{{2\left( {x + 4} \right)\left( {x - 4} \right)}}{{\left( {x + 4} \right)\left( {x + 1} \right)}}
+$$&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;fragments&#34;&gt;Fragments&lt;/h2&gt;
+
+&lt;p&gt;Make content appear incrementally&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;{{% fragment %}} One {{% /fragment %}}
+{{% fragment %}} **Two** {{% /fragment %}}
+{{% fragment %}} Three {{% /fragment %}}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Press &lt;code&gt;Space&lt;/code&gt; to play!&lt;/p&gt;
+
+&lt;p&gt;&lt;span class=&#34;fragment &#34; &gt;
+   One
+&lt;/span&gt;
+&lt;span class=&#34;fragment &#34; &gt;
+   &lt;strong&gt;Two&lt;/strong&gt;
+&lt;/span&gt;
+&lt;span class=&#34;fragment &#34; &gt;
+   Three
+&lt;/span&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;A fragment can accept two optional parameters:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;class&lt;/code&gt;: use a custom style (requires definition in custom CSS)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;weight&lt;/code&gt;: sets the order in which a fragment appears&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;speaker-notes&#34;&gt;Speaker Notes&lt;/h2&gt;
+
+&lt;p&gt;Add speaker notes to your presentation&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-markdown&#34;&gt;{{% speaker_note %}}
+- Only the speaker can read these notes
+- Press `S` key to view
+{{% /speaker_note %}}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Press the &lt;code&gt;S&lt;/code&gt; key to view the speaker notes!&lt;/p&gt;
+
+&lt;aside class=&#34;notes&#34;&gt;
+  &lt;ul&gt;
+&lt;li&gt;Only the speaker can read these notes&lt;/li&gt;
+&lt;li&gt;Press &lt;code&gt;S&lt;/code&gt; key to view&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/aside&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;themes&#34;&gt;Themes&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;black: Black background, white text, blue links (default)&lt;/li&gt;
+&lt;li&gt;white: White background, black text, blue links&lt;/li&gt;
+&lt;li&gt;league: Gray background, white text, blue links&lt;/li&gt;
+&lt;li&gt;beige: Beige background, dark text, brown links&lt;/li&gt;
+&lt;li&gt;sky: Blue background, thin dark text, blue links&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;ul&gt;
+&lt;li&gt;night: Black background, thick white text, orange links&lt;/li&gt;
+&lt;li&gt;serif: Cappuccino background, gray text, brown links&lt;/li&gt;
+&lt;li&gt;simple: White background, black text, blue links&lt;/li&gt;
+&lt;li&gt;solarized: Cream-colored background, dark green text, blue links&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+
+&lt;section data-noprocess data-shortcode-slide
+  
       
-      <guid>/2019/06/03/log-rank-test/</guid>
-      <description>Suppose we have the following data.
-df &amp;lt;- dplyr::tibble(patient_id = as.character(1:12), treatment = rep(c(&amp;quot;C&amp;quot;, &amp;quot;E&amp;quot;), each = 6), survival_time = survival::Surv(time = c(2,6,8,11,17,24,7,9,13,22,23,25), event = c(1,1,1,1,1,0,1,1,1,0,0,0))) knitr::kable(df)   patient_id treatment survival_time    1 C 2  2 C 6  3 C 8  4 C 11  5 C 17  6 C 24+  7 E 7  8 E 9  9 E 13  10 E 22+  11 E 23+  12 E 25+    Let’s arrange the data in increasing order of survival time.</description>
+      data-background-image=&#34;/img/boards.jpg&#34;
+  &gt;
+
+
+&lt;h2 id=&#34;custom-slide&#34;&gt;Custom Slide&lt;/h2&gt;
+
+&lt;p&gt;Customize the slide style and background&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-markdown&#34;&gt;{{&amp;lt; slide background-image=&amp;quot;/img/boards.jpg&amp;quot; &amp;gt;}}
+{{&amp;lt; slide background-color=&amp;quot;#0000FF&amp;quot; &amp;gt;}}
+{{&amp;lt; slide class=&amp;quot;my-style&amp;quot; &amp;gt;}}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;custom-css-example&#34;&gt;Custom CSS Example&lt;/h2&gt;
+
+&lt;p&gt;Let&amp;rsquo;s make headers navy colored.&lt;/p&gt;
+
+&lt;p&gt;Create &lt;code&gt;assets/css/reveal_custom.css&lt;/code&gt; with:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-css&#34;&gt;.reveal section h1,
+.reveal section h2,
+.reveal section h3 {
+  color: navy;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;questions&#34;&gt;Questions?&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://discourse.gohugo.io&#34; target=&#34;_blank&#34;&gt;Ask&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://sourcethemes.com/academic/docs/&#34; target=&#34;_blank&#34;&gt;Documentation&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Privacy Policy</title>
+      <link>/privacy/</link>
+      <pubDate>Thu, 28 Jun 2018 00:00:00 +0100</pubDate>
+      <guid>/privacy/</guid>
+      <description>&lt;p&gt;&amp;hellip;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Terms</title>
+      <link>/terms/</link>
+      <pubDate>Thu, 28 Jun 2018 00:00:00 +0100</pubDate>
+      <guid>/terms/</guid>
+      <description>&lt;p&gt;&amp;hellip;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>External Project</title>
+      <link>/project/external-project/</link>
+      <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
+      <guid>/project/external-project/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Internal Project</title>
+      <link>/project/internal-project/</link>
+      <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
+      <guid>/project/internal-project/</guid>
+      <description>&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis posuere tellus ac convallis placerat. Proin tincidunt magna sed ex sollicitudin condimentum. Sed ac faucibus dolor, scelerisque sollicitudin nisi. Cras purus urna, suscipit quis sapien eu, pulvinar tempor diam. Quisque risus orci, mollis id ante sit amet, gravida egestas nisl. Sed ac tempus magna. Proin in dui enim. Donec condimentum, sem id dapibus fringilla, tellus enim condimentum arcu, nec volutpat est felis vel metus. Vestibulum sit amet erat at nulla eleifend gravida.&lt;/p&gt;
+
+&lt;p&gt;Nullam vel molestie justo. Curabitur vitae efficitur leo. In hac habitasse platea dictumst. Sed pulvinar mauris dui, eget varius purus congue ac. Nulla euismod, lorem vel elementum dapibus, nunc justo porta mi, sed tempus est est vel tellus. Nam et enim eleifend, laoreet sem sit amet, elementum sem. Morbi ut leo congue, maximus velit ut, finibus arcu. In et libero cursus, rutrum risus non, molestie leo. Nullam congue quam et volutpat malesuada. Sed risus tortor, pulvinar et dictum nec, sodales non mi. Phasellus lacinia commodo laoreet. Nam mollis, erat in feugiat consectetur, purus eros egestas tellus, in auctor urna odio at nibh. Mauris imperdiet nisi ac magna convallis, at rhoncus ligula cursus.&lt;/p&gt;
+
+&lt;p&gt;Cras aliquam rhoncus ipsum, in hendrerit nunc mattis vitae. Duis vitae efficitur metus, ac tempus leo. Cras nec fringilla lacus. Quisque sit amet risus at ipsum pharetra commodo. Sed aliquam mauris at consequat eleifend. Praesent porta, augue sed viverra bibendum, neque ante euismod ante, in vehicula justo lorem ac eros. Suspendisse augue libero, venenatis eget tincidunt ut, malesuada at lorem. Donec vitae bibendum arcu. Aenean maximus nulla non pretium iaculis. Quisque imperdiet, nulla in pulvinar aliquet, velit quam ultrices quam, sit amet fringilla leo sem vel nunc. Mauris in lacinia lacus.&lt;/p&gt;
+
+&lt;p&gt;Suspendisse a tincidunt lacus. Curabitur at urna sagittis, dictum ante sit amet, euismod magna. Sed rutrum massa id tortor commodo, vitae elementum turpis tempus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean purus turpis, venenatis a ullamcorper nec, tincidunt et massa. Integer posuere quam rutrum arcu vehicula imperdiet. Mauris ullamcorper quam vitae purus congue, quis euismod magna eleifend. Vestibulum semper vel augue eget tincidunt. Fusce eget justo sodales, dapibus odio eu, ultrices lorem. Duis condimentum lorem id eros commodo, in facilisis mauris scelerisque. Morbi sed auctor leo. Nullam volutpat a lacus quis pharetra. Nulla congue rutrum magna a ornare.&lt;/p&gt;
+
+&lt;p&gt;Aliquam in turpis accumsan, malesuada nibh ut, hendrerit justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque sed erat nec justo posuere suscipit. Donec ut efficitur arcu, in malesuada neque. Nunc dignissim nisl massa, id vulputate nunc pretium nec. Quisque eget urna in risus suscipit ultricies. Pellentesque odio odio, tincidunt in eleifend sed, posuere a diam. Nam gravida nisl convallis semper elementum. Morbi vitae felis faucibus, vulputate orci placerat, aliquet nisi. Aliquam erat volutpat. Maecenas sagittis pulvinar purus, sed porta quam laoreet at.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Academic: the website builder for Hugo</title>
+      <link>/post/getting-started/</link>
+      <pubDate>Wed, 20 Apr 2016 00:00:00 +0000</pubDate>
+      <guid>/post/getting-started/</guid>
+      <description>
+
+&lt;p&gt;&lt;strong&gt;Create a free website with Academic using Markdown, Jupyter, or RStudio. Choose a beautiful color theme and build anything with the Page Builder - over 40 &lt;em&gt;widgets&lt;/em&gt;, &lt;em&gt;themes&lt;/em&gt;, and &lt;em&gt;language packs&lt;/em&gt; included!&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://academic-demo.netlify.com/&#34; target=&#34;_blank&#34;&gt;Check out the latest &lt;strong&gt;demo&lt;/strong&gt;&lt;/a&gt; of what you&amp;rsquo;ll get in less than 10 minutes, or &lt;a href=&#34;https://sourcethemes.com/academic/#expo&#34; target=&#34;_blank&#34;&gt;view the &lt;strong&gt;showcase&lt;/strong&gt;&lt;/a&gt; of personal, project, and business sites.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;👉 &lt;a href=&#34;#install&#34;&gt;&lt;strong&gt;Get Started&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;📚 &lt;a href=&#34;https://sourcethemes.com/academic/docs/&#34; target=&#34;_blank&#34;&gt;View the &lt;strong&gt;documentation&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;💬 &lt;a href=&#34;https://discourse.gohugo.io&#34; target=&#34;_blank&#34;&gt;&lt;strong&gt;Ask a question&lt;/strong&gt; on the forum&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;👥 &lt;a href=&#34;https://spectrum.chat/academic&#34; target=&#34;_blank&#34;&gt;Chat with the &lt;strong&gt;community&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;🐦 Twitter: &lt;a href=&#34;https://twitter.com/source_themes&#34; target=&#34;_blank&#34;&gt;@source_themes&lt;/a&gt; &lt;a href=&#34;https://twitter.com/GeorgeCushen&#34; target=&#34;_blank&#34;&gt;@GeorgeCushen&lt;/a&gt; &lt;a href=&#34;https://twitter.com/search?q=%23MadeWithAcademic&amp;amp;src=typd&#34; target=&#34;_blank&#34;&gt;#MadeWithAcademic&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;💡 &lt;a href=&#34;https://github.com/gcushen/hugo-academic/issues&#34; target=&#34;_blank&#34;&gt;Request a &lt;strong&gt;feature&lt;/strong&gt; or report a &lt;strong&gt;bug&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;⬆️ &lt;strong&gt;Updating?&lt;/strong&gt; View the &lt;a href=&#34;https://sourcethemes.com/academic/docs/update/&#34; target=&#34;_blank&#34;&gt;Update Guide&lt;/a&gt; and &lt;a href=&#34;https://sourcethemes.com/academic/updates/&#34; target=&#34;_blank&#34;&gt;Release Notes&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;❤️ &lt;strong&gt;Support development&lt;/strong&gt; of Academic:
+
+&lt;ul&gt;
+&lt;li&gt;☕️ &lt;a href=&#34;https://paypal.me/cushen&#34; target=&#34;_blank&#34;&gt;&lt;strong&gt;Donate a coffee&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;💵 &lt;a href=&#34;https://www.patreon.com/cushen&#34; target=&#34;_blank&#34;&gt;Become a backer on &lt;strong&gt;Patreon&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;🖼️ &lt;a href=&#34;https://www.redbubble.com/people/neutreno/works/34387919-academic&#34; target=&#34;_blank&#34;&gt;Decorate your laptop or journal with an Academic &lt;strong&gt;sticker&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;👕 &lt;a href=&#34;https://academic.threadless.com/&#34; target=&#34;_blank&#34;&gt;Wear the &lt;strong&gt;T-shirt&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;👩‍💻 &lt;a href=&#34;https://sourcethemes.com/academic/docs/contribute/&#34; target=&#34;_blank&#34;&gt;&lt;strong&gt;Contribute&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+&lt;figure&gt;
+
+
+  &lt;a data-fancybox=&#34;&#34; href=&#34;https://raw.githubusercontent.com/gcushen/hugo-academic/master/academic.png&#34; data-caption=&#34;Academic is mobile first with a responsive design to ensure that your site looks stunning on every device.&#34;&gt;
+&lt;img src=&#34;https://raw.githubusercontent.com/gcushen/hugo-academic/master/academic.png&#34; alt=&#34;&#34; &gt;&lt;/a&gt;
+
+
+  
+  
+  &lt;figcaption&gt;
+    Academic is mobile first with a responsive design to ensure that your site looks stunning on every device.
+  &lt;/figcaption&gt;
+
+
+&lt;/figure&gt;
+
+
+&lt;p&gt;&lt;strong&gt;Key features:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Page builder&lt;/strong&gt; - Create &lt;em&gt;anything&lt;/em&gt; with &lt;a href=&#34;https://sourcethemes.com/academic/docs/page-builder/&#34; target=&#34;_blank&#34;&gt;&lt;strong&gt;widgets&lt;/strong&gt;&lt;/a&gt; and &lt;a href=&#34;https://sourcethemes.com/academic/docs/writing-markdown-latex/&#34; target=&#34;_blank&#34;&gt;&lt;strong&gt;elements&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Edit any type of content&lt;/strong&gt; - Blog posts, publications, talks, slides, projects, and more!&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Create content&lt;/strong&gt; in &lt;a href=&#34;https://sourcethemes.com/academic/docs/writing-markdown-latex/&#34; target=&#34;_blank&#34;&gt;&lt;strong&gt;Markdown&lt;/strong&gt;&lt;/a&gt;, &lt;a href=&#34;https://sourcethemes.com/academic/docs/jupyter/&#34; target=&#34;_blank&#34;&gt;&lt;strong&gt;Jupyter&lt;/strong&gt;&lt;/a&gt;, or &lt;a href=&#34;https://sourcethemes.com/academic/docs/install/#install-with-rstudio&#34; target=&#34;_blank&#34;&gt;&lt;strong&gt;RStudio&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Plugin System&lt;/strong&gt; - Fully customizable &lt;a href=&#34;https://sourcethemes.com/academic/themes/&#34; target=&#34;_blank&#34;&gt;&lt;strong&gt;color&lt;/strong&gt; and &lt;strong&gt;font themes&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Display Code and Math&lt;/strong&gt; - Code highlighting and &lt;a href=&#34;https://en.wikibooks.org/wiki/LaTeX/Mathematics&#34; target=&#34;_blank&#34;&gt;LaTeX math&lt;/a&gt; supported&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Integrations&lt;/strong&gt; - &lt;a href=&#34;https://analytics.google.com&#34; target=&#34;_blank&#34;&gt;Google Analytics&lt;/a&gt;, &lt;a href=&#34;https://disqus.com&#34; target=&#34;_blank&#34;&gt;Disqus commenting&lt;/a&gt;, Maps, Contact Forms, and more!&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Beautiful Site&lt;/strong&gt; - Simple and refreshing one page design&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Industry-Leading SEO&lt;/strong&gt; - Help get your website found on search engines and social media&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Media Galleries&lt;/strong&gt; - Display your images and videos with captions in a customizable gallery&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Mobile Friendly&lt;/strong&gt; - Look amazing on every screen with a mobile friendly version of your site&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Multi-language&lt;/strong&gt; - 15+ language packs including English, 中文, and Português&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Multi-user&lt;/strong&gt; - Each author gets their own profile page&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Privacy Pack&lt;/strong&gt; - Assists with GDPR&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Stand Out&lt;/strong&gt; - Bring your site to life with animation, parallax backgrounds, and scroll effects&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;One-Click Deployment&lt;/strong&gt; - No servers. No databases. Only files.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;themes&#34;&gt;Themes&lt;/h2&gt;
+
+&lt;p&gt;Academic comes with &lt;strong&gt;automatic day (light) and night (dark) mode&lt;/strong&gt; built-in. Alternatively, visitors can  choose their preferred mode - click the sun/moon icon in the top right of the &lt;a href=&#34;https://academic-demo.netlify.com/&#34; target=&#34;_blank&#34;&gt;Demo&lt;/a&gt; to see it in action! Day/night mode can also be disabled by the site admin in &lt;code&gt;params.toml&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://sourcethemes.com/academic/themes/&#34; target=&#34;_blank&#34;&gt;Choose a stunning &lt;strong&gt;theme&lt;/strong&gt; and &lt;strong&gt;font&lt;/strong&gt;&lt;/a&gt; for your site. Themes are fully &lt;a href=&#34;https://sourcethemes.com/academic/docs/customization/#custom-theme&#34; target=&#34;_blank&#34;&gt;customizable&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;ecosystem&#34;&gt;Ecosystem&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href=&#34;https://github.com/sourcethemes/academic-admin&#34; target=&#34;_blank&#34;&gt;Academic Admin&lt;/a&gt;:&lt;/strong&gt; An admin tool to import publications from BibTeX or import assets for an offline site&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a href=&#34;https://github.com/sourcethemes/academic-scripts&#34; target=&#34;_blank&#34;&gt;Academic Scripts&lt;/a&gt;:&lt;/strong&gt; Scripts to help migrate content to new versions of Academic&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;install&#34;&gt;Install&lt;/h2&gt;
+
+&lt;p&gt;You can choose from one of the following four methods to install:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://sourcethemes.com/academic/docs/install/#install-with-web-browser&#34; target=&#34;_blank&#34;&gt;&lt;strong&gt;one-click install using your web browser (recommended)&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://sourcethemes.com/academic/docs/install/#install-with-git&#34; target=&#34;_blank&#34;&gt;install on your computer using &lt;strong&gt;Git&lt;/strong&gt; with the Command Prompt/Terminal app&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://sourcethemes.com/academic/docs/install/#install-with-zip&#34; target=&#34;_blank&#34;&gt;install on your computer by downloading the &lt;strong&gt;ZIP files&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://sourcethemes.com/academic/docs/install/#install-with-rstudio&#34; target=&#34;_blank&#34;&gt;install on your computer with &lt;strong&gt;RStudio&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Then &lt;a href=&#34;https://sourcethemes.com/academic/docs/get-started/&#34; target=&#34;_blank&#34;&gt;personalize and deploy your new site&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;updating&#34;&gt;Updating&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://sourcethemes.com/academic/docs/update/&#34; target=&#34;_blank&#34;&gt;View the Update Guide&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Feel free to &lt;em&gt;star&lt;/em&gt; the project on &lt;a href=&#34;https://github.com/gcushen/hugo-academic/&#34; target=&#34;_blank&#34;&gt;Github&lt;/a&gt; to help keep track of &lt;a href=&#34;https://sourcethemes.com/academic/updates&#34; target=&#34;_blank&#34;&gt;updates&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;license&#34;&gt;License&lt;/h2&gt;
+
+&lt;p&gt;Copyright 2016-present &lt;a href=&#34;https://georgecushen.com&#34; target=&#34;_blank&#34;&gt;George Cushen&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Released under the &lt;a href=&#34;https://github.com/gcushen/hugo-academic/blob/master/LICENSE.md&#34; target=&#34;_blank&#34;&gt;MIT&lt;/a&gt; license.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>An example journal article</title>
+      <link>/publication/journal-article/</link>
+      <pubDate>Tue, 01 Sep 2015 00:00:00 +0000</pubDate>
+      <guid>/publication/journal-article/</guid>
+      <description>&lt;div class=&#34;alert alert-note&#34;&gt;
+  &lt;div&gt;
+    Click the &lt;em&gt;Cite&lt;/em&gt; button above to demo the feature to enable visitors to import publication metadata into their reference management software.
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;alert alert-note&#34;&gt;
+  &lt;div&gt;
+    Click the &lt;em&gt;Slides&lt;/em&gt; button above to demo Academic&amp;rsquo;s Markdown slides feature.
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Supplementary notes can be added here, including &lt;a href=&#34;https://sourcethemes.com/academic/docs/writing-markdown-latex/&#34; target=&#34;_blank&#34;&gt;code and math&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>An example conference paper</title>
+      <link>/publication/conference-paper/</link>
+      <pubDate>Mon, 01 Jul 2013 00:00:00 +0000</pubDate>
+      <guid>/publication/conference-paper/</guid>
+      <description>&lt;div class=&#34;alert alert-note&#34;&gt;
+  &lt;div&gt;
+    Click the &lt;em&gt;Cite&lt;/em&gt; button above to demo the feature to enable visitors to import publication metadata into their reference management software.
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;alert alert-note&#34;&gt;
+  &lt;div&gt;
+    Click the &lt;em&gt;Slides&lt;/em&gt; button above to demo Academic&amp;rsquo;s Markdown slides feature.
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Supplementary notes can be added here, including &lt;a href=&#34;https://sourcethemes.com/academic/docs/writing-markdown-latex/&#34; target=&#34;_blank&#34;&gt;code and math&lt;/a&gt;.&lt;/p&gt;
+</description>
     </item>
     
   </channel>
