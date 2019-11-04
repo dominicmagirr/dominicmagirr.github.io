@@ -60,7 +60,7 @@
 
   <article class="article">
     
-    <span class="article-duration">2 min read</span>
+    <span class="article-duration">3 min read</span>
     
 
     <h1 class="article-title">Longitudinal hurdle models 3</h1>
@@ -73,7 +73,7 @@
       
 
 
-<p>In the last post on longitudinal hurdle models, I had just taken samples from the marginal mean</p>
+<p>In the <a href="/2019/10/23/longitudinal-hurdle-models-2">last</a> post on longitudinal hurdle models, I had just taken samples from the marginal mean</p>
 <p><span class="math display">\[\begin{align} g(\theta; x) &amp; = E(Y \mid  \theta; x) \\
 &amp; = \int   E(Y \mid u_{i&#39;}, v_{i&#39;}, \theta; x) f(u_{i&#39;}, v_{i&#39;} \mid \theta, \mathbf{y}) du_{i&#39;}dv_{i&#39;} \\ 
 &amp;\approx  L^{-1}\sum_{l = 1}^{L}E(Y \mid u_{i&#39;}^{(l)}, v_{i&#39;}^{(l)}, \theta; x)\\
@@ -95,8 +95,8 @@ hurlong::marg_pyk_q(k = 0.5,
                     newdata = x, 
                     nsims = 1000, 
                     fit = fit_hurdle)</code></pre>
-<pre><code>##   id time      2.5%       50%     97.5%
-## 1 NA    2 0.4226888 0.5011033 0.5782638</code></pre>
+<pre><code>##   id time      2.5%       50%    97.5%
+## 1 NA    2 0.4227881 0.5017131 0.578657</code></pre>
 </div>
 <div id="samples-from-textmediany-mid-theta-x" class="section level3">
 <h3>Samples from <span class="math inline">\(\text{median}(Y \mid \theta; x)\)</span></h3>
@@ -113,8 +113,28 @@ hurlong::marg_pyk_q(k = 0.5,
                                log(100), 
                                length.out = 15)), # where to evaluate p(Y&lt;k)
                   fit = fit_hurdle)</code></pre>
-<pre><code>##   id time      2.5%       50%     97.5%
-## 1 NA    2 0.2309956 0.4913408 0.8842082</code></pre>
+<pre><code>##   id time     2.5%       50%     97.5%
+## 1 NA    2 0.230754 0.4891672 0.8776129</code></pre>
+</div>
+<div id="predictions" class="section level2">
+<h2>Predictions</h2>
+<p>To round off this series on longitudinal hurdle models, I want to show how to simulate draws (and find quantiles) from the posterior predictive distribution for a new observation (<span class="math inline">\(\tilde{Y}\)</span>). Firstly for a patient <span class="math inline">\(i\)</span> already in the data set, where we draw from</p>
+<p><span class="math display">\[ f(\tilde{y} \mid \mathbf{y} ; x) = f(\tilde{y} \mid u_i, v_i, \theta, \mathbf{y} ; x)f(u_i, v_i, \theta \mid \mathbf{y}) \]</span></p>
+<pre class="r"><code>library(brms)</code></pre>
+<pre class="r"><code>predict(fit_hurdle,
+        newdata = data.frame(id = 1, time = &quot;2&quot;),
+        robust = TRUE)</code></pre>
+<pre><code>##       Estimate Est.Error Q2.5    Q97.5
+## [1,] 0.2450599 0.3136891    0 2.083267</code></pre>
+<p>and, secondly, for a new patient <span class="math inline">\(i&#39;\)</span>, where we draw from</p>
+<p><span class="math display">\[ f(\tilde{y} \mid \mathbf{y} ; x) = f(\tilde{y} \mid u_{i&#39;}, v_{i&#39;}, \theta, \mathbf{y} ; x)f(u_{i&#39;}, v_{i&#39;} \mid \theta,  \mathbf{y}) f(\theta \mid \mathbf{y}) \]</span></p>
+<pre class="r"><code>predict(fit_hurdle,
+        newdata = data.frame(id = NA, time = &quot;2&quot;),
+        allow_new_levels = TRUE,
+        sample_new_levels = &quot;gaussian&quot;,
+        robust = TRUE)</code></pre>
+<pre><code>##       Estimate Est.Error Q2.5  Q97.5
+## [1,] 0.4485192 0.6649746    0 54.552</code></pre>
 </div>
 
     </div>

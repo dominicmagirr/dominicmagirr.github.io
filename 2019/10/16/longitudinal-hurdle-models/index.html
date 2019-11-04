@@ -75,7 +75,7 @@
 
 <div id="data" class="section level2">
 <h2>Data</h2>
-<p>Recently I have been modelling data that is longitudinal, contains excess zeros, and where the non-zero data is right-skewed and measured on a continuous scale, rather than being count data.</p>
+<p>Recently, I have been modelling data that is longitudinal, contains excess zeros, and where the non-zero data is right-skewed and measured on a continuous scale, rather than being count data.</p>
 <p>I’ll simulate a semi-realistic example data set from a lognormal hurdle model. The “random effects” for the pr(zero) and non-zero parts of the model are negatively correlated.</p>
 <pre class="r"><code>set.seed(180)
 
@@ -158,7 +158,7 @@ fit_hurdle &lt;- brm(bf(y ~  time + (1 | q | id),
 </div>
 <div id="inference" class="section level2">
 <h2>Inference</h2>
-<p>From the output I can see that I have more-or-less recovered the parameters from my model. In practice, I could use this to make inference on the two parts of the model separately. In a future post I’ll discuss how to make inference/predictions when combining the two parts of the model.</p>
+<p>From the output I can see that I have more-or-less recovered the parameters from my model. In practice, I could use this to make inference on the two parts of the model separately. In <a href="/2019/10/23/longitudinal-hurdle-models-2">future</a> posts I’ll discuss how to make inference/predictions when combining the two parts of the model.</p>
 </div>
 
     </div>

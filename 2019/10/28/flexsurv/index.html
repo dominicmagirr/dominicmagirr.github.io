@@ -133,19 +133,20 @@ fit_flexsurvreg</code></pre>
 ## Total time at risk: 15588
 ## Log-likelihood = -97.36415, df = 3
 ## AIC = 200.7283</code></pre>
-<p>The parameters <code>shape</code> and <code>scale</code> correspond to <code>dweibull</code>. So I don’t have to think any further? Not quite: I still have to work out what the estimate of <code>rx2</code> is doing. I might look at <code>exp(est) = 1.749</code> and somehow expect this to be a hazard ratio. It’s not. It’s a multiplicative effect on the scale parameter. So when <code>rx = 1</code> the scale is <code>920.1</code>, and when <code>rx = 2</code> the scale is <code>920.1 * 1.749</code>. The hazard ratio is</p>
+<p>The parameters <code>shape</code> and <code>scale</code> correspond to <code>dweibull</code>. So I don’t have to think any further? Not quite: I still have to work out what the estimate of <code>rx2</code> is doing. I might look at <code>exp(est) = 1.749</code> and somehow expect this to be a hazard ratio. It’s not. It’s a multiplicative effect on the scale parameter. So when <code>rx = 1</code> the scale is <code>920.1</code>, and when <code>rx = 2</code> the scale is <code>920.1 * 1.749</code>. The hazard ratio (treatment 2 vs treatment 1) is</p>
 <p><span class="math display">\[\begin{align} \frac{h_2(x)}{h_1(x)} &amp; = \left( \frac{b_1}{b_2} \right)^a \\
                                       &amp; = \left( \frac{920.1}{920.1 \times 1.749} \right)^{1.129}\\
                                       &amp; = 0.53 \end{align} \]</span></p>
+<p>where <span class="math inline">\(a\)</span> is the common shape parameter, and <span class="math inline">\(b_1\)</span> and <span class="math inline">\(b_2\)</span> are the scale parameters.</p>
 <p>Once I had started writing this post, I realized that it’s actually not straightforward to make inference on the hazard ratio using <code>flexsurv</code>. For working out variances/covariances, the <code>survreg</code> parameterization is indeed better. I looked around for other R packages in this space, and found <code>SurvRegCensCov</code>, which can do this conversion automatically for you:</p>
 <pre class="r"><code>library(SurvRegCensCov)
 ConvertWeibull(fit_survreg)$HR</code></pre>
 <pre><code>##            HR        LB       UB
 ## rx2 0.5318051 0.1683444 1.679989</code></pre>
 <p>For completeness, using <code>flexsurv</code>, the log-hazard ratio is</p>
-<p><span class="math display">\[\begin{align} \log\left( \frac{h_1(x)}{h_0(x) }\right) &amp; = a\left\lbrace \log(b_0) - \log(b_1) \right\rbrace \\
-                                                         &amp; = -\exp(\log(a)) \times \left\lbrace \log(b_1) - \log(b_0)  \right\rbrace \end{align}\]</span></p>
-<p>I can extract the terms <span class="math inline">\(\alpha:=\log(a)\)</span> and <span class="math inline">\(\beta:=\log(b_1) - \log(b_0)\)</span> from the <code>fit_flexsurvreg</code> object, as well as their (co)variance.</p>
+<p><span class="math display">\[\begin{align} \log\left( \frac{h_2(x)}{h_1(x) }\right) &amp; = a\left\lbrace \log(b_1) - \log(b_2) \right\rbrace \\
+                                                         &amp; = -\exp(\log(a)) \times \left\lbrace \log(b_2) - \log(b_1)  \right\rbrace \end{align}\]</span></p>
+<p>I can extract the terms <span class="math inline">\(\alpha:=\log(a)\)</span> and <span class="math inline">\(\beta:=\log(b_2) - \log(b_1)\)</span> from the <code>fit_flexsurvreg</code> object, as well as their (co)variance.</p>
 <pre class="r"><code>alpha &lt;- fit_flexsurvreg$res.t[&quot;shape&quot;, &quot;est&quot;]
 beta &lt;- fit_flexsurvreg$res.t[&quot;rx2&quot;, &quot;est&quot;]
 cov_alpha_beta &lt;- vcov(fit_flexsurvreg)[c(&quot;shape&quot;, &quot;rx2&quot;), c(&quot;shape&quot;, &quot;rx2&quot;)]</code></pre>
@@ -172,7 +173,7 @@ data.frame(HR = exp(log_hr),
 </div>
 <div id="splines" class="section level2">
 <h2>Splines</h2>
-<p>The second thing I really like about <code>flexsurv</code> is the proportional hazards model with a spline for the baseline hazard. I’ll explore this in another post.</p>
+<p>The second thing I really like about <code>flexsurv</code> is the proportional hazards model with a spline for the baseline hazard. I’ll explore this in <a href="/2019/11/01/flexsurv-2">another post</a>.</p>
 </div>
 
     </div>

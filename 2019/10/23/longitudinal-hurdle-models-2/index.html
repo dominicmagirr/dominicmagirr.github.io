@@ -73,7 +73,7 @@
       
 
 
-<p>In a previous post I fit a longitudinal hurdle model using the <code>brms</code> package.</p>
+<p>In a <a href="/2019/10/16/longitudinal-hurdle-models">previous</a> post I fit a longitudinal hurdle model using the <code>brms</code> package.</p>
 <pre class="r"><code>library(brms)
 summary(fit_hurdle)</code></pre>
 <pre><code>##  Family: hurdle_lognormal 
@@ -118,14 +118,14 @@ summary(fit_hurdle)</code></pre>
 <h3>How to use <code>fitted.brmsfit</code></h3>
 <p>Having obtained posterior samples from <span class="math inline">\((\theta, u_1,\ldots,u_n,v_1,\ldots,v_n)\)</span>, we <em>might</em> want to look at samples from:</p>
 <p><span class="math display">\[\begin{align} h(u_i, v_i, \theta; x) &amp; = E(Y \mid u_i, v_i, \theta; x) \\ &amp;= \left\lbrace 1 - \text{logit}^{-1} ( x^T \gamma + u_i) \right\rbrace \exp(x^T\beta + v_i + \frac{\sigma^2}{2}).\end{align}\]</span></p>
-<p>This is some kind of patient-specific expectation of <span class="math inline">\(Y\)</span>, conditional on the “random effects”. If patient <span class="math inline">\(i\)</span> is already in the model, then we can just take samples directly from the posterior. This can be achieved with the <code>fitted</code> method:</p>
+<p>This is some kind of patient-specific expectation of <span class="math inline">\(Y\)</span>, conditional on the random effects. If patient <span class="math inline">\(i\)</span> is already in the model, then we can just take samples directly from the posterior. This can be achieved with the <code>fitted</code> method:</p>
 <pre class="r"><code>fitted(fit_hurdle, 
        newdata = data.frame(id = 1, time = &quot;2&quot;), 
        robust = TRUE)</code></pre>
 <pre><code>##       Estimate Est.Error      Q2.5     Q97.5
 ## [1,] 0.4034682  0.150417 0.1796645 0.8248473</code></pre>
 <p>will give the median and (2.5, 97.5) quantiles of <span class="math inline">\(h(u_1, v_1, \theta ; x)\)</span> at timepoint “2”.</p>
-<p>Alternatively, we <em>might</em> be more interested in <span class="math inline">\(h(0, 0, \theta ; x)\)</span>, which in some sense is the patient-specific expectation of <span class="math inline">\(Y\)</span> for an “average” patient with “random effects” fixed at zero. We can get this by setting <code>re_formula = NA</code>:</p>
+<p>Alternatively, we <em>might</em> be more interested in <span class="math inline">\(h(0, 0, \theta ; x)\)</span>, which in some sense is the patient-specific expectation of <span class="math inline">\(Y\)</span> for an “average” patient with random effects fixed at zero. We can get this by setting <code>re_formula = NA</code>:</p>
 <pre class="r"><code>fitted(fit_hurdle, 
        newdata = data.frame(time = &quot;2&quot;), 
        robust = TRUE, 
@@ -141,8 +141,8 @@ summary(fit_hurdle)</code></pre>
        allow_new_levels = TRUE,
        sample_new_levels = &quot;gaussian&quot;,
        robust = TRUE)</code></pre>
-<pre><code>##      Estimate Est.Error         Q2.5    Q97.5
-## [1,] 0.891329  1.283139 0.0009321145 51.98191</code></pre>
+<pre><code>##      Estimate Est.Error       Q2.5    Q97.5
+## [1,] 0.949522  1.365514 0.00130835 60.70721</code></pre>
 <p>and this is indeed what’s happening, as can be seen by going through the steps manually</p>
 <pre class="r"><code>ps &lt;- posterior_samples(fit_hurdle)
 
@@ -181,11 +181,11 @@ ey &lt;- (1 - plogis(xi + u)) * exp(eta + v + sigma_error ^ 2 / 2)
 
 round(quantile(ey, probs = c(0.025, 0.5, 0.975)), 3)</code></pre>
 <pre><code>##   2.5%    50%  97.5% 
-##  0.001  0.911 59.296</code></pre>
+##  0.001  0.938 58.035</code></pre>
 </div>
 <div id="unconditional-expectation" class="section level3">
 <h3>Unconditional expectation</h3>
-<p>Instead of a patient-specific expectation, conditional on “random effects”, we might be more interested in targeting an overall expectation (for a new patient) where we integrate out the random effects. In other words, we want to take samples from</p>
+<p>Instead of a patient-specific expectation, conditional on random effects, we might be more interested in targeting an overall expectation (for a new patient) where we integrate out the random effects. In other words, we want to take samples from</p>
 <p><span class="math display">\[\begin{align} g(\theta; x) &amp; = E(Y \mid  \theta; x) \\
 &amp; = \int   E(Y \mid u_{i&#39;}, v_{i&#39;}, \theta; x) f(u_{i&#39;}, v_{i&#39;} \mid \theta, \mathbf{y}) du_{i&#39;}dv_{i&#39;} \\ 
 &amp;\approx  L^{-1}\sum_{l = 1}^{L}E(Y \mid u_{i&#39;}^{(l)}, v_{i&#39;}^{(l)}, \theta; x)\\
@@ -197,8 +197,8 @@ round(quantile(ey, probs = c(0.025, 0.5, 0.975)), 3)</code></pre>
 <pre class="r"><code>hurlong::marg_mean_q(newdata = x, 
                      nsims = 1000, 
                      fit = fit_hurdle)</code></pre>
-<pre><code>##   id time    2.5%      50%    97.5%
-## 1 NA    2 3.86033 7.494943 18.90352</code></pre>
+<pre><code>##   id time     2.5%      50%    97.5%
+## 1 NA    2 3.896907 7.451117 18.86412</code></pre>
 </div>
 
     </div>

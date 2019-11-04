@@ -33,17 +33,6 @@ Fit a standard survival model, but where it’s slightly easier to work out what
     </item>
     
     <item>
-      <title>Longitudinal hurdle models 4</title>
-      <link>/2019/10/27/longitudinal-hurdle-models-4/</link>
-      <pubDate>Sun, 27 Oct 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/2019/10/27/longitudinal-hurdle-models-4/</guid>
-      <description>Predictions To round off my series on longitudinal hurdle models I want to show how to simulate draws (and find quantiles) from the posterior predictive distribution for a new observation (\(\tilde{Y}\)). Firstly for a patient \(i\) already in the data set, where we draw from
-\[ f(\tilde{y} \mid \mathbf{y} ; x) = f(\tilde{y} \mid u_i, v_i, \theta, \mathbf{y} ; x)f(u_i, v_i, \theta \mid \mathbf{y}) \]
-library(brms) predict(fit_hurdle, newdata = data.</description>
-    </item>
-    
-    <item>
       <title>Longitudinal hurdle models 3</title>
       <link>/2019/10/25/longitudinal-hurdle-models-3/</link>
       <pubDate>Fri, 25 Oct 2019 00:00:00 +0000</pubDate>
@@ -69,7 +58,7 @@ library(brms) summary(fit_hurdle) ## Family: hurdle_lognormal ## Links: mu = ide
       <pubDate>Wed, 16 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>/2019/10/16/longitudinal-hurdle-models/</guid>
-      <description>Data Recently I have been modelling data that is longitudinal, contains excess zeros, and where the non-zero data is right-skewed and measured on a continuous scale, rather than being count data.
+      <description>Data Recently, I have been modelling data that is longitudinal, contains excess zeros, and where the non-zero data is right-skewed and measured on a continuous scale, rather than being count data.
 I’ll simulate a semi-realistic example data set from a lognormal hurdle model. The “random effects” for the pr(zero) and non-zero parts of the model are negatively correlated.
 set.seed(180) ## 100 patients id &amp;lt;- 1:100 ## 2 timepoints time &amp;lt;- c(&amp;quot;1&amp;quot;, &amp;quot;2&amp;quot;) ## random effects u &amp;lt;- rnorm(100, sd = 2) v &amp;lt;- rnorm(100, mean = -0.</description>
     </item>
@@ -80,8 +69,8 @@ set.seed(180) ## 100 patients id &amp;lt;- 1:100 ## 2 timepoints time &amp;lt;- 
       <pubDate>Mon, 03 Jun 2019 00:00:00 +0000</pubDate>
       
       <guid>/about/</guid>
-      <description>I&amp;rsquo;m a medical statistician.
-I built this website with the blogdown package.</description>
+      <description>I&amp;rsquo;m a medical statistician. Quite simply, I&amp;rsquo;m interested in clinical trial design, analysis and interpretation.
+When I was around 16 or 17, I planned to study medicine. However, after doing some work experience and realizing how difficult that path would be, I decided to do a maths degree. Towards the end of my studies, I was fortunate to see a careers talk on Medical Statistics that led me to Lancaster University to do their MSc course &amp;ndash; a fantastic year, and I carried on to do a PhD.</description>
     </item>
     
     <item>
