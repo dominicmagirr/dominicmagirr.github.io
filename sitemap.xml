@@ -33,12 +33,27 @@
   </url>
   
   <url>
-    <loc>/post/flexsurv-2/</loc>
-    <lastmod>2019-11-01T00:00:00+00:00</lastmod>
+    <loc>/post/bma/</loc>
+    <lastmod>2019-11-04T15:19:11+00:00</lastmod>
   </url>
   
   <url>
     <loc>/post/</loc>
+    <lastmod>2019-11-04T15:19:11+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/r-packages/</loc>
+    <lastmod>2019-11-04T15:19:11+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2019-11-04T15:19:11+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/flexsurv-2/</loc>
     <lastmod>2019-11-01T00:00:00+00:00</lastmod>
   </url>
   
@@ -104,11 +119,6 @@
   
   <url>
     <loc>/tags/source-themes/</loc>
-    <lastmod>2019-04-07T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
     <lastmod>2019-04-07T00:00:00+00:00</lastmod>
   </url>
   

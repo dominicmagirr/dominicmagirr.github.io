@@ -106,6 +106,99 @@
     </item>
     
     <item>
+      <title>BMA</title>
+      <link>/post/bma/</link>
+      <pubDate>Mon, 04 Nov 2019 00:00:00 +0000</pubDate>
+      <guid>/post/bma/</guid>
+      <description>
+
+
+&lt;p&gt;Continuing my series on R packages that I like, I want to talk about &lt;code&gt;BMA&lt;/code&gt; for Bayesian model averaging.&lt;/p&gt;
+&lt;p&gt;(&lt;a href=&#34;https://www.r-project.org/doc/Rnews/Rnews_2005-2.pdf&#34; class=&#34;uri&#34;&gt;https://www.r-project.org/doc/Rnews/Rnews_2005-2.pdf&lt;/a&gt;)&lt;/p&gt;
+&lt;p&gt;I’ve used it a couple of times this year and think it’s great. The situation is this: you have a data set with a response variable and multiple explanatory variables (the goal could be prediction or inference). It’s crying out for a regression analysis. But you don’t want to do use a naive variable selection method because you know that’s bad. Is there something smarter you can do, and do &lt;em&gt;quickly&lt;/em&gt;?&lt;/p&gt;
+&lt;div id=&#34;example&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Example&lt;/h2&gt;
+&lt;p&gt;Let’s take the &lt;code&gt;veteran&lt;/code&gt; data set from the &lt;code&gt;survival&lt;/code&gt; package. This data comes from a randomized trial of two chemotherapies with a primary endpoint of overall survival. There are several covariates, which we can take a look at…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(survival)
+library(BMA)
+data(veteran)
+str(veteran)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## &amp;#39;data.frame&amp;#39;:    137 obs. of  8 variables:
+##  $ trt     : num  1 1 1 1 1 1 1 1 1 1 ...
+##  $ celltype: Factor w/ 4 levels &amp;quot;squamous&amp;quot;,&amp;quot;smallcell&amp;quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ time    : num  72 411 228 126 118 10 82 110 314 100 ...
+##  $ status  : num  1 1 1 1 1 1 1 1 1 0 ...
+##  $ karno   : num  60 70 60 60 70 20 40 80 50 70 ...
+##  $ diagtime: num  7 5 3 9 11 5 10 29 18 6 ...
+##  $ age     : num  69 64 38 63 65 49 69 68 43 70 ...
+##  $ prior   : num  0 10 0 10 10 0 10 0 0 0 ...&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;karno&lt;/code&gt; refers to Karnofsky performance score (from 0-100 where higher is better). Something’s gone wrong with the &lt;code&gt;prior&lt;/code&gt; treatment variable: this should be a yes/no. Variable &lt;code&gt;trt&lt;/code&gt; should also be categorical:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;veteran$trt &amp;lt;- factor(veteran$trt)
+veteran$prior &amp;lt;- factor(veteran$prior)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We can use the &lt;code&gt;bic.surv&lt;/code&gt; function to fit a Cox model for every possible combination of the explanatory variables.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;test.bic.surv&amp;lt;- bic.surv(Surv(time,status) ~ ., 
+                         data = veteran, 
+                         factor.type = TRUE)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The summary gives us the posterior probability for each model (by default each model is given the same prior probability)&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;summary(test.bic.surv, 
+        conditional=FALSE, 
+        digits=2)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## 
+## Call:
+## bic.surv.formula(f = Surv(time, status) ~ ., data = veteran,     factor.type = TRUE)
+## 
+## 
+##   6  models were selected
+##  Best  5  models (cumulative posterior probability =  0.95 ): 
+## 
+##                     p!=0    EV       SD      model 1   model 2   model 3 
+## trt                  11.3                                                
+##    .2                       0.02909  0.1058      .         .       0.2573
+## celltype             84.6                                                
+##         .smallcell          0.61564  0.3538    0.7121      .       0.8196
+##         .adeno              0.97619  0.4965    1.1508      .       1.1477
+##         .large              0.28260  0.2830    0.3251      .       0.3930
+## karno               100.0  -0.03135  0.0052   -0.0309   -0.0332   -0.0311
+## diagtime              5.4   0.00018  0.0020      .         .         .   
+## age                   6.1  -0.00036  0.0026      .         .         .   
+## prior                 5.6                                                
+##      .10                    0.00576  0.0542      .         .         .   
+##                                                                          
+## nVar                                             2         1         3   
+## BIC                                          -39.3626  -36.7742  -36.1558
+## post prob                                      0.562     0.154     0.113 
+##                     model 4   model 5 
+## trt                                   
+##    .2                   .         .   
+## celltype                              
+##         .smallcell    0.7208    0.7264
+##         .adeno        1.1643    1.1765
+##         .large        0.3215    0.3276
+## karno                -0.0318   -0.0311
+## diagtime                .         .   
+## age                  -0.0059      .   
+## prior                                 
+##      .10                .       0.1026
+##                                       
+## nVar                    3         3   
+## BIC                 -34.9292  -34.7553
+## post prob             0.061     0.056&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;It’s possible to plot the marginal posterior distribution for each covariate (avergaed according to posterior model probabilities):&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot(test.bic.surv)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-11-04-bma_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;img src=&#34;/post/2019-11-04-bma_files/figure-html/unnamed-chunk-5-2.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;div id=&#34;conclusions&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Conclusions&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;I’ve found these graphs really useful for showing the boss. Extremely intuitive.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;A drawback of &lt;code&gt;BMA&lt;/code&gt; is that it doesn’t handle missing data. Any row with &lt;code&gt;NA&lt;/code&gt;s will be removed.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;In a future post I’ll go more into the details of what &lt;code&gt;BMA&lt;/code&gt; is doing.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
       <title>flexsurv 2</title>
       <link>/post/flexsurv-2/</link>
       <pubDate>Fri, 01 Nov 2019 00:00:00 +0000</pubDate>

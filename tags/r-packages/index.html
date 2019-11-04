@@ -31,7 +31,7 @@
   <meta name="description" content="Medical Statistician">
 
   
-  <link rel="alternate" hreflang="en-us" href="/404.html">
+  <link rel="alternate" hreflang="en-us" href="/tags/r-packages/">
 
   
 
@@ -95,12 +95,14 @@
 
 
   
+  <link rel="alternate" href="/tags/r-packages/index.xml" type="application/rss+xml" title="Dominic Magirr">
+  
 
   <link rel="manifest" href="/index.webmanifest">
   <link rel="icon" type="image/png" href="/img/icon-32.png">
   <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
 
-  <link rel="canonical" href="/404.html">
+  <link rel="canonical" href="/tags/r-packages/">
 
   
   
@@ -113,12 +115,12 @@
   <meta property="twitter:card" content="summary">
   
   <meta property="og:site_name" content="Dominic Magirr">
-  <meta property="og:url" content="/404.html">
-  <meta property="og:title" content="404 Page not found | Dominic Magirr">
+  <meta property="og:url" content="/tags/r-packages/">
+  <meta property="og:title" content="R Packages | Dominic Magirr">
   <meta property="og:description" content="Medical Statistician"><meta property="og:image" content="/img/icon-192.png">
   <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
   
-    
+    <meta property="og:updated_time" content="2019-11-04T00:00:00&#43;00:00">
   
 
   
@@ -135,7 +137,7 @@
 
 
 
-  <title>404 Page not found | Dominic Magirr</title>
+  <title>R Packages | Dominic Magirr</title>
 
 </head>
 
@@ -253,48 +255,74 @@
 </nav>
 
 
-  <div class="universal-wrapper pt-3">
-
-  <h1>Page not found</h1>
-
-  
-  
-  <form class="d-flex align-items-center mb-3">
-    <input name="q" type="search" class="form-control" placeholder="Search..." autocomplete="off">
-  </form>
   
 
+
+
+
+
+
+
+
+
+
+
+
   
 
-  <p>Perhaps you were looking for one of these?</p>
+  
+  
+  
+    
+  
+<div class="universal-wrapper pt-3">
+  <h1>R Packages</h1>
+
+  
+
+  
+</div>
+
+
+
+<div class="universal-wrapper">
+  
 
   
   
+  <div>
+    <h2><a href="/post/bma/">BMA</a></h2>
+    <div class="article-style">
+      
+      Continuing my series on R packages that I like, I want to talk about BMA for Bayesian model averaging.
+(https://www.r-project.org/doc/Rnews/Rnews_2005-2.pdf)
+I’ve used it a couple of times this year and think it’s great. The situation is this: you have a data set with a response variable and multiple explanatory variables (the goal could be prediction or inference). It’s crying out for a regression analysis. But you don’t want to do use a naive variable selection method because you know that’s bad.
+      
+    </div>
+  </div>
   
-  <h2>Latest</h2>
-  <ul>
-    
-      <li><a href="/courses/example/example1/">Example Page 1</a></li>
-    
-      <li><a href="/courses/example/example2/">Example Page 2</a></li>
-    
-      <li><a href="/talk/example/">Example Talk</a></li>
-    
-      <li><a href="/post/bma/">BMA</a></li>
-    
-      <li><a href="/post/flexsurv-2/">flexsurv 2</a></li>
-    
-      <li><a href="/post/flexsurv/">flexsurv</a></li>
-    
-      <li><a href="/post/longitudinal-hurdle-models-3/">Longitudinal hurdle models 3</a></li>
-    
-      <li><a href="/post/longitudinal-hurdle-models-2/">Longitudinal hurdle models 2</a></li>
-    
-      <li><a href="/post/longitudinal-hurdle-models/">Longitudinal hurdle models</a></li>
-    
-      <li><a href="/about/">About</a></li>
-    
-  </ul>
+  <div>
+    <h2><a href="/post/flexsurv-2/">flexsurv 2</a></h2>
+    <div class="article-style">
+      
+      Previously, I started discussing the flexsurv package. I used it to fit a Weibull model. This is implemented as an accelerated failure time model. It is also a proportional hazards model (although, as I found previously, converting between the two is not so straightforward, but it can be done by SurvRegCensCov).
+Now let’s compare Weibull regression with Cox regression. Firstly, Weibull regression:
+ assumes proportional hazards; the number of parameters is equal to \(k + 2\), where \(k\) is the number of covariates; we can estimate things like the median, \(P(S&gt;s^*)\), etc.
+      
+    </div>
+  </div>
+  
+  <div>
+    <h2><a href="/post/flexsurv/">flexsurv</a></h2>
+    <div class="article-style">
+      
+      I’m going to write about some of my favourite R packages. I’ll start with flexsurv (https://github.com/chjackson/flexsurv-dev) by Chris Jackson, which can be used to fit all kinds of parametric models to survival data. It can really do a lot, but I’ll pick out just 2 cool things I like about it:
+Fit a standard survival model, but where it’s slightly easier to work out what the parameters mean. Fit a proportional hazards model, which is a lot like a Cox model, but where you also model the baseline hazard using a spline.
+      
+    </div>
+  </div>
+  
+
   
 
 </div>

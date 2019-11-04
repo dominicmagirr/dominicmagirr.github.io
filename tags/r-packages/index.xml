@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>R Packages | Dominic Magirr</title>
+    <link>/tags/r-packages/</link>
+      <atom:link href="/tags/r-packages/index.xml" rel="self" type="application/rss+xml" />
+    <description>R Packages</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Mon, 04 Nov 2019 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>/img/icon-192.png</url>
+      <title>R Packages</title>
+      <link>/tags/r-packages/</link>
+    </image>
+    
+    <item>
+      <title>BMA</title>
+      <link>/post/bma/</link>
+      <pubDate>Mon, 04 Nov 2019 00:00:00 +0000</pubDate>
+      <guid>/post/bma/</guid>
+      <description>
+
+
+&lt;p&gt;Continuing my series on R packages that I like, I want to talk about &lt;code&gt;BMA&lt;/code&gt; for Bayesian model averaging.&lt;/p&gt;
+&lt;p&gt;(&lt;a href=&#34;https://www.r-project.org/doc/Rnews/Rnews_2005-2.pdf&#34; class=&#34;uri&#34;&gt;https://www.r-project.org/doc/Rnews/Rnews_2005-2.pdf&lt;/a&gt;)&lt;/p&gt;
+&lt;p&gt;I’ve used it a couple of times this year and think it’s great. The situation is this: you have a data set with a response variable and multiple explanatory variables (the goal could be prediction or inference). It’s crying out for a regression analysis. But you don’t want to do use a naive variable selection method because you know that’s bad. Is there something smarter you can do, and do &lt;em&gt;quickly&lt;/em&gt;?&lt;/p&gt;
+&lt;div id=&#34;example&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Example&lt;/h2&gt;
+&lt;p&gt;Let’s take the &lt;code&gt;veteran&lt;/code&gt; data set from the &lt;code&gt;survival&lt;/code&gt; package. This data comes from a randomized trial of two chemotherapies with a primary endpoint of overall survival. There are several covariates, which we can take a look at…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(survival)
+library(BMA)
+data(veteran)
+str(veteran)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## &amp;#39;data.frame&amp;#39;:    137 obs. of  8 variables:
+##  $ trt     : num  1 1 1 1 1 1 1 1 1 1 ...
+##  $ celltype: Factor w/ 4 levels &amp;quot;squamous&amp;quot;,&amp;quot;smallcell&amp;quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ time    : num  72 411 228 126 118 10 82 110 314 100 ...
+##  $ status  : num  1 1 1 1 1 1 1 1 1 0 ...
+##  $ karno   : num  60 70 60 60 70 20 40 80 50 70 ...
+##  $ diagtime: num  7 5 3 9 11 5 10 29 18 6 ...
+##  $ age     : num  69 64 38 63 65 49 69 68 43 70 ...
+##  $ prior   : num  0 10 0 10 10 0 10 0 0 0 ...&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;karno&lt;/code&gt; refers to Karnofsky performance score (from 0-100 where higher is better). Something’s gone wrong with the &lt;code&gt;prior&lt;/code&gt; treatment variable: this should be a yes/no. Variable &lt;code&gt;trt&lt;/code&gt; should also be categorical:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;veteran$trt &amp;lt;- factor(veteran$trt)
+veteran$prior &amp;lt;- factor(veteran$prior)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We can use the &lt;code&gt;bic.surv&lt;/code&gt; function to fit a Cox model for every possible combination of the explanatory variables.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;test.bic.surv&amp;lt;- bic.surv(Surv(time,status) ~ ., 
+                         data = veteran, 
+                         factor.type = TRUE)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The summary gives us the posterior probability for each model (by default each model is given the same prior probability)&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;summary(test.bic.surv, 
+        conditional=FALSE, 
+        digits=2)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## 
+## Call:
+## bic.surv.formula(f = Surv(time, status) ~ ., data = veteran,     factor.type = TRUE)
+## 
+## 
+##   6  models were selected
+##  Best  5  models (cumulative posterior probability =  0.95 ): 
+## 
+##                     p!=0    EV       SD      model 1   model 2   model 3 
+## trt                  11.3                                                
+##    .2                       0.02909  0.1058      .         .       0.2573
+## celltype             84.6                                                
+##         .smallcell          0.61564  0.3538    0.7121      .       0.8196
+##         .adeno              0.97619  0.4965    1.1508      .       1.1477
+##         .large              0.28260  0.2830    0.3251      .       0.3930
+## karno               100.0  -0.03135  0.0052   -0.0309   -0.0332   -0.0311
+## diagtime              5.4   0.00018  0.0020      .         .         .   
+## age                   6.1  -0.00036  0.0026      .         .         .   
+## prior                 5.6                                                
+##      .10                    0.00576  0.0542      .         .         .   
+##                                                                          
+## nVar                                             2         1         3   
+## BIC                                          -39.3626  -36.7742  -36.1558
+## post prob                                      0.562     0.154     0.113 
+##                     model 4   model 5 
+## trt                                   
+##    .2                   .         .   
+## celltype                              
+##         .smallcell    0.7208    0.7264
+##         .adeno        1.1643    1.1765
+##         .large        0.3215    0.3276
+## karno                -0.0318   -0.0311
+## diagtime                .         .   
+## age                  -0.0059      .   
+## prior                                 
+##      .10                .       0.1026
+##                                       
+## nVar                    3         3   
+## BIC                 -34.9292  -34.7553
+## post prob             0.061     0.056&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;It’s possible to plot the marginal posterior distribution for each covariate (avergaed according to posterior model probabilities):&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot(test.bic.surv)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-11-04-bma_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;img src=&#34;/post/2019-11-04-bma_files/figure-html/unnamed-chunk-5-2.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;div id=&#34;conclusions&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Conclusions&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;I’ve found these graphs really useful for showing the boss. Extremely intuitive.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;A drawback of &lt;code&gt;BMA&lt;/code&gt; is that it doesn’t handle missing data. Any row with &lt;code&gt;NA&lt;/code&gt;s will be removed.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;In a future post I’ll go more into the details of what &lt;code&gt;BMA&lt;/code&gt; is doing.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>flexsurv 2</title>
+      <link>/post/flexsurv-2/</link>
+      <pubDate>Fri, 01 Nov 2019 00:00:00 +0000</pubDate>
+      <guid>/post/flexsurv-2/</guid>
+      <description>
+
+
+&lt;p&gt;&lt;a href=&#34;/post/flexsurv&#34;&gt;Previously,&lt;/a&gt; I started discussing the &lt;code&gt;flexsurv&lt;/code&gt; package. I used it to fit a Weibull model. This is implemented as an accelerated failure time model. It is also a proportional hazards model (although, as I found previously, converting between the two is not so straightforward, but it can be done by &lt;code&gt;SurvRegCensCov&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;Now let’s compare Weibull regression with Cox regression. Firstly, Weibull regression:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;assumes proportional hazards;&lt;/li&gt;
+&lt;li&gt;the number of parameters is equal to &lt;span class=&#34;math inline&#34;&gt;\(k + 2\)&lt;/span&gt;, where &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt; is the number of covariates;&lt;/li&gt;
+&lt;li&gt;we can estimate things like the median, &lt;span class=&#34;math inline&#34;&gt;\(P(S&amp;gt;s^*)\)&lt;/span&gt;, etc. from the model…&lt;/li&gt;
+&lt;li&gt;but the model might be too restrictive – we won’t estimate these things very well.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Cox regression:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;assumes proportional hazards;&lt;/li&gt;
+&lt;li&gt;there are &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt; parameters (one for each covariate);&lt;/li&gt;
+&lt;li&gt;we don’t estimate the baseline hazard…&lt;/li&gt;
+&lt;li&gt;which means we don’t get estimates for things like the median, &lt;span class=&#34;math inline&#34;&gt;\(P(S&amp;gt;s^*)\)&lt;/span&gt;, etc.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;flexsurv&lt;/code&gt; has a function &lt;code&gt;flexsurvspline&lt;/code&gt; which allows one to bridge the gap between Weibull regression and Cox regresssion.&lt;/p&gt;
+&lt;div id=&#34;from-weibull-regression-to-cox-regression.&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;From Weibull regression to Cox regression.&lt;/h2&gt;
+&lt;p&gt;For a Weibull distribution with shape &lt;span class=&#34;math inline&#34;&gt;\(a\)&lt;/span&gt;, scale &lt;span class=&#34;math inline&#34;&gt;\(b\)&lt;/span&gt;, covariates &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt;, and regression coefficents &lt;span class=&#34;math inline&#34;&gt;\(\gamma\)&lt;/span&gt;, the survival probability is&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[S(t; x) = \exp\left\lbrace - \left( \frac{t}{b \cdot \exp(x^T\gamma)} \right) ^ a\right\rbrace\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Since survival is related to the log-cumulative hazard via &lt;span class=&#34;math inline&#34;&gt;\(S=\exp(-H)\)&lt;/span&gt;, this means that&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\log H(t;x) = a\log t - a\log(b) - a x^T\gamma\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;In words, the log-cumulative hazard has a linear relationship with (log-) time, with the intercept depending on the value of &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt;. For a given data set, we can check if this is reasonable by looking at non-paramteric estimates, &lt;span class=&#34;math inline&#34;&gt;\(\log \hat{H}(t; x)\)&lt;/span&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(survival)
+library(flexsurv)
+library(ggplot2)
+
+### Non-parametric analysis
+fit_km &amp;lt;- survfit(Surv(futime, death) ~ trt,
+                  data = myeloid)
+t_seq &amp;lt;- seq(1, 2500, length.out = 1000)
+km_sum &amp;lt;- summary(fit_km, times = t_seq, extend = TRUE)
+
+### Weibull regression
+fit_weibull &amp;lt;- flexsurvreg(Surv(futime, death) ~ trt, 
+                           dist = &amp;quot;weibull&amp;quot;, 
+                           data = myeloid)
+
+a &amp;lt;- fit_weibull$res[&amp;quot;shape&amp;quot;, &amp;quot;est&amp;quot;]
+b &amp;lt;- fit_weibull$res[&amp;quot;scale&amp;quot;, &amp;quot;est&amp;quot;]
+trtB &amp;lt;- fit_weibull$res[&amp;quot;trtB&amp;quot;, &amp;quot;est&amp;quot;]
+
+
+### plot log-cumulative hazard against log-time
+df &amp;lt;- data.frame(log_time = log(rep(t_seq, 2)),
+                 logcumhaz = log(-log(km_sum$surv)),
+                 trt = rep(c(&amp;quot;A&amp;quot;, &amp;quot;B&amp;quot;), each = 1000),
+                 logcumhaz_w = c(a * (log(t_seq) - log(b)),
+                                 a * (log(t_seq) - log(b) - trtB)))
+
+ggplot(data = df,
+       mapping = aes(x = log_time,
+                     y = logcumhaz,
+                     colour = trt)) +
+  geom_line() +
+  geom_line(mapping = aes(x = log_time,
+                          y = logcumhaz_w,
+                          colour = trt),
+            linetype = 2) +
+  theme_bw() +
+  scale_x_continuous(limits = c(2,8)) +
+  scale_y_continuous(limits = c(-6,0))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-11-01-flexsurv-2_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;What’s going on here? Well, the first thing to acknowledge is that the hazards only appear to be proportional after about 150 (&lt;span class=&#34;math inline&#34;&gt;\(e^5\)&lt;/span&gt;) days. I’m not sure I would immediately abandon a proportional-hazards model, though, as most of the events happen when the hazards are proportional (only 10-15% of the events happen before day 150), so the right-hand-side of the plot is far more important. Looking to the right then: the relationship between the log-cumulative hazard and log-time is not really linear. The distance between the two lines is roughly the same for the two models (Weibull and non-parametric), suggesting that the Weibull model does ok at estimating the hazard ratio. However, the lack of linearity will lead to poor estimates for the medians, &lt;span class=&#34;math inline&#34;&gt;\(P(S&amp;gt;s^*)\)&lt;/span&gt;, etc., as can be confirmed by plotting the survival curves:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ggplot(data = df,
+       mapping = aes(x = exp(log_time),
+                     y = exp(-exp(logcumhaz)),
+                     colour = trt)) +
+  geom_line() +
+  geom_line(mapping = aes(x = exp(log_time),
+                          y = exp(-exp(logcumhaz_w)),
+                          colour = trt),
+            linetype = 2) +
+  theme_bw()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-11-01-flexsurv-2_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;To improve the model, given this lack of linearity, it seems quite natural to change from&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\log H(t;x) = a\log t - a\log(b) - a x^T\gamma\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;to&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\log H(t;x) = s(\log t) + x^T\beta\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;where &lt;span class=&#34;math inline&#34;&gt;\(s(\log t)\)&lt;/span&gt; is a natural cubic spline function of (log) time. One can make the model more/less flexible by choosing a large/small number of knots. By default, the knots are placed at quantiles of the uncensored event times. How many knots are required? I don’t really have a good answer for this: one or two. At most, three? In this example, I’m using two inner knots, placed at 33% and 66% of the uncensored event times (indicated by vertical lines):&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;fit_spline_2 &amp;lt;- flexsurvspline(Surv(futime, death) ~ trt, 
+                               data = myeloid,
+                               k = 2,
+                               scale = &amp;quot;hazard&amp;quot;)
+
+spline_2_sum &amp;lt;- summary(fit_spline_2, t = t_seq, type = &amp;quot;cumhaz&amp;quot;)
+
+df2 &amp;lt;- cbind(df,
+      data.frame(logcumhaz_s2 = log(c(spline_2_sum$`trt=A`[&amp;quot;est&amp;quot;]$est,
+                                  spline_2_sum$`trt=B`[&amp;quot;est&amp;quot;]$est))))
+
+ggplot(data = df2,
+       mapping = aes(x = log_time,
+                     y = logcumhaz,
+                     colour = trt)) +
+  geom_line() +
+  geom_line(mapping = aes(x = log_time,
+                          y = logcumhaz_s2,
+                          colour = trt),
+            linetype = 2) +
+  theme_bw() +
+  scale_x_continuous(limits = c(2,8)) +
+  scale_y_continuous(limits = c(-6,0)) +
+  geom_vline(xintercept = fit_spline_2$knots)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-11-01-flexsurv-2_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;This looks a lot better, and we can see the improvement in the survival curves:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ggplot(data = df2,
+       mapping = aes(x = exp(log_time),
+                     y = exp(-exp(logcumhaz)),
+                     colour = trt)) +
+  geom_line() +
+  geom_line(mapping = aes(x = exp(log_time),
+                          y = exp(-exp(logcumhaz_s2)),
+                          colour = trt),
+            linetype = 2) +
+  theme_bw()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-11-01-flexsurv-2_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;from-cox-regression-to-weibull-regression.&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;From Cox regression to Weibull regression.&lt;/h2&gt;
+&lt;p&gt;If we start out from Cox regression&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[h(t;x)=h_0(t)\exp(x^T\beta)\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;this means that&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\log H(t;x) = \log H_0(t;x) + x^T\beta\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;We estimate the parameters &lt;span class=&#34;math inline&#34;&gt;\(\beta\)&lt;/span&gt; from the partial likelihood, and don’t estimate &lt;span class=&#34;math inline&#34;&gt;\(\log H_0(t;x)\)&lt;/span&gt;. So &lt;span class=&#34;math inline&#34;&gt;\(\log H_0(t;x)\)&lt;/span&gt; can be anything. However, with the &lt;code&gt;flexsurvspline&lt;/code&gt; function, as long as we use enough knots, &lt;span class=&#34;math inline&#34;&gt;\(s(\log(t))\)&lt;/span&gt; can be more-or-less anything (smooth), so the two methods will give the same information about &lt;span class=&#34;math inline&#34;&gt;\(\beta\)&lt;/span&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;conclusions&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Conclusions&lt;/h2&gt;
+&lt;p&gt;I can’t really see any reason not to switch from a Cox model to &lt;code&gt;flexsurvspline&lt;/code&gt;. You don’t lose anything in terms of inference on &lt;span class=&#34;math inline&#34;&gt;\(\beta\)&lt;/span&gt;, only gain a nice estimate for the baseline hazard. Also, inference is all based on maximum likelihood. No special theory required.&lt;/p&gt;
+&lt;p&gt;From the other side, if you start out from Weibull regression, and then realise that Weibull is the wrong model, you don’t have to think too hard about how to choose a better model, you &lt;em&gt;know&lt;/em&gt; that &lt;code&gt;flexsurvspline&lt;/code&gt; will be good (assuming proportional hazards is correct: for non-proportional hazards you may have to think harder).&lt;/p&gt;
+&lt;p&gt;What can go wrong? In small sample sizes, I guess there could be issues with over-fitting if too many knots are chosen. But given a decent sample size, I can’t see any problems. I would be interested to see a &lt;span class=&#34;math inline&#34;&gt;\(\log H_0(t;x)\)&lt;/span&gt; that is highly wiggly – doesn’t seem likely in practice.&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>flexsurv</title>
+      <link>/post/flexsurv/</link>
+      <pubDate>Mon, 28 Oct 2019 00:00:00 +0000</pubDate>
+      <guid>/post/flexsurv/</guid>
+      <description>
+
+
+&lt;p&gt;I’m going to write about some of my favourite R packages. I’ll start with &lt;code&gt;flexsurv&lt;/code&gt; (&lt;a href=&#34;https://github.com/chjackson/flexsurv-dev&#34; class=&#34;uri&#34;&gt;https://github.com/chjackson/flexsurv-dev&lt;/a&gt;) by Chris Jackson, which can be used to fit all kinds of parametric models to survival data. It can really do a lot, but I’ll pick out just 2 cool things I like about it:&lt;/p&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;Fit a standard survival model, but where it’s &lt;em&gt;slightly&lt;/em&gt; easier to work out what the parameters mean.&lt;/li&gt;
+&lt;li&gt;Fit a proportional hazards model, which is a lot like a Cox model, but where you also model the baseline hazard using a spline.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div id=&#34;consistent-parameter-values&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;1. Consistent parameter values&lt;/h2&gt;
+&lt;p&gt;As mentioned in the tutorial (&lt;a href=&#34;https://www.jstatsoft.org/article/view/v070i08&#34; class=&#34;uri&#34;&gt;https://www.jstatsoft.org/article/view/v070i08&lt;/a&gt;), for simple models &lt;code&gt;flexsurvreg&lt;/code&gt; acts as a wrapper for &lt;code&gt;survival::survreg&lt;/code&gt;, but where the parameters in the output match those of &lt;code&gt;dweibull&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;With &lt;code&gt;survival::survreg&lt;/code&gt; I would do, e.g.:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dat_ovarian &amp;lt;- survival::ovarian
+dat_ovarian$rx &amp;lt;- factor(dat_ovarian$rx)
+
+library(survival)
+fit_survreg = survreg(Surv(futime, fustat) ~ rx, 
+                      dist = &amp;quot;weibull&amp;quot;,
+                      data = dat_ovarian)
+
+summary(fit_survreg)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## 
+## Call:
+## survreg(formula = Surv(futime, fustat) ~ rx, data = dat_ovarian, 
+##     dist = &amp;quot;weibull&amp;quot;)
+##              Value Std. Error     z      p
+## (Intercept)  6.825      0.344 19.84 &amp;lt;2e-16
+## rx2          0.559      0.529  1.06   0.29
+## Log(scale)  -0.121      0.251 -0.48   0.63
+## 
+## Scale= 0.886 
+## 
+## Weibull distribution
+## Loglik(model)= -97.4   Loglik(intercept only)= -98
+##  Chisq= 1.18 on 1 degrees of freedom, p= 0.28 
+## Number of Newton-Raphson Iterations: 5 
+## n= 26&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Then I would look around online for an explanation of the output e.g. (&lt;a href=&#34;https://stats.stackexchange.com/questions/159044/weibull-survival-model-in-r&#34; class=&#34;uri&#34;&gt;https://stats.stackexchange.com/questions/159044/weibull-survival-model-in-r&lt;/a&gt;). There is also an explanation in &lt;code&gt;?survreg&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;On the other hand, using &lt;code&gt;flexsurv&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(flexsurv)
+fit_flexsurvreg = flexsurvreg(Surv(futime, fustat) ~ rx, 
+                              dist = &amp;quot;weibull&amp;quot;,
+                              data = dat_ovarian)
+
+fit_flexsurvreg&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Call:
+## flexsurvreg(formula = Surv(futime, fustat) ~ rx, data = dat_ovarian, 
+##     dist = &amp;quot;weibull&amp;quot;)
+## 
+## Estimates: 
+##        data mean  est       L95%      U95%      se        exp(est)
+## shape        NA      1.129     0.690     1.848     0.284        NA
+## scale        NA    920.128   468.868  1805.704   316.508        NA
+## rx2       0.500      0.559    -0.478     1.597     0.529     1.749
+##        L95%      U95%    
+## shape        NA        NA
+## scale        NA        NA
+## rx2       0.620     4.936
+## 
+## N = 26,  Events: 12,  Censored: 14
+## Total time at risk: 15588
+## Log-likelihood = -97.36415, df = 3
+## AIC = 200.7283&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The parameters &lt;code&gt;shape&lt;/code&gt; and &lt;code&gt;scale&lt;/code&gt; correspond to &lt;code&gt;dweibull&lt;/code&gt;. So I don’t have to think any further? Not quite: I still have to work out what the estimate of &lt;code&gt;rx2&lt;/code&gt; is doing. I might look at &lt;code&gt;exp(est) = 1.749&lt;/code&gt; and somehow expect this to be a hazard ratio. It’s not. It’s a multiplicative effect on the scale parameter. So when &lt;code&gt;rx = 1&lt;/code&gt; the scale is &lt;code&gt;920.1&lt;/code&gt;, and when &lt;code&gt;rx = 2&lt;/code&gt; the scale is &lt;code&gt;920.1 * 1.749&lt;/code&gt;. The hazard ratio (treatment 2 vs treatment 1) is&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\begin{align} \frac{h_2(x)}{h_1(x)} &amp;amp; = \left( \frac{b_1}{b_2} \right)^a \\
+                                      &amp;amp; = \left( \frac{920.1}{920.1 \times 1.749} \right)^{1.129}\\
+                                      &amp;amp; = 0.53 \end{align} \]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;where &lt;span class=&#34;math inline&#34;&gt;\(a\)&lt;/span&gt; is the common shape parameter, and &lt;span class=&#34;math inline&#34;&gt;\(b_1\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(b_2\)&lt;/span&gt; are the scale parameters.&lt;/p&gt;
+&lt;p&gt;Once I had started writing this post, I realized that it’s actually not straightforward to make inference on the hazard ratio using &lt;code&gt;flexsurv&lt;/code&gt;. For working out variances/covariances, the &lt;code&gt;survreg&lt;/code&gt; parameterization is indeed better. I looked around for other R packages in this space, and found &lt;code&gt;SurvRegCensCov&lt;/code&gt;, which can do this conversion automatically for you:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(SurvRegCensCov)
+ConvertWeibull(fit_survreg)$HR&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##            HR        LB       UB
+## rx2 0.5318051 0.1683444 1.679989&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;For completeness, using &lt;code&gt;flexsurv&lt;/code&gt;, the log-hazard ratio is&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\begin{align} \log\left( \frac{h_2(x)}{h_1(x) }\right) &amp;amp; = a\left\lbrace \log(b_1) - \log(b_2) \right\rbrace \\
+                                                         &amp;amp; = -\exp(\log(a)) \times \left\lbrace \log(b_2) - \log(b_1)  \right\rbrace \end{align}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;I can extract the terms &lt;span class=&#34;math inline&#34;&gt;\(\alpha:=\log(a)\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(\beta:=\log(b_2) - \log(b_1)\)&lt;/span&gt; from the &lt;code&gt;fit_flexsurvreg&lt;/code&gt; object, as well as their (co)variance.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;alpha &amp;lt;- fit_flexsurvreg$res.t[&amp;quot;shape&amp;quot;, &amp;quot;est&amp;quot;]
+beta &amp;lt;- fit_flexsurvreg$res.t[&amp;quot;rx2&amp;quot;, &amp;quot;est&amp;quot;]
+cov_alpha_beta &amp;lt;- vcov(fit_flexsurvreg)[c(&amp;quot;shape&amp;quot;, &amp;quot;rx2&amp;quot;), c(&amp;quot;shape&amp;quot;, &amp;quot;rx2&amp;quot;)]&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Then work out the variance of the log-hazard ratio using the delta method.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\text{var}\left\lbrace -\beta\exp(\alpha) \right\rbrace = (-\beta\exp(\alpha), -\exp(\alpha)) \text{Cov}(\alpha, \beta) \left( \begin{array}{c} -\beta\exp(\alpha) \\ -\exp(\alpha) \end{array}\right)\]&lt;/span&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;grad &amp;lt;- matrix(c(-beta*exp(alpha),
+                 -exp(alpha)), 
+               ncol = 1)
+var_lhr = t(grad) %*% cov_alpha_beta %*% grad
+se_lhr = sqrt(var_lhr)
+se_lhr&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##           [,1]
+## [1,] 0.5868807&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;And to get a 95% confidence interval for the hazard ratio…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;log_hr = -exp(alpha) * beta
+log_hr_upr = log_hr + qnorm(0.975) * se_lhr
+log_hr_lwr = log_hr - qnorm(0.975) * se_lhr
+
+data.frame(HR = exp(log_hr),
+           LB = exp(log_hr_lwr),
+           UB = exp(log_hr_upr))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##          HR        LB       UB
+## 1 0.5318051 0.1683444 1.679988&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;splines&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Splines&lt;/h2&gt;
+&lt;p&gt;The second thing I really like about &lt;code&gt;flexsurv&lt;/code&gt; is the proportional hazards model with a spline for the baseline hazard. I’ll explore this in &lt;a href=&#34;/post/flexsurv-2&#34;&gt;another post&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

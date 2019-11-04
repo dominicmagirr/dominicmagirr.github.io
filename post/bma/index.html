@@ -28,10 +28,12 @@
   
     
   
-  <meta name="description" content="Medical Statistician">
+  <meta name="description" content="Continuing my series on R packages that I like, I want to talk about BMA for Bayesian model averaging.
+(https://www.r-project.org/doc/Rnews/Rnews_2005-2.pdf)
+I’ve used it a couple of times this year and think it’s great. The situation is this: you have a data set with a response variable and multiple explanatory variables (the goal could be prediction or inference). It’s crying out for a regression analysis. But you don’t want to do use a naive variable selection method because you know that’s bad.">
 
   
-  <link rel="alternate" hreflang="en-us" href="/post/">
+  <link rel="alternate" hreflang="en-us" href="/post/bma/">
 
   
 
@@ -95,14 +97,12 @@
 
 
   
-  <link rel="alternate" href="/post/index.xml" type="application/rss+xml" title="Dominic Magirr">
-  
 
   <link rel="manifest" href="/index.webmanifest">
   <link rel="icon" type="image/png" href="/img/icon-32.png">
   <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
 
-  <link rel="canonical" href="/post/">
+  <link rel="canonical" href="/post/bma/">
 
   
   
@@ -115,18 +115,67 @@
   <meta property="twitter:card" content="summary">
   
   <meta property="og:site_name" content="Dominic Magirr">
-  <meta property="og:url" content="/post/">
-  <meta property="og:title" content="Posts | Dominic Magirr">
-  <meta property="og:description" content="Medical Statistician"><meta property="og:image" content="/img/icon-192.png">
+  <meta property="og:url" content="/post/bma/">
+  <meta property="og:title" content="BMA | Dominic Magirr">
+  <meta property="og:description" content="Continuing my series on R packages that I like, I want to talk about BMA for Bayesian model averaging.
+(https://www.r-project.org/doc/Rnews/Rnews_2005-2.pdf)
+I’ve used it a couple of times this year and think it’s great. The situation is this: you have a data set with a response variable and multiple explanatory variables (the goal could be prediction or inference). It’s crying out for a regression analysis. But you don’t want to do use a naive variable selection method because you know that’s bad."><meta property="og:image" content="/img/icon-192.png">
   <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
   
-    <meta property="og:updated_time" content="2019-11-04T00:00:00&#43;00:00">
+    
+      <meta property="article:published_time" content="2019-11-04T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2019-11-04T15:19:11&#43;00:00">
   
 
   
 
 
+    
 
+
+
+
+
+
+  
+
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "/post/bma/"
+  },
+  "headline": "BMA",
+  
+  "datePublished": "2019-11-04T00:00:00Z",
+  "dateModified": "2019-11-04T15:19:11Z",
+  
+  "author": {
+    "@type": "Person",
+    "name": "Dominic Magirr"
+  },
+  
+  "publisher": {
+    "@type": "Organization",
+    "name": "Dominic Magirr",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "/img/icon-512.png"
+    }
+  },
+  "description": "Continuing my series on R packages that I like, I want to talk about BMA for Bayesian model averaging.\n(https://www.r-project.org/doc/Rnews/Rnews_2005-2.pdf)\nI’ve used it a couple of times this year and think it’s great. The situation is this: you have a data set with a response variable and multiple explanatory variables (the goal could be prediction or inference). It’s crying out for a regression analysis. But you don’t want to do use a naive variable selection method because you know that’s bad."
+}
+</script>
+
+  
 
   
 
@@ -134,10 +183,13 @@
   
 
 
+  
 
 
 
-  <title>Posts | Dominic Magirr</title>
+
+
+  <title>BMA | Dominic Magirr</title>
 
 </head>
 
@@ -255,78 +307,33 @@
 </nav>
 
 
-  
-
-
-
-
-
-
-
-
-
-
-
+  <article class="article">
 
   
 
+
+
+
+
+
+
+
+
+
+
+
+  
+
   
   
+  
+<div class="article-container pt-3">
+  <h1>BMA</h1>
+
+  
+
   
     
-  
-<div class="universal-wrapper pt-3">
-  <h1>Posts</h1>
-
-  
-
-  
-</div>
-
-
-
-<div class="universal-wrapper">
-
-  
-
-  
-  
-    
-      
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-<div class="media stream-item">
-  <div class="media-body">
-
-    <h3 class="article-title mb-0 mt-0">
-      <a href="/post/bma/" >BMA</a>
-    </h3>
-
-    
-    <div class="article-style">
-      Continuing my series on R packages that I like, I want to talk about BMA for Bayesian model averaging. …
-    </div>
-    
-
-    <div class="stream-meta article-metadata">
-
-      
-
-      
-        
 
 
 <div class="article-metadata">
@@ -364,538 +371,262 @@
 
 </div>
 
-      
-    </div>
-
     
 
-  </div>
-  <div class="ml-3">
-    
-    
-  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
 </div>
 
-    
-  
-    
-      
 
 
+  <div class="article-container">
 
-
-
-
-
-
-
-
-
-
-  
-
-
-<div class="media stream-item">
-  <div class="media-body">
-
-    <h3 class="article-title mb-0 mt-0">
-      <a href="/post/flexsurv-2/" >flexsurv 2</a>
-    </h3>
-
-    
     <div class="article-style">
-      Previously, I started discussing the flexsurv package. I used it to fit a Weibull model. This is implemented as an accelerated failure …
-    </div>
-    
-
-    <div class="stream-meta article-metadata">
-
       
 
-      
-        
 
-
-<div class="article-metadata">
-
-  
-  
-
-  
-  <span class="article-date">
-    
-    
-      
-    
-    Nov 1, 2019
-  </span>
-  
-
-  
-
-  
-  <span class="middot-divider"></span>
-  <span class="article-reading-time">
-    5 min read
-  </span>
-  
-
-  
-  
-  
-
-  
-  
-
+<p>Continuing my series on R packages that I like, I want to talk about <code>BMA</code> for Bayesian model averaging.</p>
+<p>(<a href="https://www.r-project.org/doc/Rnews/Rnews_2005-2.pdf" class="uri">https://www.r-project.org/doc/Rnews/Rnews_2005-2.pdf</a>)</p>
+<p>I’ve used it a couple of times this year and think it’s great. The situation is this: you have a data set with a response variable and multiple explanatory variables (the goal could be prediction or inference). It’s crying out for a regression analysis. But you don’t want to do use a naive variable selection method because you know that’s bad. Is there something smarter you can do, and do <em>quickly</em>?</p>
+<div id="example" class="section level2">
+<h2>Example</h2>
+<p>Let’s take the <code>veteran</code> data set from the <code>survival</code> package. This data comes from a randomized trial of two chemotherapies with a primary endpoint of overall survival. There are several covariates, which we can take a look at…</p>
+<pre class="r"><code>library(survival)
+library(BMA)
+data(veteran)
+str(veteran)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    137 obs. of  8 variables:
+##  $ trt     : num  1 1 1 1 1 1 1 1 1 1 ...
+##  $ celltype: Factor w/ 4 levels &quot;squamous&quot;,&quot;smallcell&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ time    : num  72 411 228 126 118 10 82 110 314 100 ...
+##  $ status  : num  1 1 1 1 1 1 1 1 1 0 ...
+##  $ karno   : num  60 70 60 60 70 20 40 80 50 70 ...
+##  $ diagtime: num  7 5 3 9 11 5 10 29 18 6 ...
+##  $ age     : num  69 64 38 63 65 49 69 68 43 70 ...
+##  $ prior   : num  0 10 0 10 10 0 10 0 0 0 ...</code></pre>
+<p><code>karno</code> refers to Karnofsky performance score (from 0-100 where higher is better). Something’s gone wrong with the <code>prior</code> treatment variable: this should be a yes/no. Variable <code>trt</code> should also be categorical:</p>
+<pre class="r"><code>veteran$trt &lt;- factor(veteran$trt)
+veteran$prior &lt;- factor(veteran$prior)</code></pre>
+<p>We can use the <code>bic.surv</code> function to fit a Cox model for every possible combination of the explanatory variables.</p>
+<pre class="r"><code>test.bic.surv&lt;- bic.surv(Surv(time,status) ~ ., 
+                         data = veteran, 
+                         factor.type = TRUE)</code></pre>
+<p>The summary gives us the posterior probability for each model (by default each model is given the same prior probability)</p>
+<pre class="r"><code>summary(test.bic.surv, 
+        conditional=FALSE, 
+        digits=2)</code></pre>
+<pre><code>## 
+## Call:
+## bic.surv.formula(f = Surv(time, status) ~ ., data = veteran,     factor.type = TRUE)
+## 
+## 
+##   6  models were selected
+##  Best  5  models (cumulative posterior probability =  0.95 ): 
+## 
+##                     p!=0    EV       SD      model 1   model 2   model 3 
+## trt                  11.3                                                
+##    .2                       0.02909  0.1058      .         .       0.2573
+## celltype             84.6                                                
+##         .smallcell          0.61564  0.3538    0.7121      .       0.8196
+##         .adeno              0.97619  0.4965    1.1508      .       1.1477
+##         .large              0.28260  0.2830    0.3251      .       0.3930
+## karno               100.0  -0.03135  0.0052   -0.0309   -0.0332   -0.0311
+## diagtime              5.4   0.00018  0.0020      .         .         .   
+## age                   6.1  -0.00036  0.0026      .         .         .   
+## prior                 5.6                                                
+##      .10                    0.00576  0.0542      .         .         .   
+##                                                                          
+## nVar                                             2         1         3   
+## BIC                                          -39.3626  -36.7742  -36.1558
+## post prob                                      0.562     0.154     0.113 
+##                     model 4   model 5 
+## trt                                   
+##    .2                   .         .   
+## celltype                              
+##         .smallcell    0.7208    0.7264
+##         .adeno        1.1643    1.1765
+##         .large        0.3215    0.3276
+## karno                -0.0318   -0.0311
+## diagtime                .         .   
+## age                  -0.0059      .   
+## prior                                 
+##      .10                .       0.1026
+##                                       
+## nVar                    3         3   
+## BIC                 -34.9292  -34.7553
+## post prob             0.061     0.056</code></pre>
+<p>It’s possible to plot the marginal posterior distribution for each covariate (avergaed according to posterior model probabilities):</p>
+<pre class="r"><code>plot(test.bic.surv)</code></pre>
+<p><img src="/post/2019-11-04-bma_files/figure-html/unnamed-chunk-5-1.png" width="672" /><img src="/post/2019-11-04-bma_files/figure-html/unnamed-chunk-5-2.png" width="672" /></p>
+<div id="conclusions" class="section level3">
+<h3>Conclusions</h3>
+<ul>
+<li><p>I’ve found these graphs really useful for showing the boss. Extremely intuitive.</p></li>
+<li><p>A drawback of <code>BMA</code> is that it doesn’t handle missing data. Any row with <code>NA</code>s will be removed.</p></li>
+<li><p>In a future post I’ll go more into the details of what <code>BMA</code> is doing.</p></li>
+</ul>
+</div>
 </div>
 
-      
-    </div>
-
-    
-
-  </div>
-  <div class="ml-3">
-    
-    
-  </div>
-</div>
-
-    
-  
-    
-      
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-<div class="media stream-item">
-  <div class="media-body">
-
-    <h3 class="article-title mb-0 mt-0">
-      <a href="/post/flexsurv/" >flexsurv</a>
-    </h3>
-
-    
-    <div class="article-style">
-      I’m going to write about some of my favourite R packages. I’ll start with flexsurv (https://github.com/chjackson/flexsurv-dev) by Chris …
-    </div>
-    
-
-    <div class="stream-meta article-metadata">
-
-      
-
-      
-        
-
-
-<div class="article-metadata">
-
-  
-  
-
-  
-  <span class="article-date">
-    
-    
-      
-    
-    Oct 28, 2019
-  </span>
-  
-
-  
-
-  
-  <span class="middot-divider"></span>
-  <span class="article-reading-time">
-    4 min read
-  </span>
-  
-
-  
-  
-  
-
-  
-  
-
-</div>
-
-      
     </div>
 
     
 
-  </div>
-  <div class="ml-3">
-    
-    
-  </div>
+
+
+
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tags/r-packages/">R Packages</a>
+  
 </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+  
     
   
+  
+  <div class="media author-card content-widget-hr">
     
       
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-<div class="media stream-item">
-  <div class="media-body">
-
-    <h3 class="article-title mb-0 mt-0">
-      <a href="/post/longitudinal-hurdle-models-3/" >Longitudinal hurdle models 3</a>
-    </h3>
-
+      <img class="portrait mr-3" src="/authors/admin/avatar_hu3ad799765e91f69a41f3acc2fc665a63_309343_250x250_fill_q90_lanczos_center.jpg" alt="Avatar">
     
-    <div class="article-style">
-      In the last post on longitudinal hurdle models, I had just taken samples from the marginal mean
-\[\begin{align} g(\theta; x) &amp; = …
+
+    <div class="media-body">
+      <h5 class="card-title"><a href="/">Dominic Magirr</a></h5>
+      <h6 class="card-subtitle">Medical Statistician</h6>
+      <p class="card-text">Interested in the design, analysis and interpretation of clinical trials.</p>
+      <ul class="network-icon" aria-hidden="true">
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://www.linkedin.com/in/dominic-magirr-87666b12b/" target="_blank" rel="noopener">
+        <i class="fab fa-linkedin"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://scholar.google.co.uk/citations?user=obri2xMAAAAJ&amp;hl=en" target="_blank" rel="noopener">
+        <i class="ai ai-google-scholar"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://github.com/dominicmagirr" target="_blank" rel="noopener">
+        <i class="fab fa-github"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="/files/cv.pdf" >
+        <i class="ai ai-cv"></i>
+      </a>
+    </li>
+  
+</ul>
+
     </div>
-    
+  </div>
 
-    <div class="stream-meta article-metadata">
 
+
+
+
+
+
+
+
+  
+  
+  <div class="article-widget content-widget-hr">
+    <h3>Related</h3>
+    <ul>
       
-
+      <li><a href="/post/flexsurv-2/">flexsurv 2</a></li>
       
-        
-
-
-<div class="article-metadata">
-
-  
-  
-
-  
-  <span class="article-date">
-    
-    
+      <li><a href="/post/flexsurv/">flexsurv</a></li>
       
-    
-    Oct 25, 2019
-  </span>
+    </ul>
+  </div>
   
 
-  
 
-  
-  <span class="middot-divider"></span>
-  <span class="article-reading-time">
-    3 min read
-  </span>
-  
-
-  
-  
-  
-
-  
-  
-
-</div>
-
-      
-    </div>
-
-    
 
   </div>
-  <div class="ml-3">
-    
-    
-  </div>
-</div>
-
-    
-  
-    
-      
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-<div class="media stream-item">
-  <div class="media-body">
-
-    <h3 class="article-title mb-0 mt-0">
-      <a href="/post/longitudinal-hurdle-models-2/" >Longitudinal hurdle models 2</a>
-    </h3>
-
-    
-    <div class="article-style">
-      In a previous post I fit a longitudinal hurdle model using the brms package.
-library(brms) summary(fit_hurdle) ## Family: …
-    </div>
-    
-
-    <div class="stream-meta article-metadata">
-
-      
-
-      
-        
-
-
-<div class="article-metadata">
-
-  
-  
-
-  
-  <span class="article-date">
-    
-    
-      
-    
-    Oct 23, 2019
-  </span>
-  
-
-  
-
-  
-  <span class="middot-divider"></span>
-  <span class="article-reading-time">
-    5 min read
-  </span>
-  
-
-  
-  
-  
-
-  
-  
-
-</div>
-
-      
-    </div>
-
-    
-
-  </div>
-  <div class="ml-3">
-    
-    
-  </div>
-</div>
-
-    
-  
-    
-      
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-<div class="media stream-item">
-  <div class="media-body">
-
-    <h3 class="article-title mb-0 mt-0">
-      <a href="/post/longitudinal-hurdle-models/" >Longitudinal hurdle models</a>
-    </h3>
-
-    
-    <div class="article-style">
-      Data Recently, I have been modelling data that is longitudinal, contains excess zeros, and where the non-zero data is right-skewed and …
-    </div>
-    
-
-    <div class="stream-meta article-metadata">
-
-      
-
-      
-        
-
-
-<div class="article-metadata">
-
-  
-  
-
-  
-  <span class="article-date">
-    
-    
-      
-    
-    Oct 16, 2019
-  </span>
-  
-
-  
-
-  
-  <span class="middot-divider"></span>
-  <span class="article-reading-time">
-    4 min read
-  </span>
-  
-
-  
-  
-  
-
-  
-  
-
-</div>
-
-      
-    </div>
-
-    
-
-  </div>
-  <div class="ml-3">
-    
-    
-  </div>
-</div>
-
-    
-  
-    
-      
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-<div class="media stream-item">
-  <div class="media-body">
-
-    <h3 class="article-title mb-0 mt-0">
-      <a href="/post/log-rank-test/" >How to calculate the log-rank statistic</a>
-    </h3>
-
-    
-    <div class="article-style">
-      Suppose we have the following data.
-df &lt;- dplyr::tibble(patient_id = as.character(1:12), treatment = rep(c(&quot;C&quot;, …
-    </div>
-    
-
-    <div class="stream-meta article-metadata">
-
-      
-
-      
-        
-
-
-<div class="article-metadata">
-
-  
-  
-
-  
-  <span class="article-date">
-    
-    
-      
-    
-    Jun 3, 2019
-  </span>
-  
-
-  
-
-  
-  <span class="middot-divider"></span>
-  <span class="article-reading-time">
-    2 min read
-  </span>
-  
-
-  
-  
-  
-
-  
-  
-
-</div>
-
-      
-    </div>
-
-    
-
-  </div>
-  <div class="ml-3">
-    
-    
-  </div>
-</div>
-
-    
-  
-
-  
-
-
-</div>
+</article>
 
       
 
