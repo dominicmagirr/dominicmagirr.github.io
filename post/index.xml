@@ -5,12 +5,164 @@
     <link>/post/</link>
       <atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     <description>Posts</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Mon, 04 Nov 2019 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Tue, 05 Nov 2019 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>Posts</title>
       <link>/post/</link>
     </image>
+    
+    <item>
+      <title>BMA-2</title>
+      <link>/post/bma-2/</link>
+      <pubDate>Tue, 05 Nov 2019 00:00:00 +0000</pubDate>
+      <guid>/post/bma-2/</guid>
+      <description>
+
+
+&lt;p&gt;In my &lt;a href=&#34;/post/bma&#34;&gt;last post&lt;/a&gt; I had just used the &lt;code&gt;BMA&lt;/code&gt; package to do a quick analysis with Bayesian model averaging. The method rests on a lovely piece of theory. Posterior model probabilities are calculated via a simple application of Bayes rule:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[p(M_1 | D) = \frac{p(D | M_1)p(M_1)}{\sum_k p(D | M_k)p(M_k)}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;but it’s a challenge calculating the terms&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[p(D | M_k) = \int p(D | \theta_k, M_k)p(\theta_k | M_k) d\theta_k.\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.stat.washington.edu/raftery/Research/PDF/socmeth1995.pdf&#34;&gt;Rafferty (Section 4)&lt;/a&gt; gives a top-class explanation for why&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\log p(D | M_k) \approx \log p(D | \hat{\theta},M_k) - (d/2)\log n\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;where &lt;span class=&#34;math inline&#34;&gt;\(d\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(n\)&lt;/span&gt; are the number of parameters and “observations”, respectively, in model &lt;span class=&#34;math inline&#34;&gt;\(M_k\)&lt;/span&gt;. This is the same as saying&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[p(D | M_k) \approx \exp\left\lbrace -0.5 \times \text{BIC}(M_k)\right\rbrace,\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;where &lt;span class=&#34;math inline&#34;&gt;\(BIC\)&lt;/span&gt; is the &lt;a href=&#34;https://en.wikipedia.org/wiki/Bayesian_information_criterion&#34;&gt;Bayesian Information Criteria&lt;/a&gt;.&lt;/p&gt;
+&lt;div id=&#34;reproduce-bma-results-manually&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Reproduce &lt;code&gt;BMA&lt;/code&gt; results manually&lt;/h2&gt;
+&lt;p&gt;I find it helpful sometimes to do things the long way round. We started with the &lt;code&gt;survival::veterans&lt;/code&gt; data set, changing some covariates from numeric to categorical&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(survival)
+library(BMA)
+data(veteran)
+veteran$trt &amp;lt;- factor(veteran$trt)
+veteran$prior &amp;lt;- factor(veteran$prior)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now we can fit a Cox model to each combination of covariates&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## Extract names of covariates
+x_names &amp;lt;- setdiff(names(veteran), 
+                   c(&amp;quot;time&amp;quot;, &amp;quot;status&amp;quot;))
+
+## Find all combinations of covariates
+xs &amp;lt;- c(&amp;quot;1&amp;quot;,
+        unlist(purrr::map(seq_along(x_names),
+                          combn,
+                          x = x_names,
+                          FUN = function(x) paste(x, 
+                                                  collapse = &amp;quot; + &amp;quot;))))
+
+## Turn into model formulas
+fs &amp;lt;- paste(&amp;quot;Surv(time, status)&amp;quot;, xs, sep = &amp;quot; ~ &amp;quot;)
+
+## Fit models
+ms &amp;lt;- purrr::map(fs, 
+                 function(f) coxph(as.formula(f),
+                                   data = veteran, 
+                                   method = &amp;quot;breslow&amp;quot;, 
+                                   iter.max = 30))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;From the models, we can extract the BICs, turn them into (approximate) marginal probabilites of the data, and then into (approximate) posterior model probabilities (where we assume equal prior probabilities for each model)…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;get_bic &amp;lt;- function(m){
+   log(m$nevent) * length(coef(m)) - 2 * rev(m$loglik)[1]
+}
+
+bics &amp;lt;- purrr::map_dbl(ms, get_bic)
+
+p_ds &amp;lt;- exp(-0.5 * bics)
+
+p_ms &amp;lt;- p_ds / (sum(p_ds))
+
+## calculate cut-off for model inclusion
+odds_ms &amp;lt;- p_ms / (1 - p_ms)
+cut_off &amp;lt;- 0.05 * max(odds_ms) / (1 + 0.05 * max(odds_ms))
+
+plot(seq_along(p_ms), p_ms,
+     xlab = &amp;quot;Model index&amp;quot;,
+     ylab = &amp;quot;p(M|D)&amp;quot;)
+
+abline(h = cut_off, col = 2)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-11-05-bma-2_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Most of the models have very low posterior probability. Only 6 cross the default threshold for inclusion in the final model (odds ratio less than 20 compared to the best model). I can extract those models and re-standardise:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;include_indices &amp;lt;- which(p_ms &amp;gt;= cut_off)
+ms_include &amp;lt;- ms[include_indices]
+p_ms_include &amp;lt;- p_ms[include_indices] / sum(p_ms[include_indices])
+data.frame(x = xs[include_indices],
+           p = round(p_ms_include,3))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##                             x     p
+## 1                       karno 0.154
+## 2            celltype + karno 0.562
+## 3      trt + celltype + karno 0.113
+## 4 celltype + karno + diagtime 0.054
+## 5      celltype + karno + age 0.061
+## 6    celltype + karno + prior 0.056&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;You can &lt;a href=&#34;/post/bma&#34;&gt;check&lt;/a&gt; that this matches the output from the &lt;code&gt;BMA::bic.surv&lt;/code&gt; summary.&lt;/p&gt;
+&lt;div id=&#34;marginal-posterior-distributions-of-coefficients&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Marginal posterior distributions of coefficients&lt;/h3&gt;
+&lt;p&gt;This part is messy, to be honest, but I wanted to finish the job. To reproduce the posterior density plots, I start by putting posterior means and variances into a table, with corresponding posterior model probabilities:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;post_df &amp;lt;- purrr::map2_dfr(ms_include, p_ms_include,
+                           function(m, p) data.frame(mean = unname(coef(m)),
+                                                     var = unname(diag(vcov(m))), 
+                                                     p = p,
+                                                     covariate = names(coef(m)),
+                                                     stringsAsFactors = FALSE))
+
+head(post_df)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##          mean          var         p         covariate
+## 1 -0.03324294 2.573811e-05 0.1540161             karno
+## 2  0.71214811 6.387773e-02 0.5618671 celltypesmallcell
+## 3  1.15080136 8.576748e-02 0.5618671     celltypeadeno
+## 4  0.32514265 7.655965e-02 0.5618671     celltypelarge
+## 5 -0.03090393 2.681814e-05 0.5618671             karno
+## 6  0.25731308 4.025205e-02 0.1130516              trt2&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;I can turn this into a function to find the non-zero densities:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;non_zero_density &amp;lt;- function(x, select_cov){
+  
+  df &amp;lt;- post_df[post_df$covariate == select_cov,] 
+  ds &amp;lt;- purrr::pmap_dfc(list(p = df$p,
+                             m = df$mean,
+                             v = df$var),
+                        function(p,m,v) p * dnorm(x, m, sqrt(v)))
+  
+  rowSums(ds)
+  
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;For example (I’ve cheated here by looking ahead for a sensible range of x for &lt;code&gt;trt2&lt;/code&gt;)…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;x_trt2 &amp;lt;- seq(-0.5, 1, length.out = 100)
+nzd_trt2 &amp;lt;- non_zero_density(x = x_trt2,
+                      select_cov = &amp;quot;trt2&amp;quot;)
+
+plot(x_trt2,
+     nzd_trt2,
+     type = &amp;quot;l&amp;quot;,
+     xlab = &amp;quot;coefficient for trt2&amp;quot;,
+     ylab = &amp;quot;non-zero density&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-11-05-bma-2_files/figure-html/unnamed-chunk-7-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;This is looking good now, &lt;a href=&#34;/post/bma&#34;&gt;compared to last time&lt;/a&gt;, but we still need to find the posterior probability that &lt;code&gt;trt2&lt;/code&gt; is excluded from the model, and sort out the y-axis scale (in &lt;code&gt;?plot.bic.surv&lt;/code&gt; it says “The nonzero part of the distribution is scaled so that the maximum height is equal to the probability that the coefficient is nonzero.”)…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;prob_nonzero &amp;lt;- function(select_cov){
+  
+  df &amp;lt;- post_df[post_df$covariate == select_cov,] 
+  sum(df$p)
+  
+}
+rescale_nzd &amp;lt;- function(nzd, pnz){
+  nzd / max(nzd) * pnz
+}
+
+pnz_trt2 &amp;lt;- prob_nonzero(&amp;quot;trt2&amp;quot;)
+rnzd_trt2 &amp;lt;- rescale_nzd(nzd_trt2, pnz_trt2)
+
+plot(x_trt2,
+     rnzd_trt2,
+     type = &amp;quot;l&amp;quot;,
+     xlab = &amp;quot;coefficient for trt2&amp;quot;,
+     ylab = &amp;quot; &amp;quot;,
+     ylim = c(0,1))
+
+points(c(0,0), c(0, 1 - pnz_trt2), type = &amp;#39;l&amp;#39;, lwd = 3)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-11-05-bma-2_files/figure-html/unnamed-chunk-8-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Yep, there we go! I could now repeat this for the other covariates if I wanted.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+    </item>
     
     <item>
       <title>BMA</title>
@@ -20,9 +172,9 @@
       <description>
 
 
-&lt;p&gt;Continuing my series on R packages that I like, I want to talk about &lt;code&gt;BMA&lt;/code&gt; for Bayesian model averaging.&lt;/p&gt;
+&lt;p&gt;I’ve used the &lt;code&gt;BMA&lt;/code&gt; package for Bayesian model averaging a couple of times this year and think it’s great.&lt;/p&gt;
 &lt;p&gt;(&lt;a href=&#34;https://www.r-project.org/doc/Rnews/Rnews_2005-2.pdf&#34; class=&#34;uri&#34;&gt;https://www.r-project.org/doc/Rnews/Rnews_2005-2.pdf&lt;/a&gt;)&lt;/p&gt;
-&lt;p&gt;I’ve used it a couple of times this year and think it’s great. The situation is this: you have a data set with a response variable and multiple explanatory variables (the goal could be prediction or inference). It’s crying out for a regression analysis. But you don’t want to do use a naive variable selection method because you know that’s bad. Is there something smarter you can do, and do &lt;em&gt;quickly&lt;/em&gt;?&lt;/p&gt;
+&lt;p&gt;The situation is this: you have a data set with a response variable and multiple explanatory variables (the goal could be prediction or inference). It’s crying out for a regression analysis. But you don’t want to do use a naive variable selection method because you &lt;a href=&#34;https://onlinelibrary.wiley.com/doi/pdf/10.1111/tri.12895&#34;&gt;know that’s bad&lt;/a&gt;. Is there something smarter you can do, and do &lt;em&gt;quickly&lt;/em&gt;?&lt;/p&gt;
 &lt;div id=&#34;example&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Example&lt;/h2&gt;
 &lt;p&gt;Let’s take the &lt;code&gt;veteran&lt;/code&gt; data set from the &lt;code&gt;survival&lt;/code&gt; package. This data comes from a randomized trial of two chemotherapies with a primary endpoint of overall survival. There are several covariates, which we can take a look at…&lt;/p&gt;
@@ -90,15 +242,15 @@ veteran$prior &amp;lt;- factor(veteran$prior)&lt;/code&gt;&lt;/pre&gt;
 ## nVar                    3         3   
 ## BIC                 -34.9292  -34.7553
 ## post prob             0.061     0.056&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;It’s possible to plot the marginal posterior distribution for each covariate (avergaed according to posterior model probabilities):&lt;/p&gt;
+&lt;p&gt;It’s possible to plot the marginal posterior distribution for each covariate (averaged according to posterior model probabilities):&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot(test.bic.surv)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/post/2019-11-04-bma_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;img src=&#34;/post/2019-11-04-bma_files/figure-html/unnamed-chunk-5-2.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;div id=&#34;conclusions&#34; class=&#34;section level3&#34;&gt;
 &lt;h3&gt;Conclusions&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;I’ve found these graphs really useful for showing the boss. Extremely intuitive.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;I’ve found these graphs really useful for showing the boss. When you want to show-off potentially interesting relationships, but prevent them (to some extent) from getting carried away. This is an intuitive way to do it.&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;A drawback of &lt;code&gt;BMA&lt;/code&gt; is that it doesn’t handle missing data. Any row with &lt;code&gt;NA&lt;/code&gt;s will be removed.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;In a future post I’ll go more into the details of what &lt;code&gt;BMA&lt;/code&gt; is doing.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;In a &lt;a href=&#34;/post/bma-2&#34;&gt;future post&lt;/a&gt; I’ll go more into the details of what &lt;code&gt;BMA&lt;/code&gt; is doing.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
 &lt;/div&gt;
