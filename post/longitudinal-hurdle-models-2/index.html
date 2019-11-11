@@ -275,6 +275,35 @@ library(brms) summary(fit_hurdle) ## Family: hurdle_lognormal ## Links: mu = ide
         
         
 
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#talks"><span>Talks</span></a>
+        </li>
+
+        
+        
+
       
       </ul>
       <ul class="navbar-nav ml-auto">
@@ -461,8 +490,8 @@ summary(fit_hurdle)</code></pre>
        allow_new_levels = TRUE,
        sample_new_levels = &quot;gaussian&quot;,
        robust = TRUE)</code></pre>
-<pre><code>##       Estimate Est.Error         Q2.5   Q97.5
-## [1,] 0.8787689  1.276364 0.0009196831 58.3599</code></pre>
+<pre><code>##       Estimate Est.Error         Q2.5    Q97.5
+## [1,] 0.9095811  1.315207 0.0009475099 58.14658</code></pre>
 <p>and this is indeed what’s happening, as can be seen by going through the steps manually</p>
 <pre class="r"><code>ps &lt;- posterior_samples(fit_hurdle)
 
@@ -501,7 +530,7 @@ ey &lt;- (1 - plogis(xi + u)) * exp(eta + v + sigma_error ^ 2 / 2)
 
 round(quantile(ey, probs = c(0.025, 0.5, 0.975)), 3)</code></pre>
 <pre><code>##   2.5%    50%  97.5% 
-##  0.001  0.966 63.905</code></pre>
+##  0.001  0.927 52.369</code></pre>
 </div>
 <div id="unconditional-expectation" class="section level3">
 <h3>Unconditional expectation</h3>
@@ -518,7 +547,7 @@ round(quantile(ey, probs = c(0.025, 0.5, 0.975)), 3)</code></pre>
                      nsims = 1000, 
                      fit = fit_hurdle)</code></pre>
 <pre><code>##   id time     2.5%      50%    97.5%
-## 1 NA    2 3.872818 7.534902 18.91359</code></pre>
+## 1 NA    2 3.845286 7.511835 19.58231</code></pre>
 </div>
 
     </div>
@@ -528,6 +557,12 @@ round(quantile(ey, probs = c(0.025, 0.5, 0.975)), 3)</code></pre>
 
 
 
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tags/technical/">Technical</a>
+  
+</div>
 
 
 
@@ -645,6 +680,15 @@ round(quantile(ey, probs = c(0.025, 0.5, 0.975)), 3)</code></pre>
 
 
   
+  
+  <div class="article-widget content-widget-hr">
+    <h3>Related</h3>
+    <ul>
+      
+      <li><a href="/post/longitudinal-hurdle-models/">Longitudinal hurdle models</a></li>
+      
+    </ul>
+  </div>
   
 
 

@@ -174,7 +174,7 @@ points(c(0,0), c(0, 1 - pnz_trt2), type = &amp;#39;l&amp;#39;, lwd = 3)&lt;/code
 
 &lt;p&gt;I’ve used the &lt;code&gt;BMA&lt;/code&gt; package for Bayesian model averaging a couple of times this year and think it’s great.&lt;/p&gt;
 &lt;p&gt;(&lt;a href=&#34;https://www.r-project.org/doc/Rnews/Rnews_2005-2.pdf&#34; class=&#34;uri&#34;&gt;https://www.r-project.org/doc/Rnews/Rnews_2005-2.pdf&lt;/a&gt;)&lt;/p&gt;
-&lt;p&gt;The situation is this: you have a data set with a response variable and multiple explanatory variables (the goal could be prediction or inference). It’s crying out for a regression analysis. But you don’t want to do use a naive variable selection method because you &lt;a href=&#34;https://onlinelibrary.wiley.com/doi/pdf/10.1111/tri.12895&#34;&gt;know that’s bad&lt;/a&gt;. Is there something smarter you can do, and do &lt;em&gt;quickly&lt;/em&gt;?&lt;/p&gt;
+&lt;p&gt;The situation is this: you have a data set with a response variable and multiple explanatory variables (the goal could be prediction or inference). It’s crying out for a regression analysis. But you don’t want to use a naive variable selection method because you &lt;a href=&#34;https://onlinelibrary.wiley.com/doi/pdf/10.1111/tri.12895&#34;&gt;know that’s bad&lt;/a&gt;. Is there something smarter you can do, and do &lt;em&gt;quickly&lt;/em&gt;?&lt;/p&gt;
 &lt;div id=&#34;example&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Example&lt;/h2&gt;
 &lt;p&gt;Let’s take the &lt;code&gt;veteran&lt;/code&gt; data set from the &lt;code&gt;survival&lt;/code&gt; package. This data comes from a randomized trial of two chemotherapies with a primary endpoint of overall survival. There are several covariates, which we can take a look at…&lt;/p&gt;

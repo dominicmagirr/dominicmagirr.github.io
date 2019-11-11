@@ -174,7 +174,7 @@ points(c(0,0), c(0, 1 - pnz_trt2), type = &amp;#39;l&amp;#39;, lwd = 3)&lt;/code
 
 &lt;p&gt;I’ve used the &lt;code&gt;BMA&lt;/code&gt; package for Bayesian model averaging a couple of times this year and think it’s great.&lt;/p&gt;
 &lt;p&gt;(&lt;a href=&#34;https://www.r-project.org/doc/Rnews/Rnews_2005-2.pdf&#34; class=&#34;uri&#34;&gt;https://www.r-project.org/doc/Rnews/Rnews_2005-2.pdf&lt;/a&gt;)&lt;/p&gt;
-&lt;p&gt;The situation is this: you have a data set with a response variable and multiple explanatory variables (the goal could be prediction or inference). It’s crying out for a regression analysis. But you don’t want to do use a naive variable selection method because you &lt;a href=&#34;https://onlinelibrary.wiley.com/doi/pdf/10.1111/tri.12895&#34;&gt;know that’s bad&lt;/a&gt;. Is there something smarter you can do, and do &lt;em&gt;quickly&lt;/em&gt;?&lt;/p&gt;
+&lt;p&gt;The situation is this: you have a data set with a response variable and multiple explanatory variables (the goal could be prediction or inference). It’s crying out for a regression analysis. But you don’t want to use a naive variable selection method because you &lt;a href=&#34;https://onlinelibrary.wiley.com/doi/pdf/10.1111/tri.12895&#34;&gt;know that’s bad&lt;/a&gt;. Is there something smarter you can do, and do &lt;em&gt;quickly&lt;/em&gt;?&lt;/p&gt;
 &lt;div id=&#34;example&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Example&lt;/h2&gt;
 &lt;p&gt;Let’s take the &lt;code&gt;veteran&lt;/code&gt; data set from the &lt;code&gt;survival&lt;/code&gt; package. This data comes from a randomized trial of two chemotherapies with a primary endpoint of overall survival. There are several covariates, which we can take a look at…&lt;/p&gt;
@@ -543,8 +543,8 @@ hurlong::marg_pyk_q(k = 0.5,
                     newdata = x, 
                     nsims = 1000, 
                     fit = fit_hurdle)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;##   id time      2.5%      50%     97.5%
-## 1 NA    2 0.4239409 0.501178 0.5801595&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   id time     2.5%       50%     97.5%
+## 1 NA    2 0.421836 0.5018633 0.5792536&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div id=&#34;samples-from-textmediany-mid-theta-x&#34; class=&#34;section level3&#34;&gt;
 &lt;h3&gt;Samples from &lt;span class=&#34;math inline&#34;&gt;\(\text{median}(Y \mid \theta; x)\)&lt;/span&gt;&lt;/h3&gt;
@@ -562,7 +562,7 @@ hurlong::marg_pyk_q(k = 0.5,
                                length.out = 15)), # where to evaluate p(Y&amp;lt;k)
                   fit = fit_hurdle)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;##   id time      2.5%       50%     97.5%
-## 1 NA    2 0.2325832 0.4891982 0.8864017&lt;/code&gt;&lt;/pre&gt;
+## 1 NA    2 0.2332964 0.4894882 0.8856152&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div id=&#34;predictions&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Predictions&lt;/h2&gt;
@@ -573,7 +573,7 @@ hurlong::marg_pyk_q(k = 0.5,
         newdata = data.frame(id = 1, time = &amp;quot;2&amp;quot;),
         robust = TRUE)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;##       Estimate Est.Error Q2.5    Q97.5
-## [1,] 0.2427486 0.3112582    0 2.078795&lt;/code&gt;&lt;/pre&gt;
+## [1,] 0.2448615 0.3224153    0 2.145083&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;and, secondly, for a new patient &lt;span class=&#34;math inline&#34;&gt;\(i&amp;#39;\)&lt;/span&gt;, where we draw from&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[ f(\tilde{y} \mid \mathbf{y} ; x) = f(\tilde{y} \mid u_{i&amp;#39;}, v_{i&amp;#39;}, \theta, \mathbf{y} ; x)f(u_{i&amp;#39;}, v_{i&amp;#39;} \mid \theta,  \mathbf{y}) f(\theta \mid \mathbf{y}) \]&lt;/span&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;predict(fit_hurdle,
@@ -582,7 +582,7 @@ hurlong::marg_pyk_q(k = 0.5,
         sample_new_levels = &amp;quot;gaussian&amp;quot;,
         robust = TRUE)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;##       Estimate Est.Error Q2.5    Q97.5
-## [1,] 0.4822929 0.7150474    0 57.66133&lt;/code&gt;&lt;/pre&gt;
+## [1,] 0.4614108 0.6840876    0 52.57643&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 </description>
     </item>
@@ -663,8 +663,8 @@ summary(fit_hurdle)&lt;/code&gt;&lt;/pre&gt;
        allow_new_levels = TRUE,
        sample_new_levels = &amp;quot;gaussian&amp;quot;,
        robust = TRUE)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;##       Estimate Est.Error         Q2.5   Q97.5
-## [1,] 0.8787689  1.276364 0.0009196831 58.3599&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##       Estimate Est.Error         Q2.5    Q97.5
+## [1,] 0.9095811  1.315207 0.0009475099 58.14658&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;and this is indeed what’s happening, as can be seen by going through the steps manually&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ps &amp;lt;- posterior_samples(fit_hurdle)
 
@@ -703,7 +703,7 @@ ey &amp;lt;- (1 - plogis(xi + u)) * exp(eta + v + sigma_error ^ 2 / 2)
 
 round(quantile(ey, probs = c(0.025, 0.5, 0.975)), 3)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;##   2.5%    50%  97.5% 
-##  0.001  0.966 63.905&lt;/code&gt;&lt;/pre&gt;
+##  0.001  0.927 52.369&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div id=&#34;unconditional-expectation&#34; class=&#34;section level3&#34;&gt;
 &lt;h3&gt;Unconditional expectation&lt;/h3&gt;
@@ -720,7 +720,7 @@ round(quantile(ey, probs = c(0.025, 0.5, 0.975)), 3)&lt;/code&gt;&lt;/pre&gt;
                      nsims = 1000, 
                      fit = fit_hurdle)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;##   id time     2.5%      50%    97.5%
-## 1 NA    2 3.872818 7.534902 18.91359&lt;/code&gt;&lt;/pre&gt;
+## 1 NA    2 3.845286 7.511835 19.58231&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 </description>
     </item>

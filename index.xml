@@ -5,7 +5,7 @@
     <link>/</link>
       <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <description>Dominic Magirr</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 01 Jun 2030 13:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Tue, 05 Nov 2019 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>Dominic Magirr</title>
@@ -79,29 +79,6 @@
 &lt;p&gt;Suspendisse a tincidunt lacus. Curabitur at urna sagittis, dictum ante sit amet, euismod magna. Sed rutrum massa id tortor commodo, vitae elementum turpis tempus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean purus turpis, venenatis a ullamcorper nec, tincidunt et massa. Integer posuere quam rutrum arcu vehicula imperdiet. Mauris ullamcorper quam vitae purus congue, quis euismod magna eleifend. Vestibulum semper vel augue eget tincidunt. Fusce eget justo sodales, dapibus odio eu, ultrices lorem. Duis condimentum lorem id eros commodo, in facilisis mauris scelerisque. Morbi sed auctor leo. Nullam volutpat a lacus quis pharetra. Nulla congue rutrum magna a ornare.&lt;/p&gt;
 
 &lt;p&gt;Aliquam in turpis accumsan, malesuada nibh ut, hendrerit justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque sed erat nec justo posuere suscipit. Donec ut efficitur arcu, in malesuada neque. Nunc dignissim nisl massa, id vulputate nunc pretium nec. Quisque eget urna in risus suscipit ultricies. Pellentesque odio odio, tincidunt in eleifend sed, posuere a diam. Nam gravida nisl convallis semper elementum. Morbi vitae felis faucibus, vulputate orci placerat, aliquet nisi. Aliquam erat volutpat. Maecenas sagittis pulvinar purus, sed porta quam laoreet at.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Example Talk</title>
-      <link>/talk/example/</link>
-      <pubDate>Sat, 01 Jun 2030 13:00:00 +0000</pubDate>
-      <guid>/talk/example/</guid>
-      <description>&lt;div class=&#34;alert alert-note&#34;&gt;
-  &lt;div&gt;
-    Click on the &lt;strong&gt;Slides&lt;/strong&gt; button above to view the built-in slides feature.
-  &lt;/div&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Slides can be added in a few ways:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Create&lt;/strong&gt; slides using Academic&amp;rsquo;s &lt;a href=&#34;https://sourcethemes.com/academic/docs/managing-content/#create-slides&#34; target=&#34;_blank&#34;&gt;&lt;em&gt;Slides&lt;/em&gt;&lt;/a&gt; feature and link using &lt;code&gt;slides&lt;/code&gt; parameter in the front matter of the talk file&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Upload&lt;/strong&gt; an existing slide deck to &lt;code&gt;static/&lt;/code&gt; and link using &lt;code&gt;url_slides&lt;/code&gt; parameter in the front matter of the talk file&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Embed&lt;/strong&gt; your slides (e.g. Google Slides) or presentation video on this page using &lt;a href=&#34;https://sourcethemes.com/academic/docs/writing-markdown-latex/&#34; target=&#34;_blank&#34;&gt;shortcodes&lt;/a&gt;.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Further talk details can easily be added to this page using &lt;em&gt;Markdown&lt;/em&gt; and $\rm \LaTeX$ math code.&lt;/p&gt;
 </description>
     </item>
     
@@ -267,7 +244,7 @@ points(c(0,0), c(0, 1 - pnz_trt2), type = &amp;#39;l&amp;#39;, lwd = 3)&lt;/code
 
 &lt;p&gt;I’ve used the &lt;code&gt;BMA&lt;/code&gt; package for Bayesian model averaging a couple of times this year and think it’s great.&lt;/p&gt;
 &lt;p&gt;(&lt;a href=&#34;https://www.r-project.org/doc/Rnews/Rnews_2005-2.pdf&#34; class=&#34;uri&#34;&gt;https://www.r-project.org/doc/Rnews/Rnews_2005-2.pdf&lt;/a&gt;)&lt;/p&gt;
-&lt;p&gt;The situation is this: you have a data set with a response variable and multiple explanatory variables (the goal could be prediction or inference). It’s crying out for a regression analysis. But you don’t want to do use a naive variable selection method because you &lt;a href=&#34;https://onlinelibrary.wiley.com/doi/pdf/10.1111/tri.12895&#34;&gt;know that’s bad&lt;/a&gt;. Is there something smarter you can do, and do &lt;em&gt;quickly&lt;/em&gt;?&lt;/p&gt;
+&lt;p&gt;The situation is this: you have a data set with a response variable and multiple explanatory variables (the goal could be prediction or inference). It’s crying out for a regression analysis. But you don’t want to use a naive variable selection method because you &lt;a href=&#34;https://onlinelibrary.wiley.com/doi/pdf/10.1111/tri.12895&#34;&gt;know that’s bad&lt;/a&gt;. Is there something smarter you can do, and do &lt;em&gt;quickly&lt;/em&gt;?&lt;/p&gt;
 &lt;div id=&#34;example&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Example&lt;/h2&gt;
 &lt;p&gt;Let’s take the &lt;code&gt;veteran&lt;/code&gt; data set from the &lt;code&gt;survival&lt;/code&gt; package. This data comes from a randomized trial of two chemotherapies with a primary endpoint of overall survival. There are several covariates, which we can take a look at…&lt;/p&gt;
@@ -636,8 +613,8 @@ hurlong::marg_pyk_q(k = 0.5,
                     newdata = x, 
                     nsims = 1000, 
                     fit = fit_hurdle)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;##   id time      2.5%      50%     97.5%
-## 1 NA    2 0.4239409 0.501178 0.5801595&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   id time     2.5%       50%     97.5%
+## 1 NA    2 0.421836 0.5018633 0.5792536&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div id=&#34;samples-from-textmediany-mid-theta-x&#34; class=&#34;section level3&#34;&gt;
 &lt;h3&gt;Samples from &lt;span class=&#34;math inline&#34;&gt;\(\text{median}(Y \mid \theta; x)\)&lt;/span&gt;&lt;/h3&gt;
@@ -655,7 +632,7 @@ hurlong::marg_pyk_q(k = 0.5,
                                length.out = 15)), # where to evaluate p(Y&amp;lt;k)
                   fit = fit_hurdle)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;##   id time      2.5%       50%     97.5%
-## 1 NA    2 0.2325832 0.4891982 0.8864017&lt;/code&gt;&lt;/pre&gt;
+## 1 NA    2 0.2332964 0.4894882 0.8856152&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div id=&#34;predictions&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Predictions&lt;/h2&gt;
@@ -666,7 +643,7 @@ hurlong::marg_pyk_q(k = 0.5,
         newdata = data.frame(id = 1, time = &amp;quot;2&amp;quot;),
         robust = TRUE)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;##       Estimate Est.Error Q2.5    Q97.5
-## [1,] 0.2427486 0.3112582    0 2.078795&lt;/code&gt;&lt;/pre&gt;
+## [1,] 0.2448615 0.3224153    0 2.145083&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;and, secondly, for a new patient &lt;span class=&#34;math inline&#34;&gt;\(i&amp;#39;\)&lt;/span&gt;, where we draw from&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[ f(\tilde{y} \mid \mathbf{y} ; x) = f(\tilde{y} \mid u_{i&amp;#39;}, v_{i&amp;#39;}, \theta, \mathbf{y} ; x)f(u_{i&amp;#39;}, v_{i&amp;#39;} \mid \theta,  \mathbf{y}) f(\theta \mid \mathbf{y}) \]&lt;/span&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;predict(fit_hurdle,
@@ -675,7 +652,7 @@ hurlong::marg_pyk_q(k = 0.5,
         sample_new_levels = &amp;quot;gaussian&amp;quot;,
         robust = TRUE)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;##       Estimate Est.Error Q2.5    Q97.5
-## [1,] 0.4822929 0.7150474    0 57.66133&lt;/code&gt;&lt;/pre&gt;
+## [1,] 0.4614108 0.6840876    0 52.57643&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 </description>
     </item>
@@ -756,8 +733,8 @@ summary(fit_hurdle)&lt;/code&gt;&lt;/pre&gt;
        allow_new_levels = TRUE,
        sample_new_levels = &amp;quot;gaussian&amp;quot;,
        robust = TRUE)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;##       Estimate Est.Error         Q2.5   Q97.5
-## [1,] 0.8787689  1.276364 0.0009196831 58.3599&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##       Estimate Est.Error         Q2.5    Q97.5
+## [1,] 0.9095811  1.315207 0.0009475099 58.14658&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;and this is indeed what’s happening, as can be seen by going through the steps manually&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ps &amp;lt;- posterior_samples(fit_hurdle)
 
@@ -796,7 +773,7 @@ ey &amp;lt;- (1 - plogis(xi + u)) * exp(eta + v + sigma_error ^ 2 / 2)
 
 round(quantile(ey, probs = c(0.025, 0.5, 0.975)), 3)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;##   2.5%    50%  97.5% 
-##  0.001  0.966 63.905&lt;/code&gt;&lt;/pre&gt;
+##  0.001  0.927 52.369&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div id=&#34;unconditional-expectation&#34; class=&#34;section level3&#34;&gt;
 &lt;h3&gt;Unconditional expectation&lt;/h3&gt;
@@ -813,7 +790,7 @@ round(quantile(ey, probs = c(0.025, 0.5, 0.975)), 3)&lt;/code&gt;&lt;/pre&gt;
                      nsims = 1000, 
                      fit = fit_hurdle)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;##   id time     2.5%      50%    97.5%
-## 1 NA    2 3.872818 7.534902 18.91359&lt;/code&gt;&lt;/pre&gt;
+## 1 NA    2 3.845286 7.511835 19.58231&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 </description>
     </item>
@@ -914,6 +891,14 @@ fit_hurdle &amp;lt;- brm(bf(y ~  time + (1 | q | id),
 &lt;p&gt;From the output I can see that I have more-or-less recovered the parameters from my model. In practice, I could use this to make inference on the two parts of the model separately. In &lt;a href=&#34;/post/longitudinal-hurdle-models-2&#34;&gt;future&lt;/a&gt; posts I’ll discuss how to make inference/predictions when combining the two parts of the model.&lt;/p&gt;
 &lt;/div&gt;
 </description>
+    </item>
+    
+    <item>
+      <title>Multi-arm multi-stage designs for early phase oncology trials</title>
+      <link>/talk/example/</link>
+      <pubDate>Mon, 03 Jun 2019 11:00:00 +0000</pubDate>
+      <guid>/talk/example/</guid>
+      <description></description>
     </item>
     
     <item>
