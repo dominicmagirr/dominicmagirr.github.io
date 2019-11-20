@@ -5,7 +5,7 @@
     <link>/tags/</link>
       <atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     <description>Tags</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Tue, 05 Nov 2019 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Wed, 20 Nov 2019 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>Tags</title>
@@ -13,18 +13,18 @@
     </image>
     
     <item>
-      <title>R Packages</title>
-      <link>/tags/r-packages/</link>
-      <pubDate>Tue, 05 Nov 2019 00:00:00 +0000</pubDate>
-      <guid>/tags/r-packages/</guid>
+      <title>Technical</title>
+      <link>/tags/technical/</link>
+      <pubDate>Wed, 20 Nov 2019 00:00:00 +0000</pubDate>
+      <guid>/tags/technical/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Technical</title>
-      <link>/tags/technical/</link>
+      <title>R Packages</title>
+      <link>/tags/r-packages/</link>
       <pubDate>Tue, 05 Nov 2019 00:00:00 +0000</pubDate>
-      <guid>/tags/technical/</guid>
+      <guid>/tags/r-packages/</guid>
       <description></description>
     </item>
     

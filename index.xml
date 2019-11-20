@@ -5,7 +5,7 @@
     <link>/</link>
       <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <description>Dominic Magirr</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Tue, 05 Nov 2019 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Wed, 20 Nov 2019 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>Dominic Magirr</title>
@@ -79,6 +79,219 @@
 &lt;p&gt;Suspendisse a tincidunt lacus. Curabitur at urna sagittis, dictum ante sit amet, euismod magna. Sed rutrum massa id tortor commodo, vitae elementum turpis tempus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean purus turpis, venenatis a ullamcorper nec, tincidunt et massa. Integer posuere quam rutrum arcu vehicula imperdiet. Mauris ullamcorper quam vitae purus congue, quis euismod magna eleifend. Vestibulum semper vel augue eget tincidunt. Fusce eget justo sodales, dapibus odio eu, ultrices lorem. Duis condimentum lorem id eros commodo, in facilisis mauris scelerisque. Morbi sed auctor leo. Nullam volutpat a lacus quis pharetra. Nulla congue rutrum magna a ornare.&lt;/p&gt;
 
 &lt;p&gt;Aliquam in turpis accumsan, malesuada nibh ut, hendrerit justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque sed erat nec justo posuere suscipit. Donec ut efficitur arcu, in malesuada neque. Nunc dignissim nisl massa, id vulputate nunc pretium nec. Quisque eget urna in risus suscipit ultricies. Pellentesque odio odio, tincidunt in eleifend sed, posuere a diam. Nam gravida nisl convallis semper elementum. Morbi vitae felis faucibus, vulputate orci placerat, aliquet nisi. Aliquam erat volutpat. Maecenas sagittis pulvinar purus, sed porta quam laoreet at.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Bayesian model averaging: struggles with interaction</title>
+      <link>/post/bayesian-model-averaging-struggles-with-interaction/</link>
+      <pubDate>Wed, 20 Nov 2019 00:00:00 +0000</pubDate>
+      <guid>/post/bayesian-model-averaging-struggles-with-interaction/</guid>
+      <description>
+
+
+&lt;p&gt;This post records my unsuccessful attempts to use Bayesian model averaging when some models contain interaction terms.&lt;/p&gt;
+&lt;div id=&#34;data&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Data&lt;/h3&gt;
+&lt;p&gt;Data comes from a phase 3 study of an immuno-oncology agent (MPDL3280A) versus chemotherapy (Docetaxel) in lung cancer. The endpoint I’m interested in is progression-free survival (PFS), and there are a number of other covariates (10) that could be prognostic and/or predictive.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(dplyr)
+library(survival)
+library(BMA)
+dat = rio::import(&amp;quot;https://static-content.springer.com/esm/art%3A10.1038%2Fs41591-018-0134-3/MediaObjects/41591_2018_134_MOESM3_ESM.xlsx&amp;quot;,
+                  setclass = &amp;quot;tibble&amp;quot;,
+                  which = 3,
+                  na = c(&amp;quot;&amp;quot;, &amp;quot;.&amp;quot;)) %&amp;gt;% 
+  mutate(PFS.EVENT = -1 * (PFS.CNSR - 1),
+         high_btmb = ifelse(btmb &amp;gt;= 16, &amp;quot;YES&amp;quot;, &amp;quot;NO&amp;quot;)) %&amp;gt;% 
+  select(TRT01P, PFS, PFS.EVENT, 
+         high_btmb, BAGE, race2, 
+         SEX, HIST, ECOGGR, PRIORTXC, 
+         TOBHX, blSLD, METSITES) %&amp;gt;% 
+  mutate_if(is.character, as.factor) 
+
+
+head(dat)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 6 x 13
+##   TRT01P   PFS PFS.EVENT high_btmb  BAGE race2 SEX   HIST  ECOGGR PRIORTXC
+##   &amp;lt;fct&amp;gt;  &amp;lt;dbl&amp;gt;     &amp;lt;dbl&amp;gt; &amp;lt;fct&amp;gt;     &amp;lt;dbl&amp;gt; &amp;lt;fct&amp;gt; &amp;lt;fct&amp;gt; &amp;lt;fct&amp;gt;  &amp;lt;dbl&amp;gt;    &amp;lt;dbl&amp;gt;
+## 1 Docet…  1.28         1 NO           64 WHITE M     NON-…      1        1
+## 2 Docet…  2.33         1 NO           65 WHITE M     NON-…      0        1
+## 3 Docet…  1.94         1 YES          75 WHITE M     SQUA…      1        1
+## 4 Docet… 12.3          1 NO           61 WHITE F     NON-…      0        2
+## 5 MPDL3…  1.41         1 YES          53 WHITE F     NON-…      1        1
+## 6 Docet…  8.54         1 &amp;lt;NA&amp;gt;         80 WHITE M     NON-…      1        1
+## # … with 3 more variables: TOBHX &amp;lt;fct&amp;gt;, blSLD &amp;lt;dbl&amp;gt;, METSITES &amp;lt;dbl&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;goal-of-the-analysis&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Goal of the analysis&lt;/h3&gt;
+&lt;p&gt;In an ideal world, I want to see which (if any) variables have an interaction with treatment, and, simultaneously, I want to produce reasonable estimates of the magnitudes of such effects. This is probably asking too much, but in a naive first attempt I plugged in all variables (along with their interaction with treatment) into &lt;code&gt;BMA::bic.surv&lt;/code&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;x &amp;lt;- dat[complete.cases(dat),]
+x$ECOGGR &amp;lt;- factor(x$ECOGGR)
+x$PRIORTXC &amp;lt;- factor(x$PRIORTXC)
+fit &amp;lt;- bic.surv(Surv(PFS, PFS.EVENT) ~ .*TRT01P, data = x) 
+data.frame(variable = names(fit$output.names),
+           probability_non_zero = fit$probne0)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##                    variable probability_non_zero
+## 1                    TRT01P                  4.0
+## 2                 high_btmb                  0.0
+## 3                      BAGE                  0.0
+## 4                     race2                  0.0
+## 5                       SEX                  0.9
+## 6                      HIST                 15.6
+## 7                    ECOGGR                 30.9
+## 8                  PRIORTXC                 83.2
+## 9                     TOBHX                  0.0
+## 10                    blSLD                 38.9
+## 11                 METSITES                 98.9
+## 12       TRT01P.high_btmb..                 17.6
+## 13     TRT01PMPDL3280A.BAGE                  4.3
+## 14           TRT01P.race2..                  0.0
+## 15             TRT01P.SEX..                  0.0
+## 16            TRT01P.HIST..                  0.0
+## 17          TRT01P.ECOGGR..                  0.8
+## 18        TRT01P.PRIORTXC..                 20.2
+## 19           TRT01P.TOBHX..                  0.0
+## 20    TRT01PMPDL3280A.blSLD                  0.0
+## 21 TRT01PMPDL3280A.METSITES                  1.9&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This gave a posterior probability of 4% of the main effect of treatment being non-zero. I thought this was a bit low. In a univariable Cox model the effect of treatment is modest, but not tiny:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;coxph(Surv(PFS, PFS.EVENT) ~ TRT01P, data = x)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Call:
+## coxph(formula = Surv(PFS, PFS.EVENT) ~ TRT01P, data = x)
+## 
+##                     coef exp(coef) se(coef)     z     p
+## TRT01PMPDL3280A -0.11178   0.89425  0.08404 -1.33 0.184
+## 
+## Likelihood ratio test=1.77  on 1 df, p=0.1835
+## n= 641, number of events= 584&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Then I looked more closely at the interaction terms. Take, for example, the fourth most likely model:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sf &amp;lt;- summary(fit)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;m4 &amp;lt;- cbind(names(sf[, &amp;quot;model 4&amp;quot;]), 
+            as.numeric(unname(sf[,&amp;quot;model 4&amp;quot;])))
+m4&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##       [,1]                                              [,2]       
+##  [1,] &amp;quot;TRT01P&amp;quot;                                          NA         
+##  [2,] &amp;quot;      .MPDL3280A&amp;quot;                                NA         
+##  [3,] &amp;quot;high_btmb&amp;quot;                                       NA         
+##  [4,] &amp;quot;         .YES&amp;quot;                                   NA         
+##  [5,] &amp;quot;BAGE&amp;quot;                                            NA         
+##  [6,] &amp;quot;race2&amp;quot;                                           NA         
+##  [7,] &amp;quot;     .OTHER&amp;quot;                                     NA         
+##  [8,] &amp;quot;     .WHITE&amp;quot;                                     NA         
+##  [9,] &amp;quot;SEX&amp;quot;                                             NA         
+## [10,] &amp;quot;   .M&amp;quot;                                           NA         
+## [11,] &amp;quot;HIST&amp;quot;                                            NA         
+## [12,] &amp;quot;    .SQUAMOUS&amp;quot;                                   NA         
+## [13,] &amp;quot;ECOGGR&amp;quot;                                          NA         
+## [14,] &amp;quot;      .1&amp;quot;                                        NA         
+## [15,] &amp;quot;PRIORTXC&amp;quot;                                        NA         
+## [16,] &amp;quot;        .2&amp;quot;                                      &amp;quot;-0.36197&amp;quot; 
+## [17,] &amp;quot;TOBHX&amp;quot;                                           NA         
+## [18,] &amp;quot;     .NEVER&amp;quot;                                     NA         
+## [19,] &amp;quot;     .PREVIOUS&amp;quot;                                  NA         
+## [20,] &amp;quot;blSLD&amp;quot;                                           &amp;quot;0.00243&amp;quot;  
+## [21,] &amp;quot;METSITES&amp;quot;                                        &amp;quot;0.11115&amp;quot;  
+## [22,] &amp;quot;TRT01P.high_btmb..&amp;quot;                              NA         
+## [23,] &amp;quot;                  .TRT01PMPDL3280A:high_btmbYES&amp;quot; &amp;quot;-0.268703&amp;quot;
+## [24,] &amp;quot;TRT01PMPDL3280A.BAGE&amp;quot;                            NA         
+## [25,] &amp;quot;TRT01P.race2..&amp;quot;                                  NA         
+## [26,] &amp;quot;              .TRT01PMPDL3280A:race2OTHER&amp;quot;       NA         
+## [27,] &amp;quot;              .TRT01PMPDL3280A:race2WHITE&amp;quot;       NA         
+## [28,] &amp;quot;TRT01P.SEX..&amp;quot;                                    NA         
+## [29,] &amp;quot;            .TRT01PMPDL3280A:SEXM&amp;quot;               NA         
+## [30,] &amp;quot;TRT01P.HIST..&amp;quot;                                   NA         
+## [31,] &amp;quot;             .TRT01PMPDL3280A:HISTSQUAMOUS&amp;quot;      NA         
+## [32,] &amp;quot;TRT01P.ECOGGR..&amp;quot;                                 NA         
+## [33,] &amp;quot;               .TRT01PMPDL3280A:ECOGGR1&amp;quot;         NA         
+## [34,] &amp;quot;TRT01P.PRIORTXC..&amp;quot;                               NA         
+## [35,] &amp;quot;                 .TRT01PMPDL3280A:PRIORTXC2&amp;quot;     NA         
+## [36,] &amp;quot;TRT01P.TOBHX..&amp;quot;                                  NA         
+## [37,] &amp;quot;              .TRT01PMPDL3280A:TOBHXNEVER&amp;quot;       NA         
+## [38,] &amp;quot;              .TRT01PMPDL3280A:TOBHXPREVIOUS&amp;quot;    NA         
+## [39,] &amp;quot;TRT01PMPDL3280A.blSLD&amp;quot;                           NA         
+## [40,] &amp;quot;TRT01PMPDL3280A.METSITES&amp;quot;                        NA         
+## [41,] &amp;quot;&amp;quot;                                                NA         
+## [42,] &amp;quot;nVar&amp;quot;                                            &amp;quot;4&amp;quot;        
+## [43,] &amp;quot;BIC&amp;quot;                                             &amp;quot;-17.33416&amp;quot;
+## [44,] &amp;quot;post prob&amp;quot;                                       &amp;quot;0.049&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;…this model contains 4 parameters: main effects for prior treatment, baseline sum of diameters, number of metastases, and an effect of being &lt;em&gt;both&lt;/em&gt; &lt;code&gt;TRT01P == MPDL3280A&lt;/code&gt; and &lt;code&gt;high_btmb == YES&lt;/code&gt;. Note that there is no variable for the main effect of treatment (nor TMB) in this model. That is, we are fitting models with interaction terms where their main effects are not included. This is, in general, &lt;a href=&#34;https://stats.stackexchange.com/questions/11009/including-the-interaction-but-not-the-main-effects-in-a-model/11080#11080&#34;&gt;a bad thing&lt;/a&gt;. So bad, in fact, that R will not even allow me to fit this model using standard syntax. If I try to do it…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;coxph(Surv(PFS, PFS.EVENT) ~ PRIORTXC + blSLD + METSITES + TRT01P:high_btmb, 
+               data = x, 
+               method = &amp;quot;breslow&amp;quot;, 
+               iter.max = 30)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Call:
+## coxph(formula = Surv(PFS, PFS.EVENT) ~ PRIORTXC + blSLD + METSITES + 
+##     TRT01P:high_btmb, data = x, method = &amp;quot;breslow&amp;quot;, iter.max = 30)
+## 
+##                                    coef  exp(coef)   se(coef)      z
+## PRIORTXC2                    -0.3612339  0.6968160  0.0987439 -3.658
+## blSLD                         0.0022519  1.0022544  0.0009478  2.376
+## METSITES                      0.1109506  1.1173397  0.0318342  3.485
+## TRT01PDocetaxel:high_btmbNO   0.2579332  1.2942524  0.1415469  1.822
+## TRT01PMPDL3280A:high_btmbNO   0.2402823  1.2716080  0.1405986  1.709
+## TRT01PDocetaxel:high_btmbYES  0.3815722  1.4645855  0.1688867  2.259
+## TRT01PMPDL3280A:high_btmbYES         NA         NA  0.0000000     NA
+##                                     p
+## PRIORTXC2                    0.000254
+## blSLD                        0.017509
+## METSITES                     0.000492
+## TRT01PDocetaxel:high_btmbNO  0.068418
+## TRT01PMPDL3280A:high_btmbNO  0.087452
+## TRT01PDocetaxel:high_btmbYES 0.023862
+## TRT01PMPDL3280A:high_btmbYES       NA
+## 
+## Likelihood ratio test=43.91  on 6 df, p=7.704e-08
+## n= 641, number of events= 584&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;…then rather than receiving a model with 4 variables, I have been given a model with 6 variables. The main effects of &lt;code&gt;TRT01P&lt;/code&gt; and &lt;code&gt;high_btmb&lt;/code&gt; have been included as well. (This is the behaviour for factors; you are allowed to include a continous variable in an interaction term without including it as a main effect).&lt;/p&gt;
+&lt;p&gt;In conclusion, the output from the model averaging is more-or-less uninterpretable when including interactions.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;predictive-distributions&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Predictive distributions&lt;/h2&gt;
+&lt;p&gt;Although inference on individual parameters is not possible, it’s still likely that &lt;code&gt;BMA&lt;/code&gt; will produce good predictions when I take the whole (mixed) model fit into account. At this point, I had a half-formed plan of re-fitting all of the ‘best’ models using &lt;code&gt;flexsurv::flexsurvspline&lt;/code&gt; to give me the baseline hazards as well, and then combining the output to give me personalized predictive survival curves.&lt;/p&gt;
+&lt;p&gt;But then I realized how much work that would involve, especially without access to R’s standard model syntax. It’s possible with some effort to reproduce the “4th best model”:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;mm_full &amp;lt;- model.matrix(Surv(PFS, PFS.EVENT) ~ .*TRT01P, data = x)
+mm_4 &amp;lt;- mm_full[ ,attr(mm_full, &amp;quot;assign&amp;quot;) %in% which(fit$which[4,])]
+
+coxph(Surv(PFS, PFS.EVENT) ~ .,
+      data = cbind(x[,c(&amp;quot;PFS&amp;quot;, &amp;quot;PFS.EVENT&amp;quot;)], 
+                   as.data.frame(mm_4)), 
+      method = &amp;quot;breslow&amp;quot;, 
+      iter.max = 30)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Call:
+## coxph(formula = Surv(PFS, PFS.EVENT) ~ ., data = cbind(x[, c(&amp;quot;PFS&amp;quot;, 
+##     &amp;quot;PFS.EVENT&amp;quot;)], as.data.frame(mm_4)), method = &amp;quot;breslow&amp;quot;, 
+##     iter.max = 30)
+## 
+##                                      coef  exp(coef)   se(coef)      z
+## PRIORTXC2                      -0.3619700  0.6963033  0.0987112 -3.667
+## blSLD                           0.0024295  1.0024325  0.0009301  2.612
+## METSITES                        0.1111500  1.1175626  0.0317456  3.501
+## `TRT01PMPDL3280A:high_btmbYES` -0.2687027  0.7643705  0.1310337 -2.051
+##                                       p
+## PRIORTXC2                      0.000245
+## blSLD                          0.008997
+## METSITES                       0.000463
+## `TRT01PMPDL3280A:high_btmbYES` 0.040302
+## 
+## Likelihood ratio test=42.81  on 4 df, p=1.131e-08
+## n= 641, number of events= 584&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;However, functions like &lt;code&gt;predict&lt;/code&gt; etc also wouldn’t work, and I’d have to do everying manually, and it probably wasn’t worth the effort.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;force-all-main-effects-to-be-included-in-the-model&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Force all main effects to be included in the model&lt;/h2&gt;
+&lt;p&gt;It’s possible to force all main effects to be included in the model&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;fit_2 &amp;lt;- bic.surv(Surv(PFS, PFS.EVENT) ~ .*TRT01P, 
+                  data = x, 
+                  prior.param = c(rep(1, 11),  # main effects
+                                  rep(0.5, 10))) # interactions with trt&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Then I think I’m back to a situation where I can safely look at the effect of individual parameters…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot(fit_2)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-11-20-bayesian-model-averaging-struggles-with-interaction_files/figure-html/unnamed-chunk-10-1.png&#34; width=&#34;672&#34; /&gt;&lt;img src=&#34;/post/2019-11-20-bayesian-model-averaging-struggles-with-interaction_files/figure-html/unnamed-chunk-10-2.png&#34; width=&#34;672&#34; /&gt;&lt;img src=&#34;/post/2019-11-20-bayesian-model-averaging-struggles-with-interaction_files/figure-html/unnamed-chunk-10-3.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;…but there’s not a lot of regularization going on now. Doesn’t look a lot different to a backward elimination, or something similar.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;alternative-ways-forward&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Alternative ways forward&lt;/h2&gt;
+&lt;p&gt;Abandon model averaging and use something else: ridge/lasso regression or their Bayesian alternatives. This is what I intend to explore next.&lt;/p&gt;
+&lt;/div&gt;
 </description>
     </item>
     
