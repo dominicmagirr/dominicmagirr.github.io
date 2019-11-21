@@ -5,7 +5,7 @@
     <link>/authors/</link>
       <atom:link href="/authors/index.xml" rel="self" type="application/rss+xml" />
     <description>Authors</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sun, 07 Apr 2019 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 26 May 2018 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>Authors</title>
@@ -15,7 +15,7 @@
     <item>
       <title></title>
       <link>/authors/admin/</link>
-      <pubDate>Sun, 07 Apr 2019 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 26 May 2018 00:00:00 +0000</pubDate>
       <guid>/authors/admin/</guid>
       <description>&lt;p&gt;I&amp;rsquo;m a medical statistician interested in the design, analysis and interpretation of clinical trials.&lt;/p&gt;
 
@@ -36,10 +36,42 @@
     </item>
     
     <item>
-      <title>Robert Ford</title>
-      <link>/authors/robert-ford/</link>
-      <pubDate>Tue, 01 Sep 2015 00:00:00 +0000</pubDate>
-      <guid>/authors/robert-ford/</guid>
+      <title>Carl-Fredrik Burman</title>
+      <link>/authors/carl-fredrik-burman/</link>
+      <pubDate>Sat, 26 May 2018 00:00:00 +0000</pubDate>
+      <guid>/authors/carl-fredrik-burman/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Franz Koenig</title>
+      <link>/authors/franz-koenig/</link>
+      <pubDate>Mon, 01 Feb 2016 00:00:00 +0000</pubDate>
+      <guid>/authors/franz-koenig/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Martin Posch</title>
+      <link>/authors/martin-posch/</link>
+      <pubDate>Mon, 01 Feb 2016 00:00:00 +0000</pubDate>
+      <guid>/authors/martin-posch/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Thomas Jaki</title>
+      <link>/authors/thomas-jaki/</link>
+      <pubDate>Mon, 01 Feb 2016 00:00:00 +0000</pubDate>
+      <guid>/authors/thomas-jaki/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>John Whitehead</title>
+      <link>/authors/john-whitehead/</link>
+      <pubDate>Fri, 01 Jun 2012 00:00:00 +0000</pubDate>
+      <guid>/authors/john-whitehead/</guid>
       <description></description>
     </item>
     
