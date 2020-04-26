@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>clinical trials | Dominic Magirr</title>
+    <link>/categories/clinical-trials/</link>
+      <atom:link href="/categories/clinical-trials/index.xml" rel="self" type="application/rss+xml" />
+    <description>clinical trials</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sun, 26 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>/img/icon-192.png</url>
+      <title>clinical trials</title>
+      <link>/categories/clinical-trials/</link>
+    </image>
+    
+    <item>
+      <title>Is there still a place for significance testing in clinical trials?</title>
+      <link>/post/is-there-still-a-place-for-significance-testing-in-clinical-trials/</link>
+      <pubDate>Sun, 26 Apr 2020 00:00:00 +0000</pubDate>
+      <guid>/post/is-there-still-a-place-for-significance-testing-in-clinical-trials/</guid>
+      <description>
+
+
+&lt;p&gt;eagd &lt;a href=&#34;https://ora.ox.ac.uk/objects/uuid:95a357f2-5ba2-4563-aeb6-ccdfdc031360/download_file?file_format=pdf&amp;amp;safe_filename=Cook_etal_2019_There_is_still_a_place.pdf&amp;amp;type_of_work=Journal+article&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
