@@ -34,7 +34,7 @@ but it’s a challenge calculating the terms
 \[p(D | M_k) = \int p(D | \theta_k, M_k)p(\theta_k | M_k) d\theta_k.">
 
   
-  <link rel="alternate" hreflang="en-us" href="/post/bma-2/">
+  <link rel="alternate" hreflang="en-us" href="../../post/bma-2/">
 
   
 
@@ -87,7 +87,7 @@ but it’s a challenge calculating the terms
   
   
   
-  <link rel="stylesheet" href="/css/academic.css">
+  <link rel="stylesheet" href="../../css/academic.css">
 
   
 
@@ -99,11 +99,11 @@ but it’s a challenge calculating the terms
 
   
 
-  <link rel="manifest" href="/index.webmanifest">
-  <link rel="icon" type="image/png" href="/img/icon-32.png">
-  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+  <link rel="manifest" href="../../index.webmanifest">
+  <link rel="icon" type="image/png" href="../../img/icon-32.png">
+  <link rel="apple-touch-icon" type="image/png" href="../../img/icon-192.png">
 
-  <link rel="canonical" href="/post/bma-2/">
+  <link rel="canonical" href="../../post/bma-2/">
 
   
   
@@ -234,7 +234,7 @@ but it’s a challenge calculating the terms
   <div class="container">
 
     
-      <a class="navbar-brand" href="/">Dominic Magirr</a>
+      <a class="navbar-brand" href="../../">Dominic Magirr</a>
       
       <button type="button" class="navbar-toggler" data-toggle="collapse"
               data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -273,7 +273,7 @@ but it’s a challenge calculating the terms
         
 
         <li class="nav-item">
-          <a class="nav-link " href="/#posts"><span>Posts</span></a>
+          <a class="nav-link " href="../../#posts"><span>Posts</span></a>
         </li>
 
         
@@ -302,7 +302,7 @@ but it’s a challenge calculating the terms
         
 
         <li class="nav-item">
-          <a class="nav-link " href="/#publications"><span>Publications</span></a>
+          <a class="nav-link " href="../../#publications"><span>Publications</span></a>
         </li>
 
         
@@ -331,7 +331,7 @@ but it’s a challenge calculating the terms
         
 
         <li class="nav-item">
-          <a class="nav-link " href="/#talks"><span>Talks</span></a>
+          <a class="nav-link " href="../../#talks"><span>Talks</span></a>
         </li>
 
         
@@ -457,7 +457,7 @@ but it’s a challenge calculating the terms
       
 
 
-<p>In my <a href="/post/bma">last post</a> I had just used the <code>BMA</code> package to do a quick analysis with Bayesian model averaging. The method rests on a lovely piece of theory. Posterior model probabilities are calculated via a simple application of Bayes rule:</p>
+<p>In my <a href="../../post/bma">last post</a> I had just used the <code>BMA</code> package to do a quick analysis with Bayesian model averaging. The method rests on a lovely piece of theory. Posterior model probabilities are calculated via a simple application of Bayes rule:</p>
 <p><span class="math display">\[p(M_1 | D) = \frac{p(D | M_1)p(M_1)}{\sum_k p(D | M_k)p(M_k)}\]</span></p>
 <p>but it’s a challenge calculating the terms</p>
 <p><span class="math display">\[p(D | M_k) = \int p(D | \theta_k, M_k)p(\theta_k | M_k) d\theta_k.\]</span></p>
@@ -516,7 +516,7 @@ plot(seq_along(p_ms), p_ms,
      ylab = &quot;p(M|D)&quot;)
 
 abline(h = cut_off, col = 2)</code></pre>
-<p><img src="/post/2019-11-05-bma-2_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="../../post/2019-11-05-bma-2_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <p>Most of the models have very low posterior probability. Only 6 cross the default threshold for inclusion in the final model (odds ratio less than 20 compared to the best model). I can extract those models and re-standardise:</p>
 <pre class="r"><code>include_indices &lt;- which(p_ms &gt;= cut_off)
 ms_include &lt;- ms[include_indices]
@@ -530,7 +530,7 @@ data.frame(x = xs[include_indices],
 ## 4 celltype + karno + diagtime 0.054
 ## 5      celltype + karno + age 0.061
 ## 6    celltype + karno + prior 0.056</code></pre>
-<p>You can <a href="/post/bma">check</a> that this matches the output from the <code>BMA::bic.surv</code> summary.</p>
+<p>You can <a href="../../post/bma">check</a> that this matches the output from the <code>BMA::bic.surv</code> summary.</p>
 <div id="marginal-posterior-distributions-of-coefficients" class="section level3">
 <h3>Marginal posterior distributions of coefficients</h3>
 <p>This part is messy, to be honest, but I wanted to finish the job. To reproduce the posterior density plots, I start by putting posterior means and variances into a table, with corresponding posterior model probabilities:</p>
@@ -571,8 +571,8 @@ plot(x_trt2,
      type = &quot;l&quot;,
      xlab = &quot;coefficient for trt2&quot;,
      ylab = &quot;non-zero density&quot;)</code></pre>
-<p><img src="/post/2019-11-05-bma-2_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
-<p>This is looking good now, <a href="/post/bma">compared to last time</a>, but we still need to find the posterior probability that <code>trt2</code> is excluded from the model, and sort out the y-axis scale (in <code>?plot.bic.surv</code> it says “The nonzero part of the distribution is scaled so that the maximum height is equal to the probability that the coefficient is nonzero.”)…</p>
+<p><img src="../../post/2019-11-05-bma-2_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>This is looking good now, <a href="../../post/bma">compared to last time</a>, but we still need to find the posterior probability that <code>trt2</code> is excluded from the model, and sort out the y-axis scale (in <code>?plot.bic.surv</code> it says “The nonzero part of the distribution is scaled so that the maximum height is equal to the probability that the coefficient is nonzero.”)…</p>
 <pre class="r"><code>prob_nonzero &lt;- function(select_cov){
   
   df &lt;- post_df[post_df$covariate == select_cov,] 
@@ -594,7 +594,7 @@ plot(x_trt2,
      ylim = c(0,1))
 
 points(c(0,0), c(0, 1 - pnz_trt2), type = &#39;l&#39;, lwd = 3)</code></pre>
-<p><img src="/post/2019-11-05-bma-2_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="../../post/2019-11-05-bma-2_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <p>Yep, there we go! I could now repeat this for the other covariates if I wanted.</p>
 </div>
 </div>
@@ -609,9 +609,9 @@ points(c(0,0), c(0, 1 - pnz_trt2), type = &#39;l&#39;, lwd = 3)</code></pre>
 
 <div class="article-tags">
   
-  <a class="badge badge-light" href="/tags/r-packages/">R Packages</a>
+  <a class="badge badge-light" href="../../tags/r-packages/">R Packages</a>
   
-  <a class="badge badge-light" href="/tags/technical/">Technical</a>
+  <a class="badge badge-light" href="../../tags/technical/">Technical</a>
   
 </div>
 
@@ -644,11 +644,11 @@ points(c(0,0), c(0, 1 - pnz_trt2), type = &#39;l&#39;, lwd = 3)</code></pre>
   <div class="media author-card content-widget-hr">
     
       
-      <img class="portrait mr-3" src="/authors/admin/avatar_hu3ad799765e91f69a41f3acc2fc665a63_309343_250x250_fill_q90_lanczos_center.jpg" alt="Avatar">
+      <img class="portrait mr-3" src="../../authors/admin/avatar_hu3ad799765e91f69a41f3acc2fc665a63_309343_250x250_fill_q90_lanczos_center.jpg" alt="Avatar">
     
 
     <div class="media-body">
-      <h5 class="card-title"><a href="/">Dominic Magirr</a></h5>
+      <h5 class="card-title"><a href="../../">Dominic Magirr</a></h5>
       <h6 class="card-subtitle">Medical Statistician</h6>
       <p class="card-text">Interested in the design, analysis and interpretation of clinical trials.</p>
       <ul class="network-icon" aria-hidden="true">
@@ -712,7 +712,7 @@ points(c(0,0), c(0, 1 - pnz_trt2), type = &#39;l&#39;, lwd = 3)</code></pre>
       
     
     <li>
-      <a href="/files/cv.pdf" >
+      <a href="../../files/cv.pdf" >
         <i class="ai ai-cv"></i>
       </a>
     </li>
@@ -736,15 +736,15 @@ points(c(0,0), c(0, 1 - pnz_trt2), type = &#39;l&#39;, lwd = 3)</code></pre>
     <h3>Related</h3>
     <ul>
       
-      <li><a href="/post/bma/">BMA</a></li>
+      <li><a href="../../post/bma/">BMA</a></li>
       
-      <li><a href="/post/flexsurv-2/">flexsurv 2</a></li>
+      <li><a href="../../post/flexsurv-2/">flexsurv 2</a></li>
       
-      <li><a href="/post/flexsurv/">flexsurv</a></li>
+      <li><a href="../../post/flexsurv/">flexsurv</a></li>
       
-      <li><a href="/post/longitudinal-hurdle-models-3/">Longitudinal hurdle models 3</a></li>
+      <li><a href="../../post/longitudinal-hurdle-models-3/">Longitudinal hurdle models 3</a></li>
       
-      <li><a href="/post/longitudinal-hurdle-models-2/">Longitudinal hurdle models 2</a></li>
+      <li><a href="../../post/longitudinal-hurdle-models-2/">Longitudinal hurdle models 2</a></li>
       
     </ul>
   </div>
@@ -854,7 +854,7 @@ points(c(0,0), c(0, 1 - pnz_trt2), type = &#39;l&#39;, lwd = 3)</code></pre>
     
     
     
-    <script src="/js/academic.min.d6bd04fdad2ad213aa8111c5a3b72fc5.js"></script>
+    <script src="../../js/academic.min.d6bd04fdad2ad213aa8111c5a3b72fc5.js"></script>
 
     
 
@@ -867,6 +867,16 @@ points(c(0,0), c(0, 1 - pnz_trt2), type = &#39;l&#39;, lwd = 3)</code></pre>
   
   <div class="container">
     <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="../../privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="../../terms/">Terms</a>
+    
+  </p>
   
 
   <p class="powered-by">
