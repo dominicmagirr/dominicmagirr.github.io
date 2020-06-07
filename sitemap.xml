@@ -18,12 +18,17 @@
   </url>
   
   <url>
-    <loc>/post/extract-patient-level-data-from-a-kaplan-meier-plot/</loc>
-    <lastmod>2020-06-01T20:25:01+02:00</lastmod>
+    <loc>/post/</loc>
+    <lastmod>2020-06-07T15:17:00+02:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/</loc>
+    <loc>/post/shiny-app-for-enhancing-published-kaplan-meier-plots/</loc>
+    <lastmod>2020-06-07T15:17:00+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/extract-patient-level-data-from-a-kaplan-meier-plot/</loc>
     <lastmod>2020-06-01T20:25:01+02:00</lastmod>
   </url>
   

@@ -5,12 +5,24 @@
     <link>/post/</link>
       <atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     <description>Posts</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Mon, 01 Jun 2020 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sun, 07 Jun 2020 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>Posts</title>
       <link>/post/</link>
     </image>
+    
+    <item>
+      <title>Shiny app for enhancing published Kaplan-Meier plots</title>
+      <link>/post/shiny-app-for-enhancing-published-kaplan-meier-plots/</link>
+      <pubDate>Sun, 07 Jun 2020 00:00:00 +0000</pubDate>
+      <guid>/post/shiny-app-for-enhancing-published-kaplan-meier-plots/</guid>
+      <description>
+
+
+&lt;p&gt;Building on &lt;a href=&#34;../post/extract-patient-level-data-from-a-kaplan-meier-plot&#34;&gt;my last post,&lt;/a&gt; I decided to build a &lt;a href=&#34;https://dominicmagirr.shinyapps.io/enhanceKM/&#34;&gt;shiny app&lt;/a&gt; to make it much easier to extract (approximate) patient-level data from a Kaplan-Meier curve. &lt;a href=&#34;https://youtu.be/sT31vTbK90A&#34;&gt;Video here&lt;/a&gt; and &lt;a href=&#34;https://github.com/dominicmagirr/enhanceKM&#34;&gt;code here.&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Extract patient-level data from a Kaplan-Meier plot</title>
