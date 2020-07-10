@@ -5,12 +5,27 @@
     <link>/categories/clinical-trials/</link>
       <atom:link href="/categories/clinical-trials/index.xml" rel="self" type="application/rss+xml" />
     <description>clinical trials</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sun, 26 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Fri, 10 Jul 2020 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>clinical trials</title>
       <link>/categories/clinical-trials/</link>
     </image>
+    
+    <item>
+      <title>Non-proportional hazards in immuno-oncology: is an old perspective needed?</title>
+      <link>/post/non-proportional-hazards-in-immuno-oncology-is-an-old-perspective-needed/</link>
+      <pubDate>Fri, 10 Jul 2020 00:00:00 +0000</pubDate>
+      <guid>/post/non-proportional-hazards-in-immuno-oncology-is-an-old-perspective-needed/</guid>
+      <description>
+
+
+&lt;p&gt;In my opinion, many phase III trials in immuno-oncology are 10–20% larger than they need (ought) to be.&lt;/p&gt;
+&lt;p&gt;This is because the method we use for the primary analysis doesn’t match what we know about how these drugs work.&lt;/p&gt;
+&lt;p&gt;Fixing this doesn’t require anything fancy, just old-school stats from the 1960s.&lt;/p&gt;
+&lt;p&gt;In this &lt;a href=&#34;https://arxiv.org/abs/2007.04767&#34;&gt;new preprint&lt;/a&gt; I try to explain how I think it should be done.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>Is there still a place for significance testing in clinical trials?</title>
