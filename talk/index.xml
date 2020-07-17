@@ -5,20 +5,12 @@
     <link>/talk/</link>
       <atom:link href="/talk/index.xml" rel="self" type="application/rss+xml" />
     <description>Recent &amp; Upcoming Talks</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Mon, 03 Jun 2019 11:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Wed, 26 Sep 2018 12:00:00 +0000</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>Recent &amp; Upcoming Talks</title>
       <link>/talk/</link>
     </image>
-    
-    <item>
-      <title>Multi-arm multi-stage designs for early phase oncology trials</title>
-      <link>/talk/example/</link>
-      <pubDate>Mon, 03 Jun 2019 11:00:00 +0000</pubDate>
-      <guid>/talk/example/</guid>
-      <description></description>
-    </item>
     
     <item>
       <title>Generalizing boundaries for triangular designs, and efficacy estimation at extended follow-ups</title>

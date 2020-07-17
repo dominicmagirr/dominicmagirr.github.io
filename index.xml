@@ -1145,14 +1145,6 @@ fit_hurdle &amp;lt;- brm(bf(y ~  time + (1 | q | id),
     </item>
     
     <item>
-      <title>Multi-arm multi-stage designs for early phase oncology trials</title>
-      <link>/talk/example/</link>
-      <pubDate>Mon, 03 Jun 2019 11:00:00 +0000</pubDate>
-      <guid>/talk/example/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>How to calculate the log-rank statistic</title>
       <link>/post/log-rank-test/</link>
       <pubDate>Mon, 03 Jun 2019 00:00:00 +0000</pubDate>
