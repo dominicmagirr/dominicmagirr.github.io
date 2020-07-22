@@ -120,7 +120,7 @@
   <meta property="og:description" content="Medical Statistician"><meta property="og:image" content="/img/icon-192.png">
   <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
   
-    <meta property="og:updated_time" content="2019-11-05T00:00:00&#43;00:00">
+    <meta property="og:updated_time" content="2019-11-01T00:00:00&#43;00:00">
   
 
   
@@ -347,29 +347,6 @@
   
 
   
-  
-  <div>
-    <h2><a href="../../post/bma-2/">BMA-2</a></h2>
-    <div class="article-style">
-      
-      In my last post I had just used the BMA package to do a quick analysis with Bayesian model averaging. The method rests on a lovely piece of theory. Posterior model probabilities are calculated via a simple application of Bayes rule:
-\[p(M_1 | D) = \frac{p(D | M_1)p(M_1)}{\sum_k p(D | M_k)p(M_k)}\]
-but it’s a challenge calculating the terms
-\[p(D | M_k) = \int p(D | \theta_k, M_k)p(\theta_k | M_k) d\theta_k.
-      
-    </div>
-  </div>
-  
-  <div>
-    <h2><a href="../../post/bma/">BMA</a></h2>
-    <div class="article-style">
-      
-      I’ve used the BMA package for Bayesian model averaging a couple of times this year and think it’s great.
-(https://www.r-project.org/doc/Rnews/Rnews_2005-2.pdf)
-The situation is this: you have a data set with a response variable and multiple explanatory variables (the goal could be prediction or inference). It’s crying out for a regression analysis. But you don’t want to use a naive variable selection method because you know that’s bad. Is there something smarter you can do, and do quickly?
-      
-    </div>
-  </div>
   
   <div>
     <h2><a href="../../post/flexsurv-2/">flexsurv 2</a></h2>
