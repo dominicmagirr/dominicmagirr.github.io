@@ -120,7 +120,7 @@
   <meta property="og:description" content="Medical Statistician"><meta property="og:image" content="/img/icon-192.png">
   <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
   
-    <meta property="og:updated_time" content="2020-07-10T00:00:00&#43;00:00">
+    <meta property="og:updated_time" content="2020-07-27T00:00:00&#43;00:00">
   
 
   
@@ -347,6 +347,16 @@
   
 
   
+  
+  <div>
+    <h2><a href="../../post/a-bayesian-approach-to-non-proportional-hazards/">A Bayesian approach to non-proportional hazards</a></h2>
+    <div class="article-style">
+      
+      In this blogpost I wanted to explore a Bayesian approach to non-proportional hazards. Take this data set as an example (the data is here).
+library(tidyverse) library(survival) library(brms) ########################## dat &lt;- read_csv(&quot;IPD_both.csv&quot;) %&gt;% mutate(arm = factor(arm)) km_est&lt;-survfit(Surv(time,event)~arm, data=dat) p1 &lt;- survminer::ggsurvplot(km_est, data = dat, risk.table = TRUE, break.x.by = 6, legend.labs = c(&quot;1&quot;, &quot;2&quot;), legend.title = &quot;&quot;, xlab = &quot;Time (months)&quot;, ylab = &quot;Overall survival&quot;, risk.table.fontsize = 4, legend = c(0.
+      
+    </div>
+  </div>
   
   <div>
     <h2><a href="../../post/non-proportional-hazards-in-immuno-oncology-is-an-old-perspective-needed/">Non-proportional hazards in immuno-oncology: is an old perspective needed?</a></h2>

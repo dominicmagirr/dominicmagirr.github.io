@@ -55,6 +55,216 @@
     </item>
     
     <item>
+      <title>A Bayesian approach to non-proportional hazards</title>
+      <link>/post/a-bayesian-approach-to-non-proportional-hazards/</link>
+      <pubDate>Mon, 27 Jul 2020 00:00:00 +0000</pubDate>
+      <guid>/post/a-bayesian-approach-to-non-proportional-hazards/</guid>
+      <description>
+
+
+&lt;p&gt;In this blogpost I wanted to explore a Bayesian approach to non-proportional hazards. Take this data set as an example (the data is &lt;a href=&#34;https://github.com/dominicmagirr/bayesian_survival&#34;&gt;here&lt;/a&gt;).&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse)
+library(survival)
+library(brms)
+##########################
+dat &amp;lt;- read_csv(&amp;quot;IPD_both.csv&amp;quot;) %&amp;gt;% 
+  mutate(arm = factor(arm))
+
+km_est&amp;lt;-survfit(Surv(time,event)~arm, data=dat)
+p1 &amp;lt;- survminer::ggsurvplot(km_est, 
+                            data = dat, 
+                            risk.table = TRUE, 
+                            break.x.by = 6,
+                            legend.labs = c(&amp;quot;1&amp;quot;, &amp;quot;2&amp;quot;),
+                            legend.title = &amp;quot;&amp;quot;,
+                            xlab = &amp;quot;Time (months)&amp;quot;,
+                            ylab = &amp;quot;Overall survival&amp;quot;,
+                            risk.table.fontsize = 4,
+                            legend = c(0.8,0.8))
+
+p1&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;./post/2020-07-27-a-bayesian-approach-to-non-proportional-hazards_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;It looks like there is a trade-off between short-term survival and long-term survival on the two treatments. But is the apparent long term benefit real? How sure are we? That is my main question of interest here: does treatment “1” improve long term survival?&lt;/p&gt;
+&lt;p&gt;Probably the best tool for flexible parametric Bayesian survival analysis is now the rstanarm package (&lt;a href=&#34;https://arxiv.org/abs/2002.09633&#34; class=&#34;uri&#34;&gt;https://arxiv.org/abs/2002.09633&lt;/a&gt;). This looks awesome. Unfortunately, I only have access to my work computer at the moment which doesn’t have the latest version installed. Instead I’ll be using the brms package – which is also excellent.&lt;/p&gt;
+&lt;p&gt;Before I can fit a piece-wise exponential model (with changepoints every 6 months), I need to use a little trick (the survSplit function) to change my covariates into time-dependent ones – this kind of thing is explained &lt;a href=&#34;https://cran.r-project.org/web/packages/survival/vignettes/timedep.pdf&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## change into time-dependent data set 
+dat_td &amp;lt;- survSplit(Surv(time, event) ~ arm,
+                   data = dat,
+                   cut = c(6,12,18,24),
+                   episode = &amp;quot;period&amp;quot;) %&amp;gt;% 
+  mutate(censored = as.numeric(!event),
+         period = factor(period))
+
+## fit Bayesian model
+fit1 &amp;lt;- brm(formula = time | cens(censored) + trunc(lb = tstart) ~ arm * period,
+            data = dat_td,
+            family = exponential(),
+            inits = &amp;quot;0&amp;quot;,
+            refresh = 0,
+            seed = 593)
+
+summary(fit1)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##  Family: exponential 
+##   Links: mu = log 
+## Formula: time | cens(censored) + trunc(lb = tstart) ~ arm * period 
+##    Data: dat_td (Number of observations: 1813) 
+## Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+##          total post-warmup samples = 4000
+## 
+## Population-Level Effects: 
+##              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept        2.89      0.10     2.69     3.10 1.00     3215     3119
+## arm2             0.23      0.15    -0.07     0.53 1.00     2954     3237
+## period2          0.11      0.16    -0.20     0.43 1.00     2821     2525
+## period3          0.68      0.23     0.24     1.14 1.00     3194     2944
+## period4          0.34      0.25    -0.15     0.85 1.00     3074     2596
+## period5          0.06      0.32    -0.52     0.72 1.00     3176     2579
+## arm2:period2    -0.48      0.23    -0.93    -0.04 1.00     2729     2777
+## arm2:period3    -0.92      0.30    -1.53    -0.33 1.00     2949     3065
+## arm2:period4    -0.54      0.35    -1.22     0.14 1.00     2968     2572
+## arm2:period5    -0.08      0.44    -0.95     0.80 1.00     3404     2814
+## 
+## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
+## is a crude measure of effective sample size, and Rhat is the potential 
+## scale reduction factor on split chains (at convergence, Rhat = 1).&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;To explain where these parameters fit in mathematically, the probability of surviving to time &lt;span class=&#34;math inline&#34;&gt;\(t\)&lt;/span&gt; on arm &lt;span class=&#34;math inline&#34;&gt;\(j=1,2\)&lt;/span&gt; is…&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\begin{split}
+S_j(t) = &amp;amp; \exp\left(\frac{-t}{\exp(\mu_{j,1})}\right), &amp;amp; ~~t \leq 6 \\
+= &amp;amp; \exp\left(\frac{-6}{\exp(\mu_{j,1})}\right)\exp\left(\frac{-(t-6)}{\exp(\mu_{j,2})}\right), &amp;amp;~~ 6 &amp;lt; t \leq 12 \\
+ =&amp;amp; \exp\left(\frac{-6}{\exp(\mu_{j,1})}\right)\exp\left(\frac{-(12-6)}{\exp(\mu_{j,2})}\right)\exp\left(\frac{-(t-12)}{\exp(\mu_{j,3})}\right), &amp;amp; ~~12 &amp;lt; t \leq 18 \\
+  = &amp;amp;...&amp;amp;
+\end{split}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;where&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\begin{split}
+\mu_{1,1} = &amp;amp; \text{Intercept}\\
+\mu_{1,2} = &amp;amp; \text{Intercept} + \text{period2}\\
+\mu_{1,3} = &amp;amp; \text{Intercept} + \text{period3}\\
+... &amp;amp; 
+\end{split}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;and&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\begin{split}
+\mu_{2,1} = &amp;amp; \text{Intercept} + \text{arm2}\\
+\mu_{2,2} = &amp;amp; \text{Intercept} + \text{arm2} + \text{period2} + \text{arm2:period2}\\
+\mu_{2,3} = &amp;amp; \text{Intercept} + \text{arm2} + \text{period3} + \text{arm2:period3}\\
+... &amp;amp; 
+\end{split}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;To generate posterior samples of these survival probabilities, I need to take the posterior samples of the model parameters, and then perform these transformations. Apologies for the ugly piece of code here.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## function to turn posterior samples 
+## of model parameters (&amp;quot;ps = posterior_samples(fit1)&amp;quot;)
+## into posterior samples of S(t)
+get_s &amp;lt;- function(t, ps, arm = &amp;quot;1&amp;quot;, changepoints = c(6,12,18,24)){
+  
+  
+  ### Extract the scale parameters from posterior samples:
+  log_scales_1 &amp;lt;- matrix(NA, 
+                         nrow = length(ps[[1]]),
+                         ncol = length(changepoints) + 1)
+  log_scales_2 &amp;lt;- matrix(NA, 
+                         nrow = length(ps[[1]]),
+                         ncol = length(changepoints) + 1)
+  
+  log_scales_1[,1] &amp;lt;- ps$b_Intercept
+  log_scales_2[,1] &amp;lt;- ps$b_Intercept + ps$b_arm2
+  
+  for (i in (1 + seq_along(changepoints))){
+    log_scales_1[,i] &amp;lt;- ps$b_Intercept + ps[[paste0(&amp;quot;b_period&amp;quot;,i)]]
+    log_scales_2[,i] &amp;lt;- ps$b_Intercept + ps[[paste0(&amp;quot;b_period&amp;quot;,i)]] +
+      ps$b_arm2 + ps[[paste0(&amp;quot;b_arm2:period&amp;quot;,i)]]
+  }
+  
+  scales_1 &amp;lt;- exp(log_scales_1)
+  scales_2 &amp;lt;- exp(log_scales_2)
+  
+  ### Piece-wise exponential survival function:
+  changepoints_Inf &amp;lt;- c(changepoints, Inf)
+  
+  if(arm == 1){
+    p &amp;lt;- exp(-min(t, changepoints[1]) / scales_1[,1])
+    for (i in which(changepoints &amp;lt; t)){
+      p &amp;lt;- p * exp(-(min(t, changepoints_Inf[i + 1]) - changepoints[i]) / scales_1[,i + 1])
+    }
+    return(p)
+  }
+  else {
+    p &amp;lt;- exp(-min(t, changepoints[1]) / scales_2[,1])
+    for (i in which(changepoints &amp;lt; t)){
+      p &amp;lt;- p * exp(-(min(t, changepoints_Inf[i + 1]) - changepoints[i]) / scales_2[,i + 1])
+    }
+    return(p)
+  }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;For example, I can take the posterior samples for the survival probabilities at each month, calculate the posterior means, and see how well this matches the K-M plot:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ps &amp;lt;- posterior_samples(fit1)
+t_seq &amp;lt;- seq(0, 36, 1)
+
+s_1 &amp;lt;- purrr::map(t_seq, get_s, ps = ps)
+s_2 &amp;lt;- purrr::map(t_seq, get_s, ps = ps, arm = &amp;quot;2&amp;quot;)
+
+df_sims &amp;lt;- data.frame(time = t_seq,
+                      mean_1 = purrr::map_dbl(s_1, mean),
+                      mean_2 = purrr::map_dbl(s_2, mean))
+
+p1$plot + 
+  geom_line(data = df_sims,
+                    mapping = aes(x = time, y = mean_1), colour = &amp;quot;red&amp;quot;) +
+  geom_line(data = df_sims,
+            mapping = aes(x = time, y = mean_2), colour = &amp;quot;blue&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;./post/2020-07-27-a-bayesian-approach-to-non-proportional-hazards_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Now suppose I’m interested in the difference in survival probabilities at 24 months, &lt;span class=&#34;math inline&#34;&gt;\(S_1(24) - S_2(24)\)&lt;/span&gt;. I can make a 95% credible interval:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;diff_24 &amp;lt;- get_s(24, ps) - get_s(24, ps, arm = &amp;quot;2&amp;quot;)
+quantile(diff_24, probs = c(0.025, 0.975)) %&amp;gt;% round(2)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##  2.5% 97.5% 
+##  0.01  0.16&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;But I hadn’t pre-specified 24 months. I might just as well have been interested in the difference at 12,18 or 30 months:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;diff_12 &amp;lt;- get_s(12, ps) - get_s(12, ps, arm = &amp;quot;2&amp;quot;)
+quantile(diff_12, probs = c(0.025, 0.975)) %&amp;gt;% round(2)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##  2.5% 97.5% 
+## -0.07  0.08&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;diff_18 &amp;lt;- get_s(18, ps) - get_s(18, ps, arm = &amp;quot;2&amp;quot;)
+quantile(diff_18, probs = c(0.025, 0.975)) %&amp;gt;% round(2)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##  2.5% 97.5% 
+##  0.00  0.15&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;diff_30 &amp;lt;- get_s(30, ps) - get_s(30, ps, arm = &amp;quot;2&amp;quot;)
+quantile(diff_30, probs = c(0.025, 0.975)) %&amp;gt;% round(2)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##  2.5% 97.5% 
+## -0.03  0.13&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;How should we interpret these 95% credible intervals, where 2 out of 4 just about exclude 0? Borderline convincing? But hang on… when I view &lt;span class=&#34;math inline&#34;&gt;\((-0.07,0.08)\times (0,0.15)\times (0.01,0.16) \times(-0.03, 0.13)\)&lt;/span&gt; as a credible region for the differences at 12,18,24 and 30 months, this has far less than 95% posterior probability:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;mean(diff_12 &amp;gt; -0.07 &amp;amp; diff_12 &amp;lt; 0.08 &amp;amp;
+     diff_18 &amp;gt; 0 &amp;amp; diff_18 &amp;lt; 0.15 &amp;amp; 
+     diff_24 &amp;gt; 0.01 &amp;amp; diff_24 &amp;lt; 0.16 &amp;amp;
+     diff_30 &amp;gt; -0.03 &amp;amp; diff_30 &amp;lt; 0.13)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.86025&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;To get a 95% credible region, I have to expand the individual credible intervals a bit (via trial and error)…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;quantile(diff_12, probs = c(0.008, 0.992)) %&amp;gt;% round(2)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##  0.8% 99.2% 
+## -0.08  0.10&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;quantile(diff_18, probs = c(0.008, 0.992)) %&amp;gt;% round(2)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##  0.8% 99.2% 
+## -0.02  0.17&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;quantile(diff_24, probs = c(0.008, 0.992)) %&amp;gt;% round(2)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##  0.8% 99.2% 
+## -0.01  0.18&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;quantile(diff_30, probs = c(0.008, 0.992)) %&amp;gt;% round(2)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##  0.8% 99.2% 
+## -0.04  0.15&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;mean(diff_12 &amp;gt; -0.08 &amp;amp; diff_12 &amp;lt; 0.10 &amp;amp;
+     diff_18 &amp;gt; -0.02 &amp;amp; diff_18 &amp;lt; 0.17 &amp;amp; 
+     diff_24 &amp;gt; -0.01 &amp;amp; diff_24 &amp;lt; 0.18 &amp;amp;
+     diff_30 &amp;gt; -0.04 &amp;amp; diff_30 &amp;lt; 0.15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.9495&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;How should we interpret this 95% credible region? None of timepoints quite manage to exclude zero. Borderline unconvincing?&lt;/p&gt;
+&lt;p&gt;Another perspective is that treatment “1” is efficacious if there is at least one timepoint where the survival probability is higher than on treatment “2”. The probability that this is the case is:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;mean(diff_12 &amp;gt; 0 | diff_18 &amp;gt; 0 | diff_24 &amp;gt; 0 | diff_30 &amp;gt; 0)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.99625&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Well over a 99% chance. Highly convincing evidence!&lt;/p&gt;
+&lt;div id=&#34;conclusion&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Conclusion&lt;/h1&gt;
+&lt;p&gt;Maybe I’m overthinking things here, but for me fitting a nice Bayesian model is only half the job done. We also need a good way to describe the (multivariate) posterior distribution. Of course, all three of these interpretations are valid given the prior distribution and model assumptions (I skipped over discussing the prior distribution here). But are these three summaries not superficially quite similar, yet yielding slightly different (perhaps importantly so) conclusions? Are we really prepared to explain these differences to our clinical colleagues, patients, regulators, payers? If not, is this still intellectually superior to a frequentist analysis? I don’t know the answers to these questions.&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Non-proportional hazards in immuno-oncology: is an old perspective needed?</title>
       <link>/post/non-proportional-hazards-in-immuno-oncology-is-an-old-perspective-needed/</link>
       <pubDate>Fri, 10 Jul 2020 00:00:00 +0000</pubDate>
