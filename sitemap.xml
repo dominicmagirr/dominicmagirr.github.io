@@ -18,6 +18,16 @@
   </url>
   
   <url>
+    <loc>/post/</loc>
+    <lastmod>2021-01-17T16:56:39+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/that-ll-do-simulated-annealing-instead-of-maths/</loc>
+    <lastmod>2021-01-17T16:56:39+01:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/post/adjusting-for-covariates-under-non-proportional-hazards/</loc>
     <lastmod>2020-09-12T15:09:34+02:00</lastmod>
   </url>
@@ -29,11 +39,6 @@
   
   <url>
     <loc>/categories/clinical-trials/</loc>
-    <lastmod>2020-09-12T15:09:34+02:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/post/</loc>
     <lastmod>2020-09-12T15:09:34+02:00</lastmod>
   </url>
   
