@@ -29,10 +29,10 @@
     
   
   <meta name="description" content="In the last post on longitudinal hurdle models, I had just taken samples from the marginal mean
-\[\begin{align} g(\theta; x) &amp; = E(Y \mid \theta; x) \\ &amp; = \int E(Y \mid u_{i&#39;}, v_{i&#39;}, \theta; x) f(u_{i&#39;}, v_{i&#39;} \mid \theta, \mathbf{y}) du_{i&#39;}dv_{i&#39;} \\ &amp;\approx L^{-1}\sum_{l = 1}^{L}E(Y \mid u_{i&#39;}^{(l)}, v_{i&#39;}^{(l)}, \theta; x)\\ &amp;= L^{-1}\sum_{l = 1}^{L}\left\lbrace 1 - \text{logit}^{-1} ( x^T \gamma &#43; u_{i&#39;}^{(l)}) \right\rbrace \exp(x^T\beta &#43; v_{i&#39;}^{(l)} &#43; \frac{\sigma^2}{2}).">
+\[\begin{align} g(\theta; x) &amp; = E(Y \mid \theta; x) \\&amp; = \int E(Y \mid u_{i&#39;}, v_{i&#39;}, \theta; x) f(u_{i&#39;}, v_{i&#39;} \mid \theta, \mathbf{y}) du_{i&#39;}dv_{i&#39;} \\ &amp;\approx L^{-1}\sum_{l = 1}^{L}E(Y \mid u_{i&#39;}^{(l)}, v_{i&#39;}^{(l)}, \theta; x)\\&amp;= L^{-1}\sum_{l = 1}^{L}\left\lbrace 1 - \text{logit}^{-1} ( x^T \gamma &#43; u_{i&#39;}^{(l)}) \right\rbrace \exp(x^T\beta &#43; v_{i&#39;}^{(l)} &#43; \frac{\sigma^2}{2}).">
 
   
-  <link rel="alternate" hreflang="en-us" href="../../post/longitudinal-hurdle-models-3/">
+  <link rel="alternate" hreflang="en-us" href="/post/longitudinal-hurdle-models-3/">
 
   
 
@@ -85,7 +85,7 @@
   
   
   
-  <link rel="stylesheet" href="../../css/academic.css">
+  <link rel="stylesheet" href="/css/academic.css">
 
   
 
@@ -97,11 +97,11 @@
 
   
 
-  <link rel="manifest" href="../../index.webmanifest">
-  <link rel="icon" type="image/png" href="../../img/icon-32.png">
-  <link rel="apple-touch-icon" type="image/png" href="../../img/icon-192.png">
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon-32.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
 
-  <link rel="canonical" href="../../post/longitudinal-hurdle-models-3/">
+  <link rel="canonical" href="/post/longitudinal-hurdle-models-3/">
 
   
   
@@ -117,7 +117,7 @@
   <meta property="og:url" content="/post/longitudinal-hurdle-models-3/">
   <meta property="og:title" content="Longitudinal hurdle models 3 | Dominic Magirr">
   <meta property="og:description" content="In the last post on longitudinal hurdle models, I had just taken samples from the marginal mean
-\[\begin{align} g(\theta; x) &amp; = E(Y \mid \theta; x) \\ &amp; = \int E(Y \mid u_{i&#39;}, v_{i&#39;}, \theta; x) f(u_{i&#39;}, v_{i&#39;} \mid \theta, \mathbf{y}) du_{i&#39;}dv_{i&#39;} \\ &amp;\approx L^{-1}\sum_{l = 1}^{L}E(Y \mid u_{i&#39;}^{(l)}, v_{i&#39;}^{(l)}, \theta; x)\\ &amp;= L^{-1}\sum_{l = 1}^{L}\left\lbrace 1 - \text{logit}^{-1} ( x^T \gamma &#43; u_{i&#39;}^{(l)}) \right\rbrace \exp(x^T\beta &#43; v_{i&#39;}^{(l)} &#43; \frac{\sigma^2}{2})."><meta property="og:image" content="/img/icon-192.png">
+\[\begin{align} g(\theta; x) &amp; = E(Y \mid \theta; x) \\&amp; = \int E(Y \mid u_{i&#39;}, v_{i&#39;}, \theta; x) f(u_{i&#39;}, v_{i&#39;} \mid \theta, \mathbf{y}) du_{i&#39;}dv_{i&#39;} \\ &amp;\approx L^{-1}\sum_{l = 1}^{L}E(Y \mid u_{i&#39;}^{(l)}, v_{i&#39;}^{(l)}, \theta; x)\\&amp;= L^{-1}\sum_{l = 1}^{L}\left\lbrace 1 - \text{logit}^{-1} ( x^T \gamma &#43; u_{i&#39;}^{(l)}) \right\rbrace \exp(x^T\beta &#43; v_{i&#39;}^{(l)} &#43; \frac{\sigma^2}{2})."><meta property="og:image" content="/img/icon-192.png">
   <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
   
     
@@ -169,7 +169,7 @@
       "url": "/img/icon-512.png"
     }
   },
-  "description": "In the last post on longitudinal hurdle models, I had just taken samples from the marginal mean\n\\[\\begin{align} g(\\theta; x) \u0026amp; = E(Y \\mid \\theta; x) \\\\ \u0026amp; = \\int E(Y \\mid u_{i\u0026#39;}, v_{i\u0026#39;}, \\theta; x) f(u_{i\u0026#39;}, v_{i\u0026#39;} \\mid \\theta, \\mathbf{y}) du_{i\u0026#39;}dv_{i\u0026#39;} \\\\ \u0026amp;\\approx L^{-1}\\sum_{l = 1}^{L}E(Y \\mid u_{i\u0026#39;}^{(l)}, v_{i\u0026#39;}^{(l)}, \\theta; x)\\\\ \u0026amp;= L^{-1}\\sum_{l = 1}^{L}\\left\\lbrace 1 - \\text{logit}^{-1} ( x^T \\gamma + u_{i\u0026#39;}^{(l)}) \\right\\rbrace \\exp(x^T\\beta + v_{i\u0026#39;}^{(l)} + \\frac{\\sigma^2}{2})."
+  "description": "In the last post on longitudinal hurdle models, I had just taken samples from the marginal mean\n\\[\\begin{align} g(\\theta; x) \u0026amp; = E(Y \\mid \\theta; x) \\\\\r\u0026amp; = \\int E(Y \\mid u_{i\u0026#39;}, v_{i\u0026#39;}, \\theta; x) f(u_{i\u0026#39;}, v_{i\u0026#39;} \\mid \\theta, \\mathbf{y}) du_{i\u0026#39;}dv_{i\u0026#39;} \\\\ \u0026amp;\\approx L^{-1}\\sum_{l = 1}^{L}E(Y \\mid u_{i\u0026#39;}^{(l)}, v_{i\u0026#39;}^{(l)}, \\theta; x)\\\\\r\u0026amp;= L^{-1}\\sum_{l = 1}^{L}\\left\\lbrace 1 - \\text{logit}^{-1} ( x^T \\gamma + u_{i\u0026#39;}^{(l)}) \\right\\rbrace \\exp(x^T\\beta + v_{i\u0026#39;}^{(l)} + \\frac{\\sigma^2}{2})."
 }
 </script>
 
@@ -230,7 +230,7 @@
   <div class="container">
 
     
-      <a class="navbar-brand" href="../../">Dominic Magirr</a>
+      <a class="navbar-brand" href="/">Dominic Magirr</a>
       
       <button type="button" class="navbar-toggler" data-toggle="collapse"
               data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -269,7 +269,7 @@
         
 
         <li class="nav-item">
-          <a class="nav-link " href="../../#posts"><span>Posts</span></a>
+          <a class="nav-link " href="/#posts"><span>Posts</span></a>
         </li>
 
         
@@ -298,7 +298,7 @@
         
 
         <li class="nav-item">
-          <a class="nav-link " href="../../#publications"><span>Publications</span></a>
+          <a class="nav-link " href="/#publications"><span>Publications</span></a>
         </li>
 
         
@@ -327,7 +327,7 @@
         
 
         <li class="nav-item">
-          <a class="nav-link " href="../../#talks"><span>Talks</span></a>
+          <a class="nav-link " href="/#talks"><span>Talks</span></a>
         </li>
 
         
@@ -451,7 +451,7 @@
       
 
 
-<p>In the <a href="../../post/longitudinal-hurdle-models-2">last</a> post on longitudinal hurdle models, I had just taken samples from the marginal mean</p>
+<p>In the <a href="/post/longitudinal-hurdle-models-2">last</a> post on longitudinal hurdle models, I had just taken samples from the marginal mean</p>
 <p><span class="math display">\[\begin{align} g(\theta; x) &amp; = E(Y \mid  \theta; x) \\
 &amp; = \int   E(Y \mid u_{i&#39;}, v_{i&#39;}, \theta; x) f(u_{i&#39;}, v_{i&#39;} \mid \theta, \mathbf{y}) du_{i&#39;}dv_{i&#39;} \\ 
 &amp;\approx  L^{-1}\sum_{l = 1}^{L}E(Y \mid u_{i&#39;}^{(l)}, v_{i&#39;}^{(l)}, \theta; x)\\
@@ -525,7 +525,7 @@ hurlong::marg_pyk_q(k = 0.5,
 
 <div class="article-tags">
   
-  <a class="badge badge-light" href="../../tags/technical/">Technical</a>
+  <a class="badge badge-light" href="/tags/technical/">Technical</a>
   
 </div>
 
@@ -558,11 +558,11 @@ hurlong::marg_pyk_q(k = 0.5,
   <div class="media author-card content-widget-hr">
     
       
-      <img class="portrait mr-3" src="../../authors/admin/avatar_hu3ad799765e91f69a41f3acc2fc665a63_309343_250x250_fill_q90_lanczos_center.jpg" alt="Avatar">
+      <img class="portrait mr-3" src="/authors/admin/avatar_hu3ad799765e91f69a41f3acc2fc665a63_309343_250x250_fill_q90_lanczos_center.jpg" alt="Avatar">
     
 
     <div class="media-body">
-      <h5 class="card-title"><a href="../../">Dominic Magirr</a></h5>
+      <h5 class="card-title"><a href="/">Dominic Magirr</a></h5>
       <h6 class="card-subtitle">Medical Statistician</h6>
       <p class="card-text">Interested in the design, analysis and interpretation of clinical trials.</p>
       <ul class="network-icon" aria-hidden="true">
@@ -626,7 +626,7 @@ hurlong::marg_pyk_q(k = 0.5,
       
     
     <li>
-      <a href="../../files/cv.pdf" >
+      <a href="/files/cv.pdf" >
         <i class="ai ai-cv"></i>
       </a>
     </li>
@@ -650,9 +650,9 @@ hurlong::marg_pyk_q(k = 0.5,
     <h3>Related</h3>
     <ul>
       
-      <li><a href="../../post/longitudinal-hurdle-models-2/">Longitudinal hurdle models 2</a></li>
+      <li><a href="/post/longitudinal-hurdle-models-2/">Longitudinal hurdle models 2</a></li>
       
-      <li><a href="../../post/longitudinal-hurdle-models/">Longitudinal hurdle models</a></li>
+      <li><a href="/post/longitudinal-hurdle-models/">Longitudinal hurdle models</a></li>
       
     </ul>
   </div>
@@ -762,7 +762,7 @@ hurlong::marg_pyk_q(k = 0.5,
     
     
     
-    <script src="../../js/academic.min.d6bd04fdad2ad213aa8111c5a3b72fc5.js"></script>
+    <script src="/js/academic.min.d6bd04fdad2ad213aa8111c5a3b72fc5.js"></script>
 
     
 
@@ -775,16 +775,6 @@ hurlong::marg_pyk_q(k = 0.5,
   
   <div class="container">
     <footer class="site-footer">
-  
-  <p class="powered-by">
-    
-      <a href="../../privacy/">Privacy Policy</a>
-    
-    
-       &middot; 
-      <a href="../../terms/">Terms</a>
-    
-  </p>
   
 
   <p class="powered-by">

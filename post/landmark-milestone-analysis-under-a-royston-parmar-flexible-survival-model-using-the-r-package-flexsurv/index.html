@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.5.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Dominic Magirr">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="The aim of this post is to demonstrate a landmark/milestone analysis of RCT time-to-event data with a Royston-Parmar flexible parametric survival model. The original reference is:
+Royston P, Parmar M (2002). “Flexible Parametric Proportional-Hazards and Proportional-Odds Models for Censored Survival Data, with Application to Prognostic Modelling andEstimation of Treatment Effects.” Statistics in Medicine, 21(1), 2175–2197. doi:10.1002/sim.1203
+This model has been expertly coded and documented by Chris Jackson in the R package flexsurv (https://www.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/post/landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv/">
+
+  
+
+
+  
+  
+  
+  <meta name="theme-color" content="#2962ff">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" integrity="sha256-+N4/V/SbAFiW1MPBCXnfnP9QSN3+Keu+NlB+0ev/YKQ=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" integrity="sha256-SHMGCYmST46SoyGgo4YR/9AlK1vf3ff84Aq9yK4hdqM=" crossorigin="anonymous">
+    
+
+    
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700%7CRoboto:400,400italic,700%7CRoboto+Mono&display=swap">
+  
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.css">
+
+  
+
+
+
+
+  
+
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon-32.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="/post/landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv/">
+
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="og:site_name" content="Dominic Magirr">
+  <meta property="og:url" content="/post/landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv/">
+  <meta property="og:title" content="Landmark/Milestone analysis under a Royston-Parmar flexible parametric survival model using the R package flexsurv | Dominic Magirr">
+  <meta property="og:description" content="The aim of this post is to demonstrate a landmark/milestone analysis of RCT time-to-event data with a Royston-Parmar flexible parametric survival model. The original reference is:
+Royston P, Parmar M (2002). “Flexible Parametric Proportional-Hazards and Proportional-Odds Models for Censored Survival Data, with Application to Prognostic Modelling andEstimation of Treatment Effects.” Statistics in Medicine, 21(1), 2175–2197. doi:10.1002/sim.1203
+This model has been expertly coded and documented by Chris Jackson in the R package flexsurv (https://www."><meta property="og:image" content="/img/icon-192.png">
+  <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
+  
+    
+      <meta property="article:published_time" content="2021-05-22T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2021-05-22T13:17:35&#43;02:00">
+  
+
+  
+
+
+    
+
+
+
+
+
+
+  
+
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "/post/landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv/"
+  },
+  "headline": "Landmark/Milestone analysis under a Royston-Parmar flexible parametric survival model using the R package flexsurv",
+  
+  "datePublished": "2021-05-22T00:00:00Z",
+  "dateModified": "2021-05-22T13:17:35+02:00",
+  
+  "author": {
+    "@type": "Person",
+    "name": "Dominic Magirr"
+  },
+  
+  "publisher": {
+    "@type": "Organization",
+    "name": "Dominic Magirr",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "/img/icon-512.png"
+    }
+  },
+  "description": "The aim of this post is to demonstrate a landmark/milestone analysis of RCT time-to-event data with a Royston-Parmar flexible parametric survival model. The original reference is:\nRoyston P, Parmar M (2002). “Flexible Parametric Proportional-Hazards and Proportional-Odds Models for Censored Survival Data, with Application to Prognostic Modelling and\rEstimation of Treatment Effects.” Statistics in Medicine, 21(1), 2175–2197. doi:10.1002/\rsim.1203\nThis model has been expertly coded and documented by Chris Jackson in the R package flexsurv (https://www."
+}
+</script>
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>Landmark/Milestone analysis under a Royston-Parmar flexible parametric survival model using the R package flexsurv | Dominic Magirr</title>
+
+</head>
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0 compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Dominic Magirr</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav mr-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#posts"><span>Posts</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#publications"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#talks"><span>Talks</span></a>
+        </li>
+
+        
+        
+
+      
+      </ul>
+      <ul class="navbar-nav ml-auto">
+      
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-search" href="#"><i class="fas fa-search" aria-hidden="true"></i></a>
+        </li>
+        
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-dark-toggle" href="#"><i class="fas fa-moon" aria-hidden="true"></i></a>
+        </li>
+        
+
+      </ul>
+
+    </div>
+  </div>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+</nav>
+
+
+  <article class="article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1>Landmark/Milestone analysis under a Royston-Parmar flexible parametric survival model using the R package flexsurv</h1>
+
+  
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+          Last updated on
+      
+    
+    May 22, 2021
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    9 min read
+  </span>
+  
+
+  
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder mr-1"></i><a href="/categories/survival-analysis/">survival analysis</a>, <a href="/categories/clinical-trials/">clinical trials</a></span>
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style">
+      
+
+
+<p>The aim of this post is to demonstrate a landmark/milestone analysis of RCT time-to-event data with a Royston-Parmar flexible parametric survival model. The original reference is:</p>
+<p><em>Royston P, Parmar M (2002). “Flexible Parametric Proportional-Hazards and Proportional-Odds Models for Censored Survival Data, with Application to Prognostic Modelling and
+Estimation of Treatment Effects.” Statistics in Medicine, 21(1), 2175–2197. <a href="doi:10.1002/" class="uri">doi:10.1002/</a>
+sim.1203</em></p>
+<p>This model has been expertly coded and documented by Chris Jackson in the R package <strong>flexsurv</strong> (<a href="https://www.jstatsoft.org/article/view/v070i08" class="uri">https://www.jstatsoft.org/article/view/v070i08</a>). In this post I’ll be making a big meal out of the same material in an effort to increase my own understanding.</p>
+<p>I need a dataset, so I’ll re-use one from a <a href="/post/adjusting-for-covariates-under-non-proportional-hazards">previous blogpost</a> – this is
+<a href="https://www.nature.com/articles/s41591-018-0134-3">publically available data</a> from the OAK RCT comparing a checkpoint inhibitor (MPDL3280A) versus chemotherapy (Docetaxel).</p>
+<pre class="r"><code>library(survival)
+library(dplyr)
+library(flexsurv)
+dat_oak &lt;- readxl::read_excel(&quot;41591_2018_134_MOESM3_ESM.xlsx&quot;,
+                              sheet = 3) %&gt;% 
+  select(PtID, ECOGGR, OS, OS.CNSR, TRT01P) %&gt;%
+  mutate(OS.EVENT = -1 * (OS.CNSR - 1))
+
+head(dat_oak)</code></pre>
+<pre><code>## # A tibble: 6 x 6
+##    PtID ECOGGR    OS OS.CNSR TRT01P    OS.EVENT
+##   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;        &lt;dbl&gt;
+## 1   318      1  5.19       0 Docetaxel        1
+## 2  1088      0  4.83       0 Docetaxel        1
+## 3   345      1  1.94       0 Docetaxel        1
+## 4   588      0 24.6        1 Docetaxel        0
+## 5   306      1  5.98       0 MPDL3280A        1
+## 6   718      1 19.2        1 Docetaxel        0</code></pre>
+<p>ECOG grade is a prognostic covariate. Initially I’m going to ignore this covariate, but I’ll come back to it later in the post.</p>
+<p>I’ll start by plotting the survival curves using the <code>survminer</code> package (<a href="https://cran.r-project.org/web/packages/survminer/index.html" class="uri">https://cran.r-project.org/web/packages/survminer/index.html</a>)…</p>
+<pre class="r"><code>km_oak &lt;- survfit(Surv(OS, OS.EVENT) ~ TRT01P,
+                  data = dat_oak)
+
+
+survminer::ggsurvplot(km_oak, 
+                      data = dat_oak, 
+                      risk.table = TRUE, 
+                      break.x.by = 6,
+                      legend.title = &quot;&quot;,
+                      xlab = &quot;Time (months)&quot;,
+                      ylab = &quot;Overall survival&quot;,
+                      risk.table.fontsize = 4,
+                      legend = c(0.8,0.8))</code></pre>
+<p><img src="/post/2021-05-22-landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>In <a href="/post/flexsurv-2">another previous post</a> I discussed using <code>flexsurv::flexsurvreg</code> to fit a Weibull model. In brief, we can describe this model as two parallel straight lines on the log cumumlative hazard scale (versus log time).</p>
+<p>Here, I’ll fit a Weibull model to the OAK data and plot the log cumulative hazard versus log time, on top of the non-parametric equivalent. Note that I’m creating functions here because I’ll want to make this graph repeatedly as we add flexibility to the model.</p>
+<pre class="r"><code>###########################
+### Non-parametric analysis
+###########################
+
+# Vector of time in months (for plotting):
+t_seq &lt;- seq(1, 24, length.out = 100)
+# Extract km estimates
+km_sum &lt;- summary(km_oak, times = t_seq, extend = TRUE)
+
+# Function to plot km estimates (log-cumhaz scale)
+plot_non_param &lt;- function(){
+  
+  plot(log(t_seq), log(km_sum$cumhaz[1:100]), type = &quot;l&quot;, 
+       xlab = &quot;log(time)&quot;, ylab = &quot;log cumulative hazard&quot;)
+  points(log(t_seq), log(km_sum$cumhaz[101:200]), type = &quot;l&quot;, col = 2)
+  legend(&quot;bottomright&quot;, c(&quot;Docetaxel&quot;, &quot;MPDL3280A&quot;),
+         lty = c(1,1), col = 1:2)       
+  
+}
+
+########################
+### Weibull regression
+########################
+fit_weibull &lt;- flexsurvreg(Surv(OS, OS.EVENT) ~ TRT01P,
+                           data = dat_oak,
+                           dist = &quot;weibull&quot;)
+
+
+#Function to add parametric estimate of log-cumulative hazard
+#to the KM-based plot
+add_model_estimate &lt;- function(fit){
+  
+  ### Add Docetaxel estimate
+  summary(fit, 
+          newdata = data.frame(TRT01P = &quot;Docetaxel&quot;),
+          t = t_seq, type = &quot;cumhaz&quot;)[[1]][,&quot;est&quot;] %&gt;% 
+    log() %&gt;% 
+    points(x = log(t_seq), type = &quot;l&quot;, lty = 2)
+  
+  ### Add MPDL3280A estimate
+  summary(fit, 
+          newdata = data.frame(TRT01P = &quot;MPDL3280A&quot;),
+          t = t_seq, type = &quot;cumhaz&quot;)[[1]][,&quot;est&quot;] %&gt;% 
+    log() %&gt;% 
+    points(x = log(t_seq), type = &quot;l&quot;, lty = 2, col = 2)
+}
+
+
+# plot Weibull regression on top of KM estimates
+plot_non_param()
+add_model_estimate(fit_weibull)</code></pre>
+<p><img src="/post/2021-05-22-landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>We can see this is not a good fit at early timepoints. Parallel lines on this scale is the same as saying the hazards are proportional, which is clearly not the case. We therefore need to relax the proportional hazards assumption. One option is to maintain the log-cumulative-hazard-versus-log-time perspective, also maintain <em>straight</em> lines on this scale, but give each treatment its own slope. In other words, this is a Weibull model but with a different shape parameter per treatment. One way I could achieve this is to split the data set and fit two separate models. I won’t do this though. Instead I’ll use the <code>flexsurv::flexsurvspline</code> function.
+First I’m just going do it. Later I’ll explain the model and syntax.</p>
+<pre class="r"><code># spline model with 0 internal knots and where each treatment has its
+# own intercept (gamma0) and its own slope (gamma1) 
+fit_spline_0_1 &lt;- flexsurvspline(Surv(OS, OS.EVENT) ~ TRT01P + gamma1(TRT01P), 
+                                 data = dat_oak,
+                                 k = 0,
+                                 scale = &quot;hazard&quot;)
+
+plot_non_param()
+add_model_estimate(fit_spline_0_1)</code></pre>
+<p><img src="/post/2021-05-22-landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>This looks a bit better perhaps, but still not great. At this point we might be tempted to introduce more complex splines. That is, we move away from modelling the log-cumulative hazard versus log time as straight lines. In my <a href="/post/flexsurv-2">previous post</a> I talked about this, but still in the context of a proportional hazards model. That is, allowing curved lines, but proportional. For completeness, this went something like this:</p>
+<pre class="r"><code># spline model with 1 internal knot and where each treatment has its 
+# own intercept (gamma0), but common slope (gamma1) and common gamma2 -- I&#39;ll explain later.
+fit_spline_1_0 &lt;- flexsurvspline(Surv(OS, OS.EVENT) ~ TRT01P, 
+                                 data = dat_oak,
+                                 k = 1,
+                                 scale = &quot;hazard&quot;)
+
+plot_non_param()
+add_model_estimate(fit_spline_1_0)</code></pre>
+<p><img src="/post/2021-05-22-landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>As mentioned, this doesn’t capture the non-proportional hazards. We need something a bit more flexible…</p>
+<pre class="r"><code># spline model with 1 internal knot and where each treatment has its 
+# own intercept (gamma0), its own slope (gamma1), but common gamma2 -- I&#39;ll explain later.
+fit_spline_1_1 &lt;- flexsurvspline(Surv(OS, OS.EVENT) ~ TRT01P + gamma1(TRT01P), 
+                               data = dat_oak,
+                               k = 1,
+                               scale = &quot;hazard&quot;)
+
+plot_non_param()
+add_model_estimate(fit_spline_1_1)</code></pre>
+<p><img src="/post/2021-05-22-landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>This is starting to look better. Now to expain a bit more what’s going on. Let’s look at the maximum likelihood estimates from the last model:</p>
+<pre class="r"><code>fit_spline_1_1$res</code></pre>
+<pre><code>##                                 est        L95%        U95%         se
+## gamma0                  -3.12264755 -3.44183503 -2.80346006 0.16285375
+## gamma1                   1.73312765  1.33785579  2.12839950 0.20167302
+## gamma2                   0.03389207  0.01200609  0.05577806 0.01116653
+## TRT01PMPDL3280A         -0.10551890 -0.56579074  0.35475295 0.23483689
+## gamma1(TRT01PMPDL3280A) -0.07747115 -0.23538127  0.08043896 0.08056787</code></pre>
+<p>The corresponding model is</p>
+<p><span class="math display">\[\log H(t;~Docetaxel) = \gamma_0 + \gamma_1 \times \log(t) + \gamma_2 \times f(\log(t))\]</span>
+and</p>
+<p><span class="math display">\[\log H(t;~MPDL3280A) = \gamma_0 + \text{`TRT01PMPDL3280A`} + \gamma_1 \times \log(t) + \text{`gamma1(TRT01PMPDL3280A)`} \times \log(t) + \gamma_2 \times f(\log(t))\]</span>.</p>
+<p>Now the question is: what is <span class="math inline">\(f(\log(t))\)</span>?</p>
+<p>The best way to answer that is probably to plot it, together with the other two basis functions (constant and linear) in this model:</p>
+<pre class="r"><code>my_basis &lt;- flexsurv:::basis(knots = fit_spline_1_1$knots, log(1:24))
+my_gamma &lt;- fit_spline_1_1$res[c(&quot;gamma0&quot;, &quot;gamma1&quot;, &quot;gamma2&quot;), &quot;est&quot;]
+
+plot(log(1:24),colSums(t(my_basis) * c(0,0,1)) / -50,
+     main = &quot;Basis funs (re-scaled to fit on same plot)&quot;,
+     xlab = &quot;log(time)&quot;,
+     ylab = &quot;Arbitrary scale&quot;,
+     type = &quot;l&quot;, ylim = c(-0.5, 1.5))
+points(log(1:24),colSums(t(my_basis) * c(0,1,0)) / 3, type = &quot;l&quot;, col = 2)
+points(log(1:24),colSums(t(my_basis) * c(1,0,0)) , type = &quot;l&quot;, col = 3)
+
+legend(&quot;bottomright&quot;, c(&quot;const&quot;, &quot;log(t)&quot;, &quot;f(log(t))&quot;),
+       lty = c(1,1,1),
+       col = 3:1)</code></pre>
+<p><img src="/post/2021-05-22-landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>The formulas are given in the <code>flexsurv</code> documentation but I won’t repeat it here because I don’t really care. The important thing is that I’m allowing the log-cumulative hazard function to be a linear combination of more complex basis functions in <span class="math inline">\(log(t)\)</span>.</p>
+<p>Hopefully I’ve done enough examples that you can see what the syntax is doing. Basically, by specifying <span class="math inline">\(k\)</span> internal knots, the baseline log-cumulative hazard is a linear combination of <span class="math inline">\(k+2\)</span> basis functions, including a constant function, a linear function, and <span class="math inline">\(k\)</span> more complex things. By default, if you just write something like <code>formula = Surv(OS, OS.EVENT) ~ TRT01P</code> then this will give you a separate constant (<code>gamma0</code>) for each treatment. For the other basis functions, if you want each treatment to have its own version then you must explicitly specify this by adding e.g. <code>gamma1(TRT01P)</code> into the formula. In principle, I don’t see any reason why you couldn’t fit the following model with a common slope (<code>gamma1</code>) but separate <code>gamma2</code>, to give an alternative to <code>fit_spline_1_1</code> but with the same number of parameters:</p>
+<pre class="r"><code># spline model with 1 internal knot and where each treatment has its 
+# own intercept (gamma0), its own gamma2, but common slope (gamma1).
+fit_spline_1_2 &lt;- flexsurvspline(Surv(OS, OS.EVENT) ~ TRT01P + gamma2(TRT01P), 
+                               data = dat_oak,
+                               k = 1,
+                               scale = &quot;hazard&quot;)
+
+plot_non_param()
+add_model_estimate(fit_spline_1_2)</code></pre>
+<p><img src="/post/2021-05-22-landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>As a final flourish for this post, I’ll do the landmark/milestone analysis based on the model <code>fit_spline_1_1</code>. Let’s pick 18 months as the landmark time. I’ll take the same approach as the <code>flexsurv</code> package. This simulates from the multivariate normal distribution with mean equal to the maximum likelihood estimates and variance equal to the variance of the maximum likelihood estimates. These random draws are then put through a function outputting the quantity of interest (in our case the difference in survival probabilities at 18 months) and we can then take quantiles to give us an estimate and confidence interval.</p>
+<pre class="r"><code>## simulate from MVN distribution
+sims &lt;- normboot.flexsurvreg(fit_spline_1_1, 
+                             B = 1e5, 
+                             raw = TRUE)
+
+## give S(18) on docetaxel for each draw 
+s_18_docetaxel &lt;-  1 - psurvspline(18, 
+                                   gamma = sims[,c(&quot;gamma0&quot;, &quot;gamma1&quot;, &quot;gamma2&quot;)], 
+                                   knots = fit_spline_1_1$knots)
+
+## give S(18) on MPDL3280A for each draw 
+s_18_MPDL3280A &lt;-  1 - psurvspline(18, 
+                                   gamma = cbind(sims[,&quot;gamma0&quot;], 
+                                                 sims[,&quot;gamma1&quot;]+sims[,&quot;gamma1(TRT01PMPDL3280A)&quot;], 
+                                                 sims[,&quot;gamma2&quot;]),
+                                   offset = sims[,&quot;TRT01PMPDL3280A&quot;],
+                                   knots = fit_spline_1_1$knots)
+
+## 95% CI and estimate for diff in survival 
+## at 18 months (MPDL3280A - docetaxel)
+quantile(s_18_MPDL3280A - s_18_docetaxel,
+         probs = c(0.025, 0.5, 0.975))</code></pre>
+<pre><code>##       2.5%        50%      97.5% 
+## 0.05931764 0.12010375 0.18001183</code></pre>
+<div id="p.s.-prognostic-covariate" class="section level2">
+<h2>p.s. prognostic covariate</h2>
+<p>I promised at one point to discuss the prognostic covariate ECOG status which was available in the data set (in this particular data set it takes values 0 and 1). This post is already longer than I expected, so I won’t dwell on this, but <a href="https://www.jstatsoft.org/article/view/v070i08">as explained in the flexsurv tutorial</a> it’s possible to do a parametric equivalent of a stratified Cox model by using a spline and allowing each ECOG status to have its own <code>gamma0</code>, <code>gamma1</code>,…,<code>gamma[k+1]</code>.</p>
+<pre class="r"><code># Make sure ECOGGR is a factor
+dat_oak$ECOGGR &lt;- factor(dat_oak$ECOGGR)
+
+# spline model with 2 internal knots and where each ECOG grade has its own 
+# complex spline, but where treatment effect within strata is a constant shift
+fit_spline_ecog_0 &lt;- flexsurvspline(Surv(OS, OS.EVENT) ~ TRT01P + 
+                                      ECOGGR + gamma1(ECOGGR) + gamma2(ECOGGR) + gamma3(ECOGGR), 
+                               data = dat_oak,
+                               k = 2,
+                               scale = &quot;hazard&quot;)
+
+fit_spline_ecog_0$res</code></pre>
+<pre><code>##                         est       L95%       U95%         se
+## gamma0          -4.39991075 -5.1904477 -3.6093738 0.40334259
+## gamma1           2.28385223  0.3406304  4.2270740 0.99145792
+## gamma2          -0.02574156 -0.3626805  0.3111974 0.17191077
+## gamma3           0.11146845 -0.3340140  0.5569509 0.22729116
+## TRT01PMPDL3280A -0.33780623 -0.5033559 -0.1722565 0.08446569
+## ECOGGR1          1.63784166  0.7727434  2.5029399 0.44138477
+## gamma1(ECOGGR1) -0.85035950 -2.8680837  1.1673647 1.02947003
+## gamma2(ECOGGR1) -0.03861271 -0.4030762  0.3258508 0.18595417
+## gamma3(ECOGGR1)  0.02669129 -0.4635331  0.5169156 0.25011906</code></pre>
+<p>This is back to being a proportional hazards model which may not be appropriate. We could then make the treatment effect more flexible, e.g.,</p>
+<pre class="r"><code># Make sure ECOGGR is a factor
+dat_oak$ECOGGR &lt;- factor(dat_oak$ECOGGR)
+
+# spline model with 2 internal knots and where each ECOG grade has its own 
+# complex spline, but where treatment effect within strata is handled using a 
+# constant and linear term only.
+fit_spline_ecog_1 &lt;- flexsurvspline(Surv(OS, OS.EVENT) ~ TRT01P + gamma1(TRT01P) +
+                                      ECOGGR + gamma1(ECOGGR) + gamma2(ECOGGR) + gamma3(ECOGGR), 
+                               data = dat_oak,
+                               k = 2,
+                               scale = &quot;hazard&quot;)
+
+fit_spline_ecog_1$res</code></pre>
+<pre><code>##                                  est       L95%        U95%         se
+## gamma0                  -4.524045821 -5.3443397 -3.70375194 0.41852498
+## gamma1                   2.296987159  0.3559155  4.23805878 0.99036086
+## gamma2                  -0.030850110 -0.3674476  0.30574735 0.17173655
+## gamma3                   0.117629309 -0.3273831  0.56264169 0.22705131
+## TRT01PMPDL3280A         -0.085983706 -0.5482385  0.37627105 0.23584859
+## ECOGGR1                  1.660089705  0.7948724  2.52530704 0.44144553
+## gamma1(TRT01PMPDL3280A) -0.093731710 -0.2545742  0.06711074 0.08206398
+## gamma1(ECOGGR1)         -0.799217529 -2.8168457  1.21841060 1.02942102
+## gamma2(ECOGGR1)         -0.024330400 -0.3890199  0.34035906 0.18606947
+## gamma3(ECOGGR1)          0.006536356 -0.4839968  0.49706953 0.25027663</code></pre>
+<p>It then becomes difficult to summarise the treatment effect succinctly. This is an interesting but complicated topic that I won’t discuss now.</p>
+</div>
+
+    </div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+  
+    
+  
+  
+  <div class="media author-card content-widget-hr">
+    
+      
+      <img class="portrait mr-3" src="/authors/admin/avatar_hu3ad799765e91f69a41f3acc2fc665a63_309343_250x250_fill_q90_lanczos_center.jpg" alt="Avatar">
+    
+
+    <div class="media-body">
+      <h5 class="card-title"><a href="/">Dominic Magirr</a></h5>
+      <h6 class="card-subtitle">Medical Statistician</h6>
+      <p class="card-text">Interested in the design, analysis and interpretation of clinical trials.</p>
+      <ul class="network-icon" aria-hidden="true">
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://www.linkedin.com/in/dominic-magirr-87666b12b/" target="_blank" rel="noopener">
+        <i class="fab fa-linkedin"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://scholar.google.co.uk/citations?user=obri2xMAAAAJ&amp;hl=en" target="_blank" rel="noopener">
+        <i class="ai ai-google-scholar"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://github.com/dominicmagirr" target="_blank" rel="noopener">
+        <i class="fab fa-github"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="/files/cv.pdf" >
+        <i class="ai ai-cv"></i>
+      </a>
+    </li>
+  
+</ul>
+
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js" integrity="sha256-1zu+3BnLYV9LdiY85uXMzii3bdrkelyp37e0ZyTAQh0=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/languages/r.min.js"></script>
+        
+      
+
+      
+      
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js" integrity="sha256-EErZamuLefUnbMBQbsEqu1USa+btR2oIlCpBJbyD4/g=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    
+    
+    
+    
+    <script>
+      const search_config = {"indexURI":"/index.json","minLength":1,"threshold":0.3};
+      const i18n = {"no_results":"No results found","placeholder":"Search...","results":"results found"};
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.d6bd04fdad2ad213aa8111c5a3b72fc5.js"></script>
+
+    
+
+
+
+
+
+
+  
+  
+  <div class="container">
+    <footer class="site-footer">
+  
+
+  <p class="powered-by">
+    
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" class="back-to-top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+</footer>
+
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

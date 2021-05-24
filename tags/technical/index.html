@@ -31,7 +31,7 @@
   <meta name="description" content="Medical Statistician">
 
   
-  <link rel="alternate" hreflang="en-us" href="../../tags/technical/">
+  <link rel="alternate" hreflang="en-us" href="/tags/technical/">
 
   
 
@@ -84,7 +84,7 @@
   
   
   
-  <link rel="stylesheet" href="../../css/academic.css">
+  <link rel="stylesheet" href="/css/academic.css">
 
   
 
@@ -95,14 +95,14 @@
 
 
   
-  <link rel="alternate" href="../../tags/technical/index.xml" type="application/rss+xml" title="Dominic Magirr">
+  <link rel="alternate" href="/tags/technical/index.xml" type="application/rss+xml" title="Dominic Magirr">
   
 
-  <link rel="manifest" href="../../index.webmanifest">
-  <link rel="icon" type="image/png" href="../../img/icon-32.png">
-  <link rel="apple-touch-icon" type="image/png" href="../../img/icon-192.png">
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon-32.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
 
-  <link rel="canonical" href="../../tags/technical/">
+  <link rel="canonical" href="/tags/technical/">
 
   
   
@@ -180,7 +180,7 @@
   <div class="container">
 
     
-      <a class="navbar-brand" href="../../">Dominic Magirr</a>
+      <a class="navbar-brand" href="/">Dominic Magirr</a>
       
       <button type="button" class="navbar-toggler" data-toggle="collapse"
               data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -219,7 +219,7 @@
         
 
         <li class="nav-item">
-          <a class="nav-link " href="../../#posts"><span>Posts</span></a>
+          <a class="nav-link " href="/#posts"><span>Posts</span></a>
         </li>
 
         
@@ -248,7 +248,7 @@
         
 
         <li class="nav-item">
-          <a class="nav-link " href="../../#publications"><span>Publications</span></a>
+          <a class="nav-link " href="/#publications"><span>Publications</span></a>
         </li>
 
         
@@ -277,7 +277,7 @@
         
 
         <li class="nav-item">
-          <a class="nav-link " href="../../#talks"><span>Talks</span></a>
+          <a class="nav-link " href="/#talks"><span>Talks</span></a>
         </li>
 
         
@@ -349,53 +349,53 @@
   
   
   <div>
-    <h2><a href="../../post/flexsurv-2/">flexsurv 2</a></h2>
+    <h2><a href="/post/flexsurv-2/">flexsurv 2</a></h2>
     <div class="article-style">
       
       Previously, I started discussing the flexsurv package. I used it to fit a Weibull model. This is implemented as an accelerated failure time model. It is also a proportional hazards model (although, as I found previously, converting between the two is not so straightforward, but it can be done by SurvRegCensCov).
 Now let’s compare Weibull regression with Cox regression. Firstly, Weibull regression:
- assumes proportional hazards; the number of parameters is equal to \(k + 2\), where \(k\) is the number of covariates; we can estimate things like the median, \(P(S&gt;s^*)\), etc.
+assumes proportional hazards;the number of parameters is equal to \(k + 2\), where \(k\) is the number of covariates;we can estimate things like the median, \(P(S&gt;s^*)\), etc.
       
     </div>
   </div>
   
   <div>
-    <h2><a href="../../post/flexsurv/">flexsurv</a></h2>
+    <h2><a href="/post/flexsurv/">flexsurv</a></h2>
     <div class="article-style">
       
       I’m going to write about some of my favourite R packages. I’ll start with flexsurv (https://github.com/chjackson/flexsurv-dev) by Chris Jackson, which can be used to fit all kinds of parametric models to survival data. It can really do a lot, but I’ll pick out just 2 cool things I like about it:
-Fit a standard survival model, but where it’s slightly easier to work out what the parameters mean. Fit a proportional hazards model, which is a lot like a Cox model, but where you also model the baseline hazard using a spline.
+Fit a standard survival model, but where it’s slightly easier to work out what the parameters mean.Fit a proportional hazards model, which is a lot like a Cox model, but where you also model the baseline hazard using a spline.
       
     </div>
   </div>
   
   <div>
-    <h2><a href="../../post/longitudinal-hurdle-models-3/">Longitudinal hurdle models 3</a></h2>
+    <h2><a href="/post/longitudinal-hurdle-models-3/">Longitudinal hurdle models 3</a></h2>
     <div class="article-style">
       
       In the last post on longitudinal hurdle models, I had just taken samples from the marginal mean
-\[\begin{align} g(\theta; x) &amp; = E(Y \mid \theta; x) \\ &amp; = \int E(Y \mid u_{i&#39;}, v_{i&#39;}, \theta; x) f(u_{i&#39;}, v_{i&#39;} \mid \theta, \mathbf{y}) du_{i&#39;}dv_{i&#39;} \\ &amp;\approx L^{-1}\sum_{l = 1}^{L}E(Y \mid u_{i&#39;}^{(l)}, v_{i&#39;}^{(l)}, \theta; x)\\ &amp;= L^{-1}\sum_{l = 1}^{L}\left\lbrace 1 - \text{logit}^{-1} ( x^T \gamma + u_{i&#39;}^{(l)}) \right\rbrace \exp(x^T\beta + v_{i&#39;}^{(l)} + \frac{\sigma^2}{2}).
+\[\begin{align} g(\theta; x) &amp; = E(Y \mid \theta; x) \\&amp; = \int E(Y \mid u_{i&#39;}, v_{i&#39;}, \theta; x) f(u_{i&#39;}, v_{i&#39;} \mid \theta, \mathbf{y}) du_{i&#39;}dv_{i&#39;} \\ &amp;\approx L^{-1}\sum_{l = 1}^{L}E(Y \mid u_{i&#39;}^{(l)}, v_{i&#39;}^{(l)}, \theta; x)\\&amp;= L^{-1}\sum_{l = 1}^{L}\left\lbrace 1 - \text{logit}^{-1} ( x^T \gamma + u_{i&#39;}^{(l)}) \right\rbrace \exp(x^T\beta + v_{i&#39;}^{(l)} + \frac{\sigma^2}{2}).
       
     </div>
   </div>
   
   <div>
-    <h2><a href="../../post/longitudinal-hurdle-models-2/">Longitudinal hurdle models 2</a></h2>
+    <h2><a href="/post/longitudinal-hurdle-models-2/">Longitudinal hurdle models 2</a></h2>
     <div class="article-style">
       
       In a previous post I fit a longitudinal hurdle model using the brms package.
-library(brms) summary(fit_hurdle) ## Family: hurdle_lognormal ## Links: mu = identity; sigma = identity; hu = logit ## Formula: y ~ time + (1 | q | id) ## hu ~ time + (1 | q | id) ## Data: dat (Number of observations: 800) ## Samples: 4 chains, each with iter = 4000; warmup = 2000; thin = 1; ## total post-warmup samples = 8000 ## ## Group-Level Effects: ## ~id (Number of levels: 100) ## Estimate Est.
+library(brms)summary(fit_hurdle)## Family: hurdle_lognormal ## Links: mu = identity; sigma = identity; hu = logit ## Formula: y ~ time + (1 | q | id) ## hu ~ time + (1 | q | id)## Data: dat (Number of observations: 800) ## Samples: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;## total post-warmup samples = 8000## ## Group-Level Effects: ## ~id (Number of levels: 100) ## Estimate Est.
       
     </div>
   </div>
   
   <div>
-    <h2><a href="../../post/longitudinal-hurdle-models/">Longitudinal hurdle models</a></h2>
+    <h2><a href="/post/longitudinal-hurdle-models/">Longitudinal hurdle models</a></h2>
     <div class="article-style">
       
-      Data Recently, I have been modelling data that is longitudinal, contains excess zeros, and where the non-zero data is right-skewed and measured on a continuous scale, rather than being count data.
+      DataRecently, I have been modelling data that is longitudinal, contains excess zeros, and where the non-zero data is right-skewed and measured on a continuous scale, rather than being count data.
 I’ll simulate a semi-realistic example data set from a lognormal hurdle model. The “random effects” for the pr(zero) and non-zero parts of the model are negatively correlated.
-set.seed(180) ## 100 patients id &lt;- 1:100 ## 2 timepoints time &lt;- c(&quot;1&quot;, &quot;2&quot;) ## random effects u &lt;- rnorm(100, sd = 2) v &lt;- rnorm(100, mean = -0.
+set.seed(180)## 100 patientsid &lt;- 1:100## 2 timepointstime &lt;- c(&quot;1&quot;, &quot;2&quot;)## random effectsu &lt;- rnorm(100, sd = 2)v &lt;- rnorm(100, mean = -0.
       
     </div>
   </div>
@@ -504,7 +504,7 @@ set.seed(180) ## 100 patients id &lt;- 1:100 ## 2 timepoints time &lt;- c(&quot;
     
     
     
-    <script src="../../js/academic.min.d6bd04fdad2ad213aa8111c5a3b72fc5.js"></script>
+    <script src="/js/academic.min.d6bd04fdad2ad213aa8111c5a3b72fc5.js"></script>
 
     
 
@@ -517,16 +517,6 @@ set.seed(180) ## 100 patients id &lt;- 1:100 ## 2 timepoints time &lt;- c(&quot;
   
   <div class="container">
     <footer class="site-footer">
-  
-  <p class="powered-by">
-    
-      <a href="../../privacy/">Privacy Policy</a>
-    
-    
-       &middot; 
-      <a href="../../terms/">Terms</a>
-    
-  </p>
   
 
   <p class="powered-by">

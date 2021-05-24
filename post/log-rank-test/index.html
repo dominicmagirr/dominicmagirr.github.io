@@ -29,10 +29,10 @@
     
   
   <meta name="description" content="Suppose we have the following data.
-df &lt;- dplyr::tibble(patient_id = as.character(1:12), treatment = rep(c(&quot;C&quot;, &quot;E&quot;), each = 6), survival_time = survival::Surv(time = c(2,6,8,11,17,24,7,9,13,22,23,25), event = c(1,1,1,1,1,0,1,1,1,0,0,0))) knitr::kable(df)   patient_id treatment survival_time    1 C 2  2 C 6  3 C 8  4 C 11  5 C 17  6 C 24&#43;  7 E 7  8 E 9  9 E 13  10 E 22&#43;  11 E 23&#43;  12 E 25&#43;    Let’s arrange the data in increasing order of survival time.">
+df &lt;- dplyr::tibble(patient_id = as.character(1:12), treatment = rep(c(&quot;C&quot;, &quot;E&quot;), each = 6),survival_time = survival::Surv(time = c(2,6,8,11,17,24,7,9,13,22,23,25),event = c(1,1,1,1,1,0,1,1,1,0,0,0)))knitr::kable(df)patient_idtreatmentsurvival_time1C22C63C84C115C176C24&#43;7E78E99E1310E22&#43;11E23&#43;12E25&#43;Let’s arrange the data in increasing order of survival time.">
 
   
-  <link rel="alternate" hreflang="en-us" href="../../post/log-rank-test/">
+  <link rel="alternate" hreflang="en-us" href="/post/log-rank-test/">
 
   
 
@@ -85,7 +85,7 @@ df &lt;- dplyr::tibble(patient_id = as.character(1:12), treatment = rep(c(&quot;
   
   
   
-  <link rel="stylesheet" href="../../css/academic.css">
+  <link rel="stylesheet" href="/css/academic.css">
 
   
 
@@ -97,11 +97,11 @@ df &lt;- dplyr::tibble(patient_id = as.character(1:12), treatment = rep(c(&quot;
 
   
 
-  <link rel="manifest" href="../../index.webmanifest">
-  <link rel="icon" type="image/png" href="../../img/icon-32.png">
-  <link rel="apple-touch-icon" type="image/png" href="../../img/icon-192.png">
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon-32.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
 
-  <link rel="canonical" href="../../post/log-rank-test/">
+  <link rel="canonical" href="/post/log-rank-test/">
 
   
   
@@ -117,7 +117,7 @@ df &lt;- dplyr::tibble(patient_id = as.character(1:12), treatment = rep(c(&quot;
   <meta property="og:url" content="/post/log-rank-test/">
   <meta property="og:title" content="How to calculate the log-rank statistic | Dominic Magirr">
   <meta property="og:description" content="Suppose we have the following data.
-df &lt;- dplyr::tibble(patient_id = as.character(1:12), treatment = rep(c(&quot;C&quot;, &quot;E&quot;), each = 6), survival_time = survival::Surv(time = c(2,6,8,11,17,24,7,9,13,22,23,25), event = c(1,1,1,1,1,0,1,1,1,0,0,0))) knitr::kable(df)   patient_id treatment survival_time    1 C 2  2 C 6  3 C 8  4 C 11  5 C 17  6 C 24&#43;  7 E 7  8 E 9  9 E 13  10 E 22&#43;  11 E 23&#43;  12 E 25&#43;    Let’s arrange the data in increasing order of survival time."><meta property="og:image" content="/img/icon-192.png">
+df &lt;- dplyr::tibble(patient_id = as.character(1:12), treatment = rep(c(&quot;C&quot;, &quot;E&quot;), each = 6),survival_time = survival::Surv(time = c(2,6,8,11,17,24,7,9,13,22,23,25),event = c(1,1,1,1,1,0,1,1,1,0,0,0)))knitr::kable(df)patient_idtreatmentsurvival_time1C22C63C84C115C176C24&#43;7E78E99E1310E22&#43;11E23&#43;12E25&#43;Let’s arrange the data in increasing order of survival time."><meta property="og:image" content="/img/icon-192.png">
   <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
   
     
@@ -169,7 +169,7 @@ df &lt;- dplyr::tibble(patient_id = as.character(1:12), treatment = rep(c(&quot;
       "url": "/img/icon-512.png"
     }
   },
-  "description": "Suppose we have the following data.\ndf \u0026lt;- dplyr::tibble(patient_id = as.character(1:12), treatment = rep(c(\u0026quot;C\u0026quot;, \u0026quot;E\u0026quot;), each = 6), survival_time = survival::Surv(time = c(2,6,8,11,17,24,7,9,13,22,23,25), event = c(1,1,1,1,1,0,1,1,1,0,0,0))) knitr::kable(df)   patient_id treatment survival_time    1 C 2  2 C 6  3 C 8  4 C 11  5 C 17  6 C 24+  7 E 7  8 E 9  9 E 13  10 E 22+  11 E 23+  12 E 25+    Let’s arrange the data in increasing order of survival time."
+  "description": "Suppose we have the following data.\ndf \u0026lt;- dplyr::tibble(patient_id = as.character(1:12), treatment = rep(c(\u0026quot;C\u0026quot;, \u0026quot;E\u0026quot;), each = 6),\rsurvival_time = survival::Surv(time = c(2,6,8,11,17,24,7,9,13,22,23,25),\revent = c(1,1,1,1,1,0,1,1,1,0,0,0)))\rknitr::kable(df)\r\r\rpatient_id\rtreatment\rsurvival_time\r\r\r\r1\rC\r2\r\r2\rC\r6\r\r3\rC\r8\r\r4\rC\r11\r\r5\rC\r17\r\r6\rC\r24+\r\r7\rE\r7\r\r8\rE\r9\r\r9\rE\r13\r\r10\rE\r22+\r\r11\rE\r23+\r\r12\rE\r25+\r\r\r\rLet’s arrange the data in increasing order of survival time."
 }
 </script>
 
@@ -230,7 +230,7 @@ df &lt;- dplyr::tibble(patient_id = as.character(1:12), treatment = rep(c(&quot;
   <div class="container">
 
     
-      <a class="navbar-brand" href="../../">Dominic Magirr</a>
+      <a class="navbar-brand" href="/">Dominic Magirr</a>
       
       <button type="button" class="navbar-toggler" data-toggle="collapse"
               data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -269,7 +269,7 @@ df &lt;- dplyr::tibble(patient_id = as.character(1:12), treatment = rep(c(&quot;
         
 
         <li class="nav-item">
-          <a class="nav-link " href="../../#posts"><span>Posts</span></a>
+          <a class="nav-link " href="/#posts"><span>Posts</span></a>
         </li>
 
         
@@ -298,7 +298,7 @@ df &lt;- dplyr::tibble(patient_id = as.character(1:12), treatment = rep(c(&quot;
         
 
         <li class="nav-item">
-          <a class="nav-link " href="../../#publications"><span>Publications</span></a>
+          <a class="nav-link " href="/#publications"><span>Publications</span></a>
         </li>
 
         
@@ -327,7 +327,7 @@ df &lt;- dplyr::tibble(patient_id = as.character(1:12), treatment = rep(c(&quot;
         
 
         <li class="nav-item">
-          <a class="nav-link " href="../../#talks"><span>Talks</span></a>
+          <a class="nav-link " href="/#talks"><span>Talks</span></a>
         </li>
 
         
@@ -764,11 +764,11 @@ rbind(logrank_fit$n, logrank_fit$obs - logrank_fit$exp)[2,]</code></pre>
   <div class="media author-card content-widget-hr">
     
       
-      <img class="portrait mr-3" src="../../authors/admin/avatar_hu3ad799765e91f69a41f3acc2fc665a63_309343_250x250_fill_q90_lanczos_center.jpg" alt="Avatar">
+      <img class="portrait mr-3" src="/authors/admin/avatar_hu3ad799765e91f69a41f3acc2fc665a63_309343_250x250_fill_q90_lanczos_center.jpg" alt="Avatar">
     
 
     <div class="media-body">
-      <h5 class="card-title"><a href="../../">Dominic Magirr</a></h5>
+      <h5 class="card-title"><a href="/">Dominic Magirr</a></h5>
       <h6 class="card-subtitle">Medical Statistician</h6>
       <p class="card-text">Interested in the design, analysis and interpretation of clinical trials.</p>
       <ul class="network-icon" aria-hidden="true">
@@ -832,7 +832,7 @@ rbind(logrank_fit$n, logrank_fit$obs - logrank_fit$exp)[2,]</code></pre>
       
     
     <li>
-      <a href="../../files/cv.pdf" >
+      <a href="/files/cv.pdf" >
         <i class="ai ai-cv"></i>
       </a>
     </li>
@@ -957,7 +957,7 @@ rbind(logrank_fit$n, logrank_fit$obs - logrank_fit$exp)[2,]</code></pre>
     
     
     
-    <script src="../../js/academic.min.d6bd04fdad2ad213aa8111c5a3b72fc5.js"></script>
+    <script src="/js/academic.min.d6bd04fdad2ad213aa8111c5a3b72fc5.js"></script>
 
     
 
@@ -970,16 +970,6 @@ rbind(logrank_fit$n, logrank_fit$obs - logrank_fit$exp)[2,]</code></pre>
   
   <div class="container">
     <footer class="site-footer">
-  
-  <p class="powered-by">
-    
-      <a href="../../privacy/">Privacy Policy</a>
-    
-    
-       &middot; 
-      <a href="../../terms/">Terms</a>
-    
-  </p>
   
 
   <p class="powered-by">
