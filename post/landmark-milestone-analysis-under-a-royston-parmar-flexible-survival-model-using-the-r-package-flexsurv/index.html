@@ -566,7 +566,7 @@ fit_spline_0_1 &lt;- flexsurvspline(Surv(OS, OS.EVENT) ~ TRT01P + gamma1(TRT01P)
 plot_non_param()
 add_model_estimate(fit_spline_0_1)</code></pre>
 <p><img src="/post/2021-05-22-landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
-<p>This looks a bit better perhaps, but still not great. At this point we might be tempted to introduce more complex splines. That is, we move away from modelling the log-cumulative hazard versus log time as straight lines. In my <a href="/post/flexsurv-2">previous post</a> I talked about this, but still in the context of a proportional hazards model. That is, allowing curved lines, but proportional. For completeness, this went something like this:</p>
+<p>This looks a bit better perhaps, but still not great. At this point we might be tempted to introduce more complex splines. That is, we move away from modelling the log-cumulative hazard versus log time as straight lines. In my <a href="/post/flexsurv-2">previous post</a> I talked about this, but still in the context of a proportional hazards model. That is, allowing curved lines, but parallel. For completeness, this went something like this:</p>
 <pre class="r"><code># spline model with 1 internal knot and where each treatment has its 
 # own intercept (gamma0), but common slope (gamma1) and common gamma2 -- I&#39;ll explain later.
 fit_spline_1_0 &lt;- flexsurvspline(Surv(OS, OS.EVENT) ~ TRT01P, 
@@ -653,7 +653,7 @@ s_18_MPDL3280A &lt;-  1 - psurvspline(18,
 quantile(s_18_MPDL3280A - s_18_docetaxel,
          probs = c(0.025, 0.5, 0.975))</code></pre>
 <pre><code>##       2.5%        50%      97.5% 
-## 0.05931764 0.12010375 0.18001183</code></pre>
+## 0.05990075 0.12032737 0.17999915</code></pre>
 <div id="p.s.-prognostic-covariate" class="section level2">
 <h2>p.s. prognostic covariate</h2>
 <p>I promised at one point to discuss the prognostic covariate ECOG status which was available in the data set (in this particular data set it takes values 0 and 1). This post is already longer than I expected, so I won’t dwell on this, but <a href="https://www.jstatsoft.org/article/view/v070i08">as explained in the flexsurv tutorial</a> it’s possible to do a parametric equivalent of a stratified Cox model by using a spline and allowing each ECOG status to have its own <code>gamma0</code>, <code>gamma1</code>,…,<code>gamma[k+1]</code>.</p>
