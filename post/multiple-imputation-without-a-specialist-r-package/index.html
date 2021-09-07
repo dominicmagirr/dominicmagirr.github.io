@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.5.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Dominic Magirr">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="If you’re interested in doing multiple imputation in R, it’s best to use a specialist package. There are many good options out there, including mice (https://www.jstatsoft.org/article/view/v045i03), smcfcs (https://cran.r-project.org/web/packages/smcfcs/vignettes/smcfcs-vignette.html), norm2 (https://usermanual.wiki/Document/norm2UserGuide.911613350/view), and many others (https://cran.r-project.org/web/views/MissingData.html).
+The aim of this post is for me to deepen my understanding of multiple imputation and not forget it. More specifically, I want a middle way which is somewhere between a black box command (leaves me unsatisfied) and full gory details (ahhhhh!">
+
+  
+  <link rel="alternate" hreflang="en-us" href="../../post/multiple-imputation-without-a-specialist-r-package/">
+
+  
+
+
+  
+  
+  
+  <meta name="theme-color" content="#2962ff">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" integrity="sha256-+N4/V/SbAFiW1MPBCXnfnP9QSN3+Keu+NlB+0ev/YKQ=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" integrity="sha256-SHMGCYmST46SoyGgo4YR/9AlK1vf3ff84Aq9yK4hdqM=" crossorigin="anonymous">
+    
+
+    
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700%7CRoboto:400,400italic,700%7CRoboto+Mono&display=swap">
+  
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="../../css/academic.css">
+
+  
+
+
+
+
+  
+
+
+  
+
+  <link rel="manifest" href="../../index.webmanifest">
+  <link rel="icon" type="image/png" href="../../img/icon-32.png">
+  <link rel="apple-touch-icon" type="image/png" href="../../img/icon-192.png">
+
+  <link rel="canonical" href="../../post/multiple-imputation-without-a-specialist-r-package/">
+
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="og:site_name" content="Dominic Magirr">
+  <meta property="og:url" content="/post/multiple-imputation-without-a-specialist-r-package/">
+  <meta property="og:title" content="Multiple imputation without a specialist R package | Dominic Magirr">
+  <meta property="og:description" content="If you’re interested in doing multiple imputation in R, it’s best to use a specialist package. There are many good options out there, including mice (https://www.jstatsoft.org/article/view/v045i03), smcfcs (https://cran.r-project.org/web/packages/smcfcs/vignettes/smcfcs-vignette.html), norm2 (https://usermanual.wiki/Document/norm2UserGuide.911613350/view), and many others (https://cran.r-project.org/web/views/MissingData.html).
+The aim of this post is for me to deepen my understanding of multiple imputation and not forget it. More specifically, I want a middle way which is somewhere between a black box command (leaves me unsatisfied) and full gory details (ahhhhh!"><meta property="og:image" content="/img/icon-192.png">
+  <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
+  
+    
+      <meta property="article:published_time" content="2021-09-07T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2021-09-07T20:04:06&#43;02:00">
+  
+
+  
+
+
+    
+
+
+
+
+
+
+  
+
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "/post/multiple-imputation-without-a-specialist-r-package/"
+  },
+  "headline": "Multiple imputation without a specialist R package",
+  
+  "datePublished": "2021-09-07T00:00:00Z",
+  "dateModified": "2021-09-07T20:04:06+02:00",
+  
+  "author": {
+    "@type": "Person",
+    "name": "Dominic Magirr"
+  },
+  
+  "publisher": {
+    "@type": "Organization",
+    "name": "Dominic Magirr",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "/img/icon-512.png"
+    }
+  },
+  "description": "If you’re interested in doing multiple imputation in R, it’s best to use a specialist package. There are many good options out there, including mice (https://www.jstatsoft.org/article/view/v045i03), smcfcs (https://cran.r-project.org/web/packages/smcfcs/vignettes/smcfcs-vignette.html), norm2 (https://usermanual.wiki/Document/norm2UserGuide.911613350/view), and many others (https://cran.r-project.org/web/views/MissingData.html).\nThe aim of this post is for me to deepen my understanding of multiple imputation and not forget it. More specifically, I want a middle way which is somewhere between a black box command (leaves me unsatisfied) and full gory details (ahhhhh!"
+}
+</script>
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>Multiple imputation without a specialist R package | Dominic Magirr</title>
+
+</head>
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0 compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="../../">Dominic Magirr</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav mr-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="../../#posts"><span>Posts</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="../../#publications"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="../../#talks"><span>Talks</span></a>
+        </li>
+
+        
+        
+
+      
+      </ul>
+      <ul class="navbar-nav ml-auto">
+      
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-search" href="#"><i class="fas fa-search" aria-hidden="true"></i></a>
+        </li>
+        
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-dark-toggle" href="#"><i class="fas fa-moon" aria-hidden="true"></i></a>
+        </li>
+        
+
+      </ul>
+
+    </div>
+  </div>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+</nav>
+
+
+  <article class="article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1>Multiple imputation without a specialist R package</h1>
+
+  
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+          Last updated on
+      
+    
+    Sep 7, 2021
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    13 min read
+  </span>
+  
+
+  
+  
+  
+
+  
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style">
+      
+
+
+<p>If you’re interested in doing multiple imputation in R, it’s best to use a specialist package. There are many good options out there, including <code>mice</code> (<a href="https://www.jstatsoft.org/article/view/v045i03" class="uri">https://www.jstatsoft.org/article/view/v045i03</a>), <code>smcfcs</code> (<a href="https://cran.r-project.org/web/packages/smcfcs/vignettes/smcfcs-vignette.html" class="uri">https://cran.r-project.org/web/packages/smcfcs/vignettes/smcfcs-vignette.html</a>), <code>norm2</code> (<a href="https://usermanual.wiki/Document/norm2UserGuide.911613350/view" class="uri">https://usermanual.wiki/Document/norm2UserGuide.911613350/view</a>), and many others (<a href="https://cran.r-project.org/web/views/MissingData.html" class="uri">https://cran.r-project.org/web/views/MissingData.html</a>).</p>
+<p>The aim of this post is for me to deepen my understanding of multiple imputation and not forget it. More specifically, I want a middle way which is somewhere between a black box command (leaves me unsatisfied) and full gory details (ahhhhh!).</p>
+<p>In terms of the methodological approach of using multiple imputation for sensitivity analysis, I’ll follow the excellent paper by Cro et al. (<a href="https://onlinelibrary.wiley.com/doi/pdf/10.1002/sim.8569" class="uri">https://onlinelibrary.wiley.com/doi/pdf/10.1002/sim.8569</a>). The paper comes with a Stata package (<a href="https://journals.sagepub.com/doi/pdf/10.1177/1536867X1601600211" class="uri">https://journals.sagepub.com/doi/pdf/10.1177/1536867X1601600211</a>) which was based on original SAS Macros by James Roger (<a href="https://www.lshtm.ac.uk/research/centres-projects-groups/missing-data#dia-missing-data" class="uri">https://www.lshtm.ac.uk/research/centres-projects-groups/missing-data#dia-missing-data</a>).</p>
+<p>The key tool I’ll be using in R is the <code>brms</code> package (<a href="https://cran.r-project.org/web/packages/brms/index.html" class="uri">https://cran.r-project.org/web/packages/brms/index.html</a>). The brilliant thing about this is that I can understand each step conceptually, without knowing too much about the details.</p>
+<p>This is probably an inefficient way to do this though. There could well be errors too.</p>
+<pre class="r"><code>library(tidyverse)
+library(brms)</code></pre>
+<div id="data-set" class="section level2">
+<h2>Data set</h2>
+<p>I’ll use the “low dropout” data set from Mallinckrodt et al. (<a href="https://journals.sagepub.com/doi/pdf/10.1177/2168479013501310" class="uri">https://journals.sagepub.com/doi/pdf/10.1177/2168479013501310</a>) which is available via <a href="https://www.lshtm.ac.uk/research/centres-projects-groups/missing-data#dia-missing-data" class="uri">https://www.lshtm.ac.uk/research/centres-projects-groups/missing-data#dia-missing-data</a>.</p>
+<pre class="r"><code>low_data &lt;- haven::read_sas(&quot;low1.sas7bdat&quot;)
+head(low_data)</code></pre>
+<pre><code>## # A tibble: 6 x 6
+##   PATIENT POOLINV trt   basval  week change
+##     &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+## 1    1005 101     2         16     1     -3
+## 2    1005 101     2         16     2     -5
+## 3    1005 101     2         16     4    -10
+## 4    1005 101     2         16     6    -11
+## 5    1005 101     2         16     8    -13
+## 6    1006 101     2         17     1     -1</code></pre>
+<p>This data set is in long format. It consists of patient ID, treatment (1 or 2), treatment centre (<code>POOLINV</code>), baseline value, timepoint (<code>week</code>), and change from baseline (the outcome variable).</p>
+<p><em>I won’t describe the context here, or do any exploratory analysis – see the Mallinckrodt et al paper for this (<a href="https://journals.sagepub.com/doi/pdf/10.1177/2168479013501310" class="uri">https://journals.sagepub.com/doi/pdf/10.1177/2168479013501310</a>).</em></p>
+<p>For my analysis, I’ll first convert it to a wide format, with a separate variable for the outcome at each timepoint (week 1, 2, 4, 6 and 8).</p>
+<pre class="r"><code>low_data_wide &lt;- low_data %&gt;%
+  pivot_wider(names_from = week, 
+              names_prefix = &quot;week&quot;,
+              values_from = change)
+
+head(low_data_wide)</code></pre>
+<pre><code>## # A tibble: 6 x 9
+##   PATIENT POOLINV trt   basval week1 week2 week4 week6 week8
+##     &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1    1005 101     2         16    -3    -5   -10   -11   -13
+## 2    1006 101     2         17    -1    -2    -6   -10   -12
+## 3    1008 101     1         32    -6   -12   -17   -20   -22
+## 4    1011 101     1         18    -1    -5    -8    NA    NA
+## 5    1012 101     1         22    -6    -9   -13   -16   -17
+## 6    1015 101     2         29    -6   -14   -14   -20   -25</code></pre>
+<p>We can see now that there are some missing values.</p>
+<p>At this point I’ll also split the data set by treatment group. This is because I’ll use a separate imputation model for each treatment.</p>
+<pre class="r"><code>low_data_1 &lt;- low_data_wide %&gt;% dplyr::filter(trt == &quot;1&quot;)
+low_data_2 &lt;- low_data_wide %&gt;% dplyr::filter(trt == &quot;2&quot;)</code></pre>
+<p>The next step is to fit the imputation model, which is basically a Bayesian MMRM, using <code>brms</code>. The covariarates in each model are baseline (<code>basval</code>) and centre (<code>POOLINV</code>), which both get crossed with timepoint. And the covariance matrices are unstructured.</p>
+<pre class="r"><code>fit_1 &lt;- brm(data = low_data_1, 
+             family = gaussian,
+             bf(mvbind(week1, week2, week4, week6, week8) | mi() ~ basval + POOLINV) + 
+             set_rescor(TRUE),
+             refresh = 0)
+
+fit_2 &lt;- brm(data = low_data_2, 
+             family = gaussian,
+             bf(mvbind(week1, week2, week4, week6, week8) | mi() ~ basval + POOLINV) + 
+             set_rescor(TRUE),
+             refresh = 0)</code></pre>
+<p>We can take a quick look at the summary of the first model fit to reassure ourselves it is giving us the right kind of thing.</p>
+<pre class="r"><code>summary(fit_1)</code></pre>
+<pre><code>##  Family: MV(gaussian, gaussian, gaussian, gaussian, gaussian) 
+##   Links: mu = identity; sigma = identity
+##          mu = identity; sigma = identity
+##          mu = identity; sigma = identity
+##          mu = identity; sigma = identity
+##          mu = identity; sigma = identity 
+## Formula: week1 | mi() ~ basval + POOLINV 
+##          week2 | mi() ~ basval + POOLINV 
+##          week4 | mi() ~ basval + POOLINV 
+##          week6 | mi() ~ basval + POOLINV 
+##          week8 | mi() ~ basval + POOLINV 
+##    Data: low_data_1 (Number of observations: 100) 
+## Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+##          total post-warmup samples = 4000
+## 
+## Population-Level Effects: 
+##                  Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS
+## week1_Intercept      1.60      1.57    -1.51     4.71 1.00     4000
+## week2_Intercept     -2.20      2.35    -6.71     2.43 1.00     3363
+## week4_Intercept     -0.25      2.56    -5.21     4.67 1.00     2839
+## week6_Intercept      0.25      2.94    -5.53     5.99 1.00     2658
+## week8_Intercept      5.11      3.18    -1.24    11.45 1.00     3234
+## week1_basval        -0.19      0.07    -0.33    -0.05 1.00     4603
+## week1_POOLINV121    -0.08      0.76    -1.60     1.41 1.00     3794
+## week1_POOLINV131     0.09      0.65    -1.19     1.42 1.00     3684
+## week1_POOLINV141     0.78      0.69    -0.60     2.10 1.00     3695
+## week2_basval        -0.13      0.10    -0.33     0.07 1.00     4158
+## week2_POOLINV121     1.12      1.14    -1.17     3.29 1.00     2923
+## week2_POOLINV131    -0.89      0.99    -2.79     1.07 1.00     2865
+## week2_POOLINV141     0.59      1.03    -1.41     2.61 1.00     3027
+## week4_basval        -0.34      0.11    -0.56    -0.12 1.00     3469
+## week4_POOLINV121     0.82      1.22    -1.56     3.15 1.00     2511
+## week4_POOLINV131    -1.74      1.08    -3.84     0.40 1.00     2620
+## week4_POOLINV141     0.24      1.13    -1.97     2.42 1.00     2610
+## week6_basval        -0.45      0.13    -0.70    -0.19 1.00     3247
+## week6_POOLINV121     0.29      1.42    -2.48     3.11 1.00     2632
+## week6_POOLINV131    -0.75      1.24    -3.17     1.66 1.00     2343
+## week6_POOLINV141    -0.25      1.27    -2.64     2.26 1.00     2458
+## week8_basval        -0.70      0.14    -0.97    -0.42 1.00     3638
+## week8_POOLINV121    -0.50      1.56    -3.53     2.56 1.00     3161
+## week8_POOLINV131    -2.67      1.36    -5.25    -0.00 1.00     2597
+## week8_POOLINV141    -1.22      1.39    -3.84     1.49 1.00     2932
+##                  Tail_ESS
+## week1_Intercept      3397
+## week2_Intercept      2979
+## week4_Intercept      2889
+## week6_Intercept      2744
+## week8_Intercept      3078
+## week1_basval         3552
+## week1_POOLINV121     3029
+## week1_POOLINV131     3199
+## week1_POOLINV141     3162
+## week2_basval         3157
+## week2_POOLINV121     3272
+## week2_POOLINV131     3013
+## week2_POOLINV141     3075
+## week4_basval         3213
+## week4_POOLINV121     2567
+## week4_POOLINV131     3273
+## week4_POOLINV141     2821
+## week6_basval         2879
+## week6_POOLINV121     2651
+## week6_POOLINV131     2558
+## week6_POOLINV141     2869
+## week8_basval         3229
+## week8_POOLINV121     2997
+## week8_POOLINV131     2840
+## week8_POOLINV141     3062
+## 
+## Family Specific Parameters: 
+##             Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## sigma_week1     2.50      0.18     2.18     2.89 1.00     5461     3139
+## sigma_week2     3.73      0.27     3.25     4.30 1.00     3838     3248
+## sigma_week4     4.05      0.29     3.54     4.66 1.00     3645     3259
+## sigma_week6     4.53      0.34     3.93     5.26 1.00     3573     2732
+## sigma_week8     4.88      0.38     4.19     5.71 1.00     4169     3132
+## 
+## Residual Correlations: 
+##                     Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS
+## rescor(week1,week2)     0.53      0.07     0.38     0.67 1.00     3978
+## rescor(week1,week4)     0.42      0.08     0.24     0.56 1.00     3800
+## rescor(week2,week4)     0.71      0.05     0.60     0.80 1.00     3129
+## rescor(week1,week6)     0.32      0.09     0.14     0.49 1.00     3557
+## rescor(week2,week6)     0.53      0.07     0.37     0.66 1.00     3500
+## rescor(week4,week6)     0.76      0.04     0.67     0.84 1.00     3506
+## rescor(week1,week8)     0.17      0.10    -0.03     0.36 1.00     3875
+## rescor(week2,week8)     0.33      0.09     0.14     0.50 1.00     3791
+## rescor(week4,week8)     0.55      0.07     0.39     0.68 1.00     3528
+## rescor(week6,week8)     0.85      0.03     0.78     0.90 1.00     3724
+##                     Tail_ESS
+## rescor(week1,week2)     3313
+## rescor(week1,week4)     3299
+## rescor(week2,week4)     3356
+## rescor(week1,week6)     3151
+## rescor(week2,week6)     2833
+## rescor(week4,week6)     2767
+## rescor(week1,week8)     3453
+## rescor(week2,week8)     3145
+## rescor(week4,week8)     3300
+## rescor(week6,week8)     3391
+## 
+## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
+## is a crude measure of effective sample size, and Rhat is the potential 
+## scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
+<p>Next, I’ll extract the posterior samples from the MCMC.</p>
+<pre class="r"><code>p_1 &lt;- posterior_samples(fit_1)
+dim(p_1)</code></pre>
+<pre><code>## [1] 4000   58</code></pre>
+<p>We can see that we have 4000 samples from 58 “parameters”. Actually, only the first 40 are what I would think of as model parameters, e.g., (printing the head of columns 1,2,3)</p>
+<pre class="r"><code>head(p_1[,c(1,2,3)])</code></pre>
+<pre><code>##   b_week1_Intercept b_week2_Intercept b_week4_Intercept
+## 1         0.5154750        -5.1858678         -3.870133
+## 2         1.6749945        -3.3279521         -2.459063
+## 3         3.1583047        -0.7224206          4.742484
+## 4         3.4688916         1.9246520          2.719808
+## 5         4.2199799        -0.7346923          5.604683
+## 6         0.4128793        -4.0833588         -2.098488</code></pre>
+<p>the rest are samples from the predictive distribution of the missing data, e.g., (printing the head of columns 51,52,53)</p>
+<pre class="r"><code>head(p_1[,c(51,52,53)])</code></pre>
+<pre><code>##   Ymi_week8[9] Ymi_week8[18] Ymi_week8[20]
+## 1    -4.059760    -13.807886     -5.103871
+## 2    -3.287829     -6.579197    -10.596638
+## 3    -2.680057      1.211975    -10.349368
+## 4    -1.487953     -8.258051     -5.253324
+## 5    -4.687085    -11.235663    -10.320470
+## 6    -1.184016     -5.524158     -5.053344</code></pre>
+<p>We see this corresponds to missing data on the week 8 variable in rows 9,18, and 20, respectively, of the original data set (<code>low_data_1</code>).</p>
+<p>That’s the beautiful thing about MCMC. I can sample from the predictive distribution of the missing data “for free”. To create mulitple imputed data sets, all I need to do is extract samples from the MCMC chain and use them to fill in the missing data in the original data set.</p>
+<p>To actually do this, I need to introduce a small piece of ugly code (sorry!). Essentially, I’m extracting the location of the missing data in the original data set via the column names of the MCMC object.</p>
+<p>I’m creating 5 imputed data sets because that’s all I’m prepared to type (one could easily take more and create a function to avoid typing). As I have 4000 (correlated) samples from the posterior, and need to create 5 imputed data sets, I’m picking out rows 800, 1600, 2400, 3200 and 4000.</p>
+<pre class="r"><code>### create 5 copies of the data set (TRT 1), plus original (labelled 0).
+low_data_1_0 &lt;- low_data_1 %&gt;% mutate(.id = PATIENT, .imp = 0)
+low_data_1_1 &lt;- low_data_1 %&gt;% mutate(.id = PATIENT, .imp = 1)
+low_data_1_2 &lt;- low_data_1 %&gt;% mutate(.id = PATIENT, .imp = 2)
+low_data_1_3 &lt;- low_data_1 %&gt;% mutate(.id = PATIENT, .imp = 3)
+low_data_1_4 &lt;- low_data_1 %&gt;% mutate(.id = PATIENT, .imp = 4)
+low_data_1_5 &lt;- low_data_1 %&gt;% mutate(.id = PATIENT, .imp = 5)
+
+### extract the positions of NAs in data set that need to be replaced.
+s_1_1 &lt;- str_split(names(p_1), &quot;Ymi_&quot;, simplify = TRUE)
+s_2_1 &lt;- str_split(s_1_1[,2], &quot;\\[&quot;, simplify = TRUE)
+col_i_1 &lt;- s_2_1[,1]
+row_i_1 &lt;- as.numeric(str_split(s_2_1[,2], &quot;\\]&quot;, simplify = TRUE)[,1])
+
+
+### replace NAs with values from MCMC chain
+for (i in seq_along(col_i_1)){
+  
+  if(col_i_1[i] != &quot;&quot;){
+    
+    low_data_1_1[row_i_1[i], col_i_1[i]] &lt;- as.numeric(p_1[800, i])    
+    low_data_1_2[row_i_1[i], col_i_1[i]] &lt;- as.numeric(p_1[1600, i])  
+    low_data_1_3[row_i_1[i], col_i_1[i]] &lt;- as.numeric(p_1[2400, i])  
+    low_data_1_4[row_i_1[i], col_i_1[i]] &lt;- as.numeric(p_1[3200, i])  
+    low_data_1_5[row_i_1[i], col_i_1[i]] &lt;- as.numeric(p_1[4000, i])  
+    
+  }
+  
+  
+}</code></pre>
+<p>If we look at the first two rows of the original data set, followed by the first two rows of the first imputed data set, we can see that the missing values have been filled in.</p>
+<pre class="r"><code>head(low_data_1_0, 2)</code></pre>
+<pre><code>## # A tibble: 2 x 11
+##   PATIENT POOLINV trt   basval week1 week2 week4 week6 week8   .id  .imp
+##     &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1    1008 101     1         32    -6   -12   -17   -20   -22  1008     0
+## 2    1011 101     1         18    -1    -5    -8    NA    NA  1011     0</code></pre>
+<pre class="r"><code>head(low_data_1_1, 2)</code></pre>
+<pre><code>## # A tibble: 2 x 11
+##   PATIENT POOLINV trt   basval week1 week2 week4 week6 week8   .id  .imp
+##     &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1    1008 101     1         32    -6   -12   -17 -20   -22    1008     1
+## 2    1011 101     1         18    -1    -5    -8 -15.4 -17.4  1011     1</code></pre>
+<p>I now need to do exactly the same thing for the treatment 2 data set:</p>
+<pre class="r"><code>p_2 &lt;- posterior_samples(fit_2)
+
+### create 5 copies of the data set (TRT 1), plus original (labelled 0).
+low_data_2_0 &lt;- low_data_2 %&gt;% mutate(.id = PATIENT, .imp = 0)
+low_data_2_1 &lt;- low_data_2 %&gt;% mutate(.id = PATIENT, .imp = 1)
+low_data_2_2 &lt;- low_data_2 %&gt;% mutate(.id = PATIENT, .imp = 2)
+low_data_2_3 &lt;- low_data_2 %&gt;% mutate(.id = PATIENT, .imp = 3)
+low_data_2_4 &lt;- low_data_2 %&gt;% mutate(.id = PATIENT, .imp = 4)
+low_data_2_5 &lt;- low_data_2 %&gt;% mutate(.id = PATIENT, .imp = 5)
+
+### extract the positions of NAs in data set that need to be replaced.
+s_1_2 &lt;- str_split(names(p_2), &quot;Ymi_&quot;, simplify = TRUE)
+s_2_2 &lt;- str_split(s_1_2[,2], &quot;\\[&quot;, simplify = TRUE)
+col_i_2 &lt;- s_2_2[,1]
+row_i_2 &lt;- as.numeric(str_split(s_2_2[,2], &quot;\\]&quot;, simplify = TRUE)[,1])
+
+
+### replace NAs with values from MCMC chain
+for (i in seq_along(col_i_2)){
+  
+  if(col_i_2[i] != &quot;&quot;){
+    
+    low_data_2_1[row_i_2[i], col_i_2[i]] &lt;- as.numeric(p_2[800, i])  
+    low_data_2_2[row_i_2[i], col_i_2[i]] &lt;- as.numeric(p_2[1600, i]) 
+    low_data_2_3[row_i_2[i], col_i_2[i]] &lt;- as.numeric(p_2[2400, i]) 
+    low_data_2_4[row_i_2[i], col_i_2[i]] &lt;- as.numeric(p_2[3200, i]) 
+    low_data_2_5[row_i_2[i], col_i_2[i]] &lt;- as.numeric(p_2[4000, i]) 
+    
+  }
+  
+  
+}</code></pre>
+<p>and then I can stack all of the imputed data sets together. Note that I created a label <code>.imp</code> for each imputed data set.</p>
+<pre class="r"><code>low_data_mi &lt;- rbind(low_data_1_0,
+                     low_data_2_0,
+                     low_data_1_1,
+                     low_data_2_1,
+                     low_data_1_2,
+                     low_data_2_2,
+                     low_data_1_3,
+                     low_data_2_3,
+                     low_data_1_4,
+                     low_data_2_4,
+                     low_data_1_5,
+                     low_data_2_5)</code></pre>
+<p>The final step is to fit an analysis model (ANCOVA: week 8 vs treatment, baseline and centre) to each imputed data set, and then combine the results using Rubin’s Rules (<a href="https://bookdown.org/mwheymans/bookmi/rubins-rules.html" class="uri">https://bookdown.org/mwheymans/bookmi/rubins-rules.html</a>). I claimed in the title that I wouldn’t use a specialist multiple imputation package, but I’ll borrow some code from <code>mice</code> for this step (that’s why I created the <code>.id</code> and <code>.imp</code> columns above – <code>mice</code> recognizes these):</p>
+<pre class="r"><code>library(mice)
+fit_mi &lt;- with(as.mids(low_data_mi), lm(week8 ~ trt + POOLINV + basval))
+summary(pool(fit_mi))</code></pre>
+<pre><code>##               estimate  std.error  statistic       df      p.value
+## (Intercept)  1.7477586 1.89808520  0.9208009 178.3657 3.583981e-01
+## trt2        -1.8635641 0.72553680 -2.5685315 103.8203 1.163510e-02
+## POOLINV121  -0.6095234 1.07376910 -0.5676484 153.3716 5.711037e-01
+## POOLINV131  -2.1373912 0.94122937 -2.2708505 126.8167 2.484221e-02
+## POOLINV141  -0.1464228 0.96397585 -0.1518946 114.2162 8.795380e-01
+## basval      -0.5532151 0.08369395 -6.6099764 186.9722 3.901515e-10</code></pre>
+<p>We can see that the estimated treatment effect is around -1.8 with standard error around 0.7. Comparing this with Table 4 in the Mallinckrodt et al paper, we can see that it’s in the right ballpark, bearing in mind slight differences in the model and the low number of imputations.</p>
+<p>Up until now I’ve only performed imputations under a missing-at-random assumption. Given that we could just fit an MMRM model directly, there wasn’t much point in going to the trouble of multiple imputation. However, the advantage of multiple imputation is that it’s easy to perform certain types of sensitivity analysis.</p>
+<p>For example, to perform <span class="math inline">\(\delta\)</span>-based sensitivity analysis (see Cro et al.), I may, as an example, add a fixed amount <span class="math inline">\(\delta = 2\)</span> to the imputations on the experimental treatment arm. To do this, I’ll literally copy-paste by code above, but adding delta:</p>
+<pre class="r"><code>delta &lt;- 2
+
+### replace NAs with values from MCMC chain
+for (i in seq_along(col_i_2)){
+  
+  if(col_i_2[i] != &quot;&quot;){
+    
+    low_data_2_1[row_i_2[i], col_i_2[i]] &lt;- as.numeric(p_2[800, i])  + delta 
+    low_data_2_2[row_i_2[i], col_i_2[i]] &lt;- as.numeric(p_2[1600, i]) + delta 
+    low_data_2_3[row_i_2[i], col_i_2[i]] &lt;- as.numeric(p_2[2400, i]) + delta 
+    low_data_2_4[row_i_2[i], col_i_2[i]] &lt;- as.numeric(p_2[3200, i]) + delta 
+    low_data_2_5[row_i_2[i], col_i_2[i]] &lt;- as.numeric(p_2[4000, i]) + delta 
+    
+  }
+  
+  
+}
+
+low_data_mi &lt;- rbind(low_data_1_0,
+                     low_data_2_0,
+                     low_data_1_1,
+                     low_data_2_1,
+                     low_data_1_2,
+                     low_data_2_2,
+                     low_data_1_3,
+                     low_data_2_3,
+                     low_data_1_4,
+                     low_data_2_4,
+                     low_data_1_5,
+                     low_data_2_5)
+
+fit_mi &lt;- with(as.mids(low_data_mi), lm(week8 ~ trt + POOLINV + basval))
+summary(pool(fit_mi))</code></pre>
+<pre><code>##               estimate  std.error   statistic       df      p.value
+## (Intercept)  1.3996455 1.90747537  0.73376861 178.5648 4.640521e-01
+## trt2        -1.7184241 0.72878966 -2.35791501 104.6129 2.023692e-02
+## POOLINV121  -0.6247259 1.07890860 -0.57903510 153.8860 5.634121e-01
+## POOLINV131  -2.1714417 0.94558853 -2.29639171 127.5395 2.328443e-02
+## POOLINV141  -0.0533222 0.96836491 -0.05506416 114.9899 9.561829e-01
+## basval      -0.5368745 0.08411448 -6.38266384 187.0423 1.336286e-09</code></pre>
+<p>We can see that this reduces the treatment effect somewhat. The standard error has not changed much.</p>
+<p>An alternative to <span class="math inline">\(\delta\)</span>-based sensitivity analysis is reference-based sensitivity analysis, where more qualitative types of assumption are made about the missing data. See Cro et al. for a disscussion of pros and cons of the two approaches. My very personal opinion is that I prefer the <span class="math inline">\(\delta\)</span>-based approach. But maybe that’s influenced by its computational simplicity. There’s no way I could do an exercise like this for a reference-based approach in 100 lines of code.</p>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+<p>Mallinckrodt, Craig, et al. “Recent developments in the prevention and treatment of missing data.” Therapeutic innovation &amp; regulatory science 48.1 (2014): 68-80.</p>
+<p>Cro, Suzie, et al. “Sensitivity analysis for clinical trials with missing continuous outcome data using controlled multiple imputation: a practical guide.” Statistics in medicine 39.21 (2020): 2815-2842.</p>
+<p>Cro, Suzie, et al. “Reference-based sensitivity analysis via multiple imputation for longitudinal trials with protocol deviation.” The Stata Journal 16.2 (2016): 443-463.</p>
+<p>Bürkner, Paul-Christian. “brms: An R package for Bayesian multilevel models using Stan.” Journal of statistical software 80.1 (2017): 1-28.</p>
+</div>
+<div id="helpful-links" class="section level2">
+<h2>Helpful links</h2>
+<p><a href="https://thestatsgeek.com/category/missing-data/" class="uri">https://thestatsgeek.com/category/missing-data/</a></p>
+<p><a href="https://discourse.mc-stan.org/t/unstructured-error-covariance-matrix-in-a-multilevel-growth-model/21792/4" class="uri">https://discourse.mc-stan.org/t/unstructured-error-covariance-matrix-in-a-multilevel-growth-model/21792/4</a></p>
+<p><a href="https://www.lshtm.ac.uk/research/centres-projects-groups/missing-data#dia-missing-data" class="uri">https://www.lshtm.ac.uk/research/centres-projects-groups/missing-data#dia-missing-data</a></p>
+</div>
+
+    </div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+  
+    
+  
+  
+  <div class="media author-card content-widget-hr">
+    
+      
+      <img class="portrait mr-3" src="../../authors/admin/avatar_hu3ad799765e91f69a41f3acc2fc665a63_309343_250x250_fill_q90_lanczos_center.jpg" alt="Avatar">
+    
+
+    <div class="media-body">
+      <h5 class="card-title"><a href="../../">Dominic Magirr</a></h5>
+      <h6 class="card-subtitle">Medical Statistician</h6>
+      <p class="card-text">Interested in the design, analysis and interpretation of clinical trials.</p>
+      <ul class="network-icon" aria-hidden="true">
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://www.linkedin.com/in/dominic-magirr-87666b12b/" target="_blank" rel="noopener">
+        <i class="fab fa-linkedin"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://scholar.google.co.uk/citations?user=obri2xMAAAAJ&amp;hl=en" target="_blank" rel="noopener">
+        <i class="ai ai-google-scholar"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://github.com/dominicmagirr" target="_blank" rel="noopener">
+        <i class="fab fa-github"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="../../files/cv.pdf" >
+        <i class="ai ai-cv"></i>
+      </a>
+    </li>
+  
+</ul>
+
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js" integrity="sha256-1zu+3BnLYV9LdiY85uXMzii3bdrkelyp37e0ZyTAQh0=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/languages/r.min.js"></script>
+        
+      
+
+      
+      
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js" integrity="sha256-EErZamuLefUnbMBQbsEqu1USa+btR2oIlCpBJbyD4/g=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    
+    
+    
+    
+    <script>
+      const search_config = {"indexURI":"/index.json","minLength":1,"threshold":0.3};
+      const i18n = {"no_results":"No results found","placeholder":"Search...","results":"results found"};
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="../../js/academic.min.d6bd04fdad2ad213aa8111c5a3b72fc5.js"></script>
+
+    
+
+
+
+
+
+
+  
+  
+  <div class="container">
+    <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="../../privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="../../terms/">Terms</a>
+    
+  </p>
+  
+
+  <p class="powered-by">
+    
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" class="back-to-top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+</footer>
+
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

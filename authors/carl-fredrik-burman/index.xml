@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Carl-Fredrik Burman | Dominic Magirr</title>
+    <link>/authors/carl-fredrik-burman/</link>
+      <atom:link href="/authors/carl-fredrik-burman/index.xml" rel="self" type="application/rss+xml" />
+    <description>Carl-Fredrik Burman</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 26 May 2018 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>/img/icon-192.png</url>
+      <title>Carl-Fredrik Burman</title>
+      <link>/authors/carl-fredrik-burman/</link>
+    </image>
+    
+    <item>
+      <title>Modestly weighted logrank tests</title>
+      <link>/publication/wlrt/</link>
+      <pubDate>Sat, 26 May 2018 00:00:00 +0000</pubDate>
+      <guid>/publication/wlrt/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

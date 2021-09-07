@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Technical | Dominic Magirr</title>
+    <link>/tags/technical/</link>
+      <atom:link href="/tags/technical/index.xml" rel="self" type="application/rss+xml" />
+    <description>Technical</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Fri, 01 Nov 2019 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>/img/icon-192.png</url>
+      <title>Technical</title>
+      <link>/tags/technical/</link>
+    </image>
+    
+    <item>
+      <title>flexsurv 2</title>
+      <link>/post/flexsurv-2/</link>
+      <pubDate>Fri, 01 Nov 2019 00:00:00 +0000</pubDate>
+      <guid>/post/flexsurv-2/</guid>
+      <description>
+
+
+&lt;p&gt;&lt;a href=&#34;../../post/flexsurv&#34;&gt;Previously,&lt;/a&gt; I started discussing the &lt;code&gt;flexsurv&lt;/code&gt; package. I used it to fit a Weibull model. This is implemented as an accelerated failure time model. It is also a proportional hazards model (although, as I found previously, converting between the two is not so straightforward, but it can be done by &lt;code&gt;SurvRegCensCov&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;Now let’s compare Weibull regression with Cox regression. Firstly, Weibull regression:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;assumes proportional hazards;&lt;/li&gt;
+&lt;li&gt;the number of parameters is equal to &lt;span class=&#34;math inline&#34;&gt;\(k + 2\)&lt;/span&gt;, where &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt; is the number of covariates;&lt;/li&gt;
+&lt;li&gt;we can estimate things like the median, &lt;span class=&#34;math inline&#34;&gt;\(P(S&amp;gt;s^*)\)&lt;/span&gt;, etc. from the model…&lt;/li&gt;
+&lt;li&gt;but the model might be too restrictive – we won’t estimate these things very well.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Cox regression:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;assumes proportional hazards;&lt;/li&gt;
+&lt;li&gt;there are &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt; parameters (one for each covariate);&lt;/li&gt;
+&lt;li&gt;we don’t estimate the baseline hazard…&lt;/li&gt;
+&lt;li&gt;which means we don’t get estimates for things like the median, &lt;span class=&#34;math inline&#34;&gt;\(P(S&amp;gt;s^*)\)&lt;/span&gt;, etc.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;flexsurv&lt;/code&gt; has a function &lt;code&gt;flexsurvspline&lt;/code&gt; which allows one to bridge the gap between Weibull regression and Cox regresssion.&lt;/p&gt;
+&lt;div id=&#34;from-weibull-regression-to-cox-regression.&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;From Weibull regression to Cox regression.&lt;/h2&gt;
+&lt;p&gt;For a Weibull distribution with shape &lt;span class=&#34;math inline&#34;&gt;\(a\)&lt;/span&gt;, scale &lt;span class=&#34;math inline&#34;&gt;\(b\)&lt;/span&gt;, covariates &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt;, and regression coefficents &lt;span class=&#34;math inline&#34;&gt;\(\gamma\)&lt;/span&gt;, the survival probability is&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[S(t; x) = \exp\left\lbrace - \left( \frac{t}{b \cdot \exp(x^T\gamma)} \right) ^ a\right\rbrace\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Since survival is related to the log-cumulative hazard via &lt;span class=&#34;math inline&#34;&gt;\(S=\exp(-H)\)&lt;/span&gt;, this means that&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\log H(t;x) = a\log t - a\log(b) - a x^T\gamma\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;In words, the log-cumulative hazard has a linear relationship with (log-) time, with the intercept depending on the value of &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt;. For a given data set, we can check if this is reasonable by looking at non-paramteric estimates, &lt;span class=&#34;math inline&#34;&gt;\(\log \hat{H}(t; x)\)&lt;/span&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(survival)
+library(flexsurv)
+library(ggplot2)
+
+### Non-parametric analysis
+fit_km &amp;lt;- survfit(Surv(futime, death) ~ trt,
+                  data = myeloid)
+t_seq &amp;lt;- seq(1, 2500, length.out = 1000)
+km_sum &amp;lt;- summary(fit_km, times = t_seq, extend = TRUE)
+
+### Weibull regression
+fit_weibull &amp;lt;- flexsurvreg(Surv(futime, death) ~ trt, 
+                           dist = &amp;quot;weibull&amp;quot;, 
+                           data = myeloid)
+
+a &amp;lt;- fit_weibull$res[&amp;quot;shape&amp;quot;, &amp;quot;est&amp;quot;]
+b &amp;lt;- fit_weibull$res[&amp;quot;scale&amp;quot;, &amp;quot;est&amp;quot;]
+trtB &amp;lt;- fit_weibull$res[&amp;quot;trtB&amp;quot;, &amp;quot;est&amp;quot;]
+
+
+### plot log-cumulative hazard against log-time
+df &amp;lt;- data.frame(log_time = log(rep(t_seq, 2)),
+                 logcumhaz = log(-log(km_sum$surv)),
+                 trt = rep(c(&amp;quot;A&amp;quot;, &amp;quot;B&amp;quot;), each = 1000),
+                 logcumhaz_w = c(a * (log(t_seq) - log(b)),
+                                 a * (log(t_seq) - log(b) - trtB)))
+
+ggplot(data = df,
+       mapping = aes(x = log_time,
+                     y = logcumhaz,
+                     colour = trt)) +
+  geom_line() +
+  geom_line(mapping = aes(x = log_time,
+                          y = logcumhaz_w,
+                          colour = trt),
+            linetype = 2) +
+  theme_bw() +
+  scale_x_continuous(limits = c(2,8)) +
+  scale_y_continuous(limits = c(-6,0))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;../../post/2019-11-01-flexsurv-2_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;What’s going on here? Well, the first thing to acknowledge is that the hazards only appear to be proportional after about 150 (&lt;span class=&#34;math inline&#34;&gt;\(e^5\)&lt;/span&gt;) days. I’m not sure I would immediately abandon a proportional-hazards model, though, as most of the events happen when the hazards are proportional (only 10-15% of the events happen before day 150), so the right-hand-side of the plot is far more important. Looking to the right then: the relationship between the log-cumulative hazard and log-time is not really linear. The distance between the two lines is roughly the same for the two models (Weibull and non-parametric), suggesting that the Weibull model does ok at estimating the hazard ratio. However, the lack of linearity will lead to poor estimates for the medians, &lt;span class=&#34;math inline&#34;&gt;\(P(S&amp;gt;s^*)\)&lt;/span&gt;, etc., as can be confirmed by plotting the survival curves:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ggplot(data = df,
+       mapping = aes(x = exp(log_time),
+                     y = exp(-exp(logcumhaz)),
+                     colour = trt)) +
+  geom_line() +
+  geom_line(mapping = aes(x = exp(log_time),
+                          y = exp(-exp(logcumhaz_w)),
+                          colour = trt),
+            linetype = 2) +
+  theme_bw()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;../../post/2019-11-01-flexsurv-2_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;To improve the model, given this lack of linearity, it seems quite natural to change from&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\log H(t;x) = a\log t - a\log(b) - a x^T\gamma\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;to&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\log H(t;x) = s(\log t) + x^T\beta\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;where &lt;span class=&#34;math inline&#34;&gt;\(s(\log t)\)&lt;/span&gt; is a natural cubic spline function of (log) time. One can make the model more/less flexible by choosing a large/small number of knots. By default, the knots are placed at quantiles of the uncensored event times. How many knots are required? I don’t really have a good answer for this: one or two. At most, three? In this example, I’m using two inner knots, placed at 33% and 66% of the uncensored event times (indicated by vertical lines):&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;fit_spline_2 &amp;lt;- flexsurvspline(Surv(futime, death) ~ trt, 
+                               data = myeloid,
+                               k = 2,
+                               scale = &amp;quot;hazard&amp;quot;)
+
+spline_2_sum &amp;lt;- summary(fit_spline_2, t = t_seq, type = &amp;quot;cumhaz&amp;quot;)
+
+df2 &amp;lt;- cbind(df,
+      data.frame(logcumhaz_s2 = log(c(spline_2_sum$`trt=A`[&amp;quot;est&amp;quot;]$est,
+                                  spline_2_sum$`trt=B`[&amp;quot;est&amp;quot;]$est))))
+
+ggplot(data = df2,
+       mapping = aes(x = log_time,
+                     y = logcumhaz,
+                     colour = trt)) +
+  geom_line() +
+  geom_line(mapping = aes(x = log_time,
+                          y = logcumhaz_s2,
+                          colour = trt),
+            linetype = 2) +
+  theme_bw() +
+  scale_x_continuous(limits = c(2,8)) +
+  scale_y_continuous(limits = c(-6,0)) +
+  geom_vline(xintercept = fit_spline_2$knots)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;../../post/2019-11-01-flexsurv-2_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;This looks a lot better, and we can see the improvement in the survival curves:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ggplot(data = df2,
+       mapping = aes(x = exp(log_time),
+                     y = exp(-exp(logcumhaz)),
+                     colour = trt)) +
+  geom_line() +
+  geom_line(mapping = aes(x = exp(log_time),
+                          y = exp(-exp(logcumhaz_s2)),
+                          colour = trt),
+            linetype = 2) +
+  theme_bw()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;../../post/2019-11-01-flexsurv-2_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;from-cox-regression-to-weibull-regression.&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;From Cox regression to Weibull regression.&lt;/h2&gt;
+&lt;p&gt;If we start out from Cox regression&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[h(t;x)=h_0(t)\exp(x^T\beta)\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;this means that&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\log H(t;x) = \log H_0(t;x) + x^T\beta\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;We estimate the parameters &lt;span class=&#34;math inline&#34;&gt;\(\beta\)&lt;/span&gt; from the partial likelihood, and don’t estimate &lt;span class=&#34;math inline&#34;&gt;\(\log H_0(t;x)\)&lt;/span&gt;. So &lt;span class=&#34;math inline&#34;&gt;\(\log H_0(t;x)\)&lt;/span&gt; can be anything. However, with the &lt;code&gt;flexsurvspline&lt;/code&gt; function, as long as we use enough knots, &lt;span class=&#34;math inline&#34;&gt;\(s(\log(t))\)&lt;/span&gt; can be more-or-less anything (smooth), so the two methods will give the same information about &lt;span class=&#34;math inline&#34;&gt;\(\beta\)&lt;/span&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;conclusions&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Conclusions&lt;/h2&gt;
+&lt;p&gt;I can’t really see any reason not to switch from a Cox model to &lt;code&gt;flexsurvspline&lt;/code&gt;. You don’t lose anything in terms of inference on &lt;span class=&#34;math inline&#34;&gt;\(\beta\)&lt;/span&gt;, only gain a nice estimate for the baseline hazard. Also, inference is all based on maximum likelihood. No special theory required.&lt;/p&gt;
+&lt;p&gt;From the other side, if you start out from Weibull regression, and then realise that Weibull is the wrong model, you don’t have to think too hard about how to choose a better model, you &lt;em&gt;know&lt;/em&gt; that &lt;code&gt;flexsurvspline&lt;/code&gt; will be good (assuming proportional hazards is correct: for non-proportional hazards you may have to think harder).&lt;/p&gt;
+&lt;p&gt;What can go wrong? In small sample sizes, I guess there could be issues with over-fitting if too many knots are chosen. But given a decent sample size, I can’t see any problems. I would be interested to see a &lt;span class=&#34;math inline&#34;&gt;\(\log H_0(t;x)\)&lt;/span&gt; that is highly wiggly – doesn’t seem likely in practice.&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>flexsurv</title>
+      <link>/post/flexsurv/</link>
+      <pubDate>Mon, 28 Oct 2019 00:00:00 +0000</pubDate>
+      <guid>/post/flexsurv/</guid>
+      <description>
+
+
+&lt;p&gt;I’m going to write about some of my favourite R packages. I’ll start with &lt;code&gt;flexsurv&lt;/code&gt; (&lt;a href=&#34;https://github.com/chjackson/flexsurv-dev&#34; class=&#34;uri&#34;&gt;https://github.com/chjackson/flexsurv-dev&lt;/a&gt;) by Chris Jackson, which can be used to fit all kinds of parametric models to survival data. It can really do a lot, but I’ll pick out just 2 cool things I like about it:&lt;/p&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;Fit a standard survival model, but where it’s &lt;em&gt;slightly&lt;/em&gt; easier to work out what the parameters mean.&lt;/li&gt;
+&lt;li&gt;Fit a proportional hazards model, which is a lot like a Cox model, but where you also model the baseline hazard using a spline.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div id=&#34;consistent-parameter-values&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;1. Consistent parameter values&lt;/h2&gt;
+&lt;p&gt;As mentioned in the tutorial (&lt;a href=&#34;https://www.jstatsoft.org/article/view/v070i08&#34; class=&#34;uri&#34;&gt;https://www.jstatsoft.org/article/view/v070i08&lt;/a&gt;), for simple models &lt;code&gt;flexsurvreg&lt;/code&gt; acts as a wrapper for &lt;code&gt;survival::survreg&lt;/code&gt;, but where the parameters in the output match those of &lt;code&gt;dweibull&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;With &lt;code&gt;survival::survreg&lt;/code&gt; I would do, e.g.:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dat_ovarian &amp;lt;- survival::ovarian
+dat_ovarian$rx &amp;lt;- factor(dat_ovarian$rx)
+
+library(survival)
+fit_survreg = survreg(Surv(futime, fustat) ~ rx, 
+                      dist = &amp;quot;weibull&amp;quot;,
+                      data = dat_ovarian)
+
+summary(fit_survreg)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## 
+## Call:
+## survreg(formula = Surv(futime, fustat) ~ rx, data = dat_ovarian, 
+##     dist = &amp;quot;weibull&amp;quot;)
+##              Value Std. Error     z      p
+## (Intercept)  6.825      0.344 19.84 &amp;lt;2e-16
+## rx2          0.559      0.529  1.06   0.29
+## Log(scale)  -0.121      0.251 -0.48   0.63
+## 
+## Scale= 0.886 
+## 
+## Weibull distribution
+## Loglik(model)= -97.4   Loglik(intercept only)= -98
+##  Chisq= 1.18 on 1 degrees of freedom, p= 0.28 
+## Number of Newton-Raphson Iterations: 5 
+## n= 26&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Then I would look around online for an explanation of the output e.g. (&lt;a href=&#34;https://stats.stackexchange.com/questions/159044/weibull-survival-model-in-r&#34; class=&#34;uri&#34;&gt;https://stats.stackexchange.com/questions/159044/weibull-survival-model-in-r&lt;/a&gt;). There is also an explanation in &lt;code&gt;?survreg&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;On the other hand, using &lt;code&gt;flexsurv&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(flexsurv)
+fit_flexsurvreg = flexsurvreg(Surv(futime, fustat) ~ rx, 
+                              dist = &amp;quot;weibull&amp;quot;,
+                              data = dat_ovarian)
+
+fit_flexsurvreg&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Call:
+## flexsurvreg(formula = Surv(futime, fustat) ~ rx, data = dat_ovarian, 
+##     dist = &amp;quot;weibull&amp;quot;)
+## 
+## Estimates: 
+##        data mean  est       L95%      U95%      se        exp(est)
+## shape        NA      1.129     0.690     1.848     0.284        NA
+## scale        NA    920.128   468.868  1805.704   316.508        NA
+## rx2       0.500      0.559    -0.478     1.597     0.529     1.749
+##        L95%      U95%    
+## shape        NA        NA
+## scale        NA        NA
+## rx2       0.620     4.936
+## 
+## N = 26,  Events: 12,  Censored: 14
+## Total time at risk: 15588
+## Log-likelihood = -97.36415, df = 3
+## AIC = 200.7283&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The parameters &lt;code&gt;shape&lt;/code&gt; and &lt;code&gt;scale&lt;/code&gt; correspond to &lt;code&gt;dweibull&lt;/code&gt;. So I don’t have to think any further? Not quite: I still have to work out what the estimate of &lt;code&gt;rx2&lt;/code&gt; is doing. I might look at &lt;code&gt;exp(est) = 1.749&lt;/code&gt; and somehow expect this to be a hazard ratio. It’s not. It’s a multiplicative effect on the scale parameter. So when &lt;code&gt;rx = 1&lt;/code&gt; the scale is &lt;code&gt;920.1&lt;/code&gt;, and when &lt;code&gt;rx = 2&lt;/code&gt; the scale is &lt;code&gt;920.1 * 1.749&lt;/code&gt;. The hazard ratio (treatment 2 vs treatment 1) is&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\begin{align} \frac{h_2(x)}{h_1(x)} &amp;amp; = \left( \frac{b_1}{b_2} \right)^a \\
+                                      &amp;amp; = \left( \frac{920.1}{920.1 \times 1.749} \right)^{1.129}\\
+                                      &amp;amp; = 0.53 \end{align} \]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;where &lt;span class=&#34;math inline&#34;&gt;\(a\)&lt;/span&gt; is the common shape parameter, and &lt;span class=&#34;math inline&#34;&gt;\(b_1\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(b_2\)&lt;/span&gt; are the scale parameters.&lt;/p&gt;
+&lt;p&gt;Once I had started writing this post, I realized that it’s actually not straightforward to make inference on the hazard ratio using &lt;code&gt;flexsurv&lt;/code&gt;. For working out variances/covariances, the &lt;code&gt;survreg&lt;/code&gt; parameterization is indeed better. I looked around for other R packages in this space, and found &lt;code&gt;SurvRegCensCov&lt;/code&gt;, which can do this conversion automatically for you:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(SurvRegCensCov)
+ConvertWeibull(fit_survreg)$HR&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##            HR        LB       UB
+## rx2 0.5318051 0.1683444 1.679989&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;For completeness, using &lt;code&gt;flexsurv&lt;/code&gt;, the log-hazard ratio is&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\begin{align} \log\left( \frac{h_2(x)}{h_1(x) }\right) &amp;amp; = a\left\lbrace \log(b_1) - \log(b_2) \right\rbrace \\
+                                                         &amp;amp; = -\exp(\log(a)) \times \left\lbrace \log(b_2) - \log(b_1)  \right\rbrace \end{align}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;I can extract the terms &lt;span class=&#34;math inline&#34;&gt;\(\alpha:=\log(a)\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(\beta:=\log(b_2) - \log(b_1)\)&lt;/span&gt; from the &lt;code&gt;fit_flexsurvreg&lt;/code&gt; object, as well as their (co)variance.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;alpha &amp;lt;- fit_flexsurvreg$res.t[&amp;quot;shape&amp;quot;, &amp;quot;est&amp;quot;]
+beta &amp;lt;- fit_flexsurvreg$res.t[&amp;quot;rx2&amp;quot;, &amp;quot;est&amp;quot;]
+cov_alpha_beta &amp;lt;- vcov(fit_flexsurvreg)[c(&amp;quot;shape&amp;quot;, &amp;quot;rx2&amp;quot;), c(&amp;quot;shape&amp;quot;, &amp;quot;rx2&amp;quot;)]&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Then work out the variance of the log-hazard ratio using the delta method.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\text{var}\left\lbrace -\beta\exp(\alpha) \right\rbrace = (-\beta\exp(\alpha), -\exp(\alpha)) \text{Cov}(\alpha, \beta) \left( \begin{array}{c} -\beta\exp(\alpha) \\ -\exp(\alpha) \end{array}\right)\]&lt;/span&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;grad &amp;lt;- matrix(c(-beta*exp(alpha),
+                 -exp(alpha)), 
+               ncol = 1)
+var_lhr = t(grad) %*% cov_alpha_beta %*% grad
+se_lhr = sqrt(var_lhr)
+se_lhr&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##           [,1]
+## [1,] 0.5868807&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;And to get a 95% confidence interval for the hazard ratio…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;log_hr = -exp(alpha) * beta
+log_hr_upr = log_hr + qnorm(0.975) * se_lhr
+log_hr_lwr = log_hr - qnorm(0.975) * se_lhr
+
+data.frame(HR = exp(log_hr),
+           LB = exp(log_hr_lwr),
+           UB = exp(log_hr_upr))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##          HR        LB       UB
+## 1 0.5318051 0.1683444 1.679988&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;splines&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Splines&lt;/h2&gt;
+&lt;p&gt;The second thing I really like about &lt;code&gt;flexsurv&lt;/code&gt; is the proportional hazards model with a spline for the baseline hazard. I’ll explore this in &lt;a href=&#34;../../post/flexsurv-2&#34;&gt;another post&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Longitudinal hurdle models 3</title>
+      <link>/post/longitudinal-hurdle-models-3/</link>
+      <pubDate>Fri, 25 Oct 2019 00:00:00 +0000</pubDate>
+      <guid>/post/longitudinal-hurdle-models-3/</guid>
+      <description>
+
+
+&lt;p&gt;In the &lt;a href=&#34;../../post/longitudinal-hurdle-models-2&#34;&gt;last&lt;/a&gt; post on longitudinal hurdle models, I had just taken samples from the marginal mean&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\begin{align} g(\theta; x) &amp;amp; = E(Y \mid  \theta; x) \\
+&amp;amp; = \int   E(Y \mid u_{i&amp;#39;}, v_{i&amp;#39;}, \theta; x) f(u_{i&amp;#39;}, v_{i&amp;#39;} \mid \theta, \mathbf{y}) du_{i&amp;#39;}dv_{i&amp;#39;} \\ 
+&amp;amp;\approx  L^{-1}\sum_{l = 1}^{L}E(Y \mid u_{i&amp;#39;}^{(l)}, v_{i&amp;#39;}^{(l)}, \theta; x)\\
+&amp;amp;=  L^{-1}\sum_{l = 1}^{L}\left\lbrace 1 - \text{logit}^{-1} ( x^T \gamma + u_{i&amp;#39;}^{(l)}) \right\rbrace \exp(x^T\beta + v_{i&amp;#39;}^{(l)} + \frac{\sigma^2}{2}).\end{align}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;One of the issues with lognormal data is that it is highly skewed, so the mean can be very large. In a small sample, the sample mean can change a lot based on just 1 or 2 large observations. For this reason I would like to sample from other summary measures of &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt;.&lt;/p&gt;
+&lt;div id=&#34;samples-from-py-leq-k-mid-theta-x&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Samples from &lt;span class=&#34;math inline&#34;&gt;\(p(Y \leq k \mid \theta; x)\)&lt;/span&gt;&lt;/h3&gt;
+&lt;p&gt;This is quite similar to taking samples from the marginal mean.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\begin{align} r(\theta; x, k) &amp;amp; = p(Y &amp;lt; k \mid  \theta; x) \\
+&amp;amp; = \int   p(Y &amp;lt; k \mid u_{i&amp;#39;}, v_{i&amp;#39;}, \theta; x) f(u_{i&amp;#39;}, v_{i&amp;#39;} \mid \theta, \mathbf{y}) du_{i&amp;#39;}dv_{i&amp;#39;} \\ 
+&amp;amp;\approx  L^{-1}\sum_{l = 1}^{L}p(Y &amp;lt; k \mid u_{i&amp;#39;}^{(l)}, v_{i&amp;#39;}^{(l)}, \theta; x)\\
+&amp;amp;=  L^{-1}\sum_{l = 1}^{L}\ \left[ \pi^{(l)}(x) + \left\lbrace 1 - \pi^{(l)}(x)\right\rbrace \Phi \left\lbrace \frac{\log(k) - x^T\beta - v_{i&amp;#39;}^{(l)}}{\sigma} \right\rbrace \right].\end{align}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;where &lt;span class=&#34;math inline&#34;&gt;\(\pi^{(l)}(x):= \text{logit}^{-1} ( x^T \gamma + u_{i&amp;#39;}^{(l)})\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;Again, I don’t know of any functions for doing this, so I built my own.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;devtools::install_github(&amp;quot;dominicmagirr/hurlong&amp;quot;)
+library(brms)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;x &amp;lt;- data.frame(id = NA, time = &amp;quot;2&amp;quot;)
+hurlong::marg_pyk_q(k = 0.5,
+                    newdata = x, 
+                    nsims = 1000, 
+                    fit = fit_hurdle)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   id time     2.5%       50%     97.5%
+## 1 NA    2 0.421836 0.5018633 0.5792536&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;samples-from-textmediany-mid-theta-x&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Samples from &lt;span class=&#34;math inline&#34;&gt;\(\text{median}(Y \mid \theta; x)\)&lt;/span&gt;&lt;/h3&gt;
+&lt;p&gt;Finally, I am interested in samples from the marginal median.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\begin{align} s(\theta; x) &amp;amp; = \text{median}(Y  \mid  \theta; x) \\
+&amp;amp; = \int   \text{median}(Y \mid u_{i&amp;#39;}, v_{i&amp;#39;}, \theta; x) f(u_{i&amp;#39;}, v_{i&amp;#39;} \mid \theta, \mathbf{y}) du_{i&amp;#39;}dv_{i&amp;#39;} \\ 
+&amp;amp;\approx  L^{-1}\sum_{l = 1}^{L}\text{median}(Y\mid u_{i&amp;#39;}^{(l)}, v_{i&amp;#39;}^{(l)}, \theta; x) \end{align}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;To evaluate &lt;span class=&#34;math inline&#34;&gt;\(\text{median}(Y\mid u_{i&amp;#39;}^{(l)}, v_{i&amp;#39;}^{(l)}, \theta; x)\)&lt;/span&gt; at each &lt;span class=&#34;math inline&#34;&gt;\(l\)&lt;/span&gt;, I do a search for &lt;span class=&#34;math inline&#34;&gt;\(m^{(l)}\)&lt;/span&gt; such that&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[p(Y &amp;lt; m^{(l)} \mid u_{i&amp;#39;}^{(l)}, v_{i&amp;#39;}^{(l)}, \theta; x) = 0.5.\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Again, I’ve made a function that can do this (for this specific longitudinal hurdle model).&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;hurlong::marg_med(newdata = x, 
+                  nsims = 1000, 
+                  ks = exp(seq(log(0.01), 
+                               log(100), 
+                               length.out = 15)), # where to evaluate p(Y&amp;lt;k)
+                  fit = fit_hurdle)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   id time      2.5%       50%     97.5%
+## 1 NA    2 0.2332964 0.4894882 0.8856152&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;predictions&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Predictions&lt;/h2&gt;
+&lt;p&gt;To round off this series on longitudinal hurdle models, I want to show how to simulate draws (and find quantiles) from the posterior predictive distribution for a new observation (&lt;span class=&#34;math inline&#34;&gt;\(\tilde{Y}\)&lt;/span&gt;). Firstly for a patient &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt; already in the data set, where we draw from&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[ f(\tilde{y} \mid \mathbf{y} ; x) = f(\tilde{y} \mid u_i, v_i, \theta, \mathbf{y} ; x)f(u_i, v_i, \theta \mid \mathbf{y}) \]&lt;/span&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(brms)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;predict(fit_hurdle,
+        newdata = data.frame(id = 1, time = &amp;quot;2&amp;quot;),
+        robust = TRUE)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##       Estimate Est.Error Q2.5    Q97.5
+## [1,] 0.2448615 0.3224153    0 2.145083&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;and, secondly, for a new patient &lt;span class=&#34;math inline&#34;&gt;\(i&amp;#39;\)&lt;/span&gt;, where we draw from&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[ f(\tilde{y} \mid \mathbf{y} ; x) = f(\tilde{y} \mid u_{i&amp;#39;}, v_{i&amp;#39;}, \theta, \mathbf{y} ; x)f(u_{i&amp;#39;}, v_{i&amp;#39;} \mid \theta,  \mathbf{y}) f(\theta \mid \mathbf{y}) \]&lt;/span&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;predict(fit_hurdle,
+        newdata = data.frame(id = NA, time = &amp;quot;2&amp;quot;),
+        allow_new_levels = TRUE,
+        sample_new_levels = &amp;quot;gaussian&amp;quot;,
+        robust = TRUE)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##       Estimate Est.Error Q2.5    Q97.5
+## [1,] 0.4614108 0.6840876    0 52.57643&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Longitudinal hurdle models 2</title>
+      <link>/post/longitudinal-hurdle-models-2/</link>
+      <pubDate>Wed, 23 Oct 2019 00:00:00 +0000</pubDate>
+      <guid>/post/longitudinal-hurdle-models-2/</guid>
+      <description>
+
+
+&lt;p&gt;In a &lt;a href=&#34;../../post/longitudinal-hurdle-models&#34;&gt;previous&lt;/a&gt; post I fit a longitudinal hurdle model using the &lt;code&gt;brms&lt;/code&gt; package.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(brms)
+summary(fit_hurdle)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##  Family: hurdle_lognormal 
+##   Links: mu = identity; sigma = identity; hu = logit 
+## Formula: y ~ time + (1 | q | id) 
+##          hu ~ time + (1 | q | id)
+##    Data: dat (Number of observations: 800) 
+## Samples: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;
+##          total post-warmup samples = 8000
+## 
+## Group-Level Effects: 
+## ~id (Number of levels: 100) 
+##                             Estimate Est.Error l-95% CI u-95% CI Rhat
+## sd(Intercept)                   1.96      0.16     1.67     2.30 1.00
+## sd(hu_Intercept)                2.46      0.30     1.94     3.10 1.00
+## cor(Intercept,hu_Intercept)    -0.90      0.04    -0.97    -0.80 1.00
+##                             Bulk_ESS Tail_ESS
+## sd(Intercept)                   1475     2467
+## sd(hu_Intercept)                3265     4837
+## cor(Intercept,hu_Intercept)     1949     3570
+## 
+## Population-Level Effects: 
+##              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept        0.07      0.21    -0.34     0.48 1.01      770     1487
+## hu_Intercept    -2.73      0.35    -3.44    -2.07 1.00     1484     3476
+## time2           -0.33      0.08    -0.48    -0.18 1.00    11586     5606
+## hu_time2         1.27      0.24     0.81     1.73 1.00    11668     5524
+## 
+## Family Specific Parameters: 
+##       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## sigma     0.94      0.03     0.88     1.00 1.00     8823     5708
+## 
+## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
+## is a crude measure of effective sample size, and Rhat is the potential 
+## scale reduction factor on split chains (at convergence, Rhat = 1).&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;I’d now like to do some inference on the model, combining its zero and non-zero parts.&lt;/p&gt;
+&lt;p&gt;The model is: for observation &lt;span class=&#34;math inline&#34;&gt;\(j\)&lt;/span&gt; from patient &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt;,&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[Y_{i,j} = Z_{i,j}Y^*_{i,j},\]&lt;/span&gt; &lt;span class=&#34;math display&#34;&gt;\[\text{logit}\left\lbrace P(Z_{i,j} = 0) \right\rbrace = x_{i,j}^T\gamma + u_i,\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\log (Y^*_{i,j})  \sim N(x_{i,j}^T\beta + v_i, ~\sigma^2), \]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\left( \begin{array}{c}  u_i \\ v_i \\ \end{array} \right) \sim N\left(\left( \begin{array}{c}  0 \\ 0 \\ \end{array} \right), \left( \begin{array}{c c} \sigma_u^2 &amp;amp; \rho \sigma_u\sigma_v \\ \rho \sigma_u \sigma_v &amp;amp; \sigma_v ^ 2\end{array}\right)\right),\]&lt;/span&gt; where &lt;span class=&#34;math inline&#34;&gt;\(x_{i,j}^T = (1, t_{i,j})\)&lt;/span&gt;. Also let &lt;span class=&#34;math inline&#34;&gt;\(\theta = (\gamma, \beta, \sigma, \sigma_u, \sigma_v, \rho)\)&lt;/span&gt;.&lt;/p&gt;
+&lt;div id=&#34;how-to-use-fitted.brmsfit&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;How to use &lt;code&gt;fitted.brmsfit&lt;/code&gt;&lt;/h3&gt;
+&lt;p&gt;Having obtained posterior samples from &lt;span class=&#34;math inline&#34;&gt;\((\theta, u_1,\ldots,u_n,v_1,\ldots,v_n)\)&lt;/span&gt;, we &lt;em&gt;might&lt;/em&gt; want to look at samples from:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\begin{align} h(u_i, v_i, \theta; x) &amp;amp; = E(Y \mid u_i, v_i, \theta; x) \\ &amp;amp;= \left\lbrace 1 - \text{logit}^{-1} ( x^T \gamma + u_i) \right\rbrace \exp(x^T\beta + v_i + \frac{\sigma^2}{2}).\end{align}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;This is some kind of patient-specific expectation of &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt;, conditional on the random effects. If patient &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt; is already in the model, then we can just take samples directly from the posterior. This can be achieved with the &lt;code&gt;fitted&lt;/code&gt; method:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;fitted(fit_hurdle, 
+       newdata = data.frame(id = 1, time = &amp;quot;2&amp;quot;), 
+       robust = TRUE)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##       Estimate Est.Error      Q2.5     Q97.5
+## [1,] 0.4034682  0.150417 0.1796645 0.8248473&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;will give the median and (2.5, 97.5) quantiles of &lt;span class=&#34;math inline&#34;&gt;\(h(u_1, v_1, \theta ; x)\)&lt;/span&gt; at timepoint “2”.&lt;/p&gt;
+&lt;p&gt;Alternatively, we &lt;em&gt;might&lt;/em&gt; be more interested in &lt;span class=&#34;math inline&#34;&gt;\(h(0, 0, \theta ; x)\)&lt;/span&gt;, which in some sense is the patient-specific expectation of &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt; for an “average” patient with random effects fixed at zero. We can get this by setting &lt;code&gt;re_formula = NA&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;fitted(fit_hurdle, 
+       newdata = data.frame(time = &amp;quot;2&amp;quot;), 
+       robust = TRUE, 
+       re_formula = NA)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##       Estimate Est.Error      Q2.5    Q97.5
+## [1,] 0.9615294 0.2401395 0.5689127 1.569304&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Or, we &lt;em&gt;might&lt;/em&gt; be more interested in &lt;span class=&#34;math inline&#34;&gt;\(h(u_{i&amp;#39;}, v_{i&amp;#39;}, \theta ; x)\)&lt;/span&gt; for a new patient &lt;span class=&#34;math inline&#34;&gt;\(i&amp;#39;\)&lt;/span&gt;. Now we need to generate samples from the posterior distribution&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[f(u_{i&amp;#39;}, v_{i&amp;#39;}, \theta \mid \mathbf{y}) = f(u_{i&amp;#39;}, v_{i&amp;#39;} \mid \theta, \mathbf{y}) f(\theta \mid \mathbf{y})\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;we can do this by going through our posterior samples &lt;span class=&#34;math inline&#34;&gt;\(\theta^{(k)}\)&lt;/span&gt; for &lt;span class=&#34;math inline&#34;&gt;\(k = 1,\ldots,K\)&lt;/span&gt; and each time simulating&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\left( \begin{array}{c}  u_{i&amp;#39;}^{(k)} \\ v_{i&amp;#39;}^{(k)} \\ \end{array} \right) \sim N\left(\left( \begin{array}{c}  0 \\ 0 \\ \end{array} \right), \left( \begin{array}{c c} (\sigma^{(k)}_u)^2 &amp;amp; \rho \sigma^{(k)}_u\sigma^{(k)}_v \\ \rho \sigma^{(k)}_u \sigma^{(k)}_v &amp;amp; (\sigma^{(k)}_v)^2\end{array}\right)\right).\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;The way I expected this to be done is&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;fitted(fit_hurdle, newdata = data.frame(id = NA, time = &amp;quot;2&amp;quot;), 
+       allow_new_levels = TRUE,
+       sample_new_levels = &amp;quot;gaussian&amp;quot;,
+       robust = TRUE)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##       Estimate Est.Error         Q2.5    Q97.5
+## [1,] 0.9095811  1.315207 0.0009475099 58.14658&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;and this is indeed what’s happening, as can be seen by going through the steps manually&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ps &amp;lt;- posterior_samples(fit_hurdle)
+
+sigma_error &amp;lt;- ps[,&amp;quot;sigma&amp;quot;]
+sigma_u &amp;lt;- ps[,&amp;quot;sd_id__hu_Intercept&amp;quot;]
+sigma_v &amp;lt;- ps[,&amp;quot;sd_id__Intercept&amp;quot;]
+rho &amp;lt;- ps[,&amp;quot;cor_id__Intercept__hu_Intercept&amp;quot;]
+
+n_mcmc &amp;lt;- length(rho)
+
+x &amp;lt;- data.frame(id = NA, time = &amp;quot;2&amp;quot;)
+
+### simulate u_i&amp;#39; and v_i&amp;#39; 
+u &amp;lt;- rnorm(n_mcmc, sd = sigma_u)
+### include correlation 
+v &amp;lt;- rnorm(n_mcmc, 
+           mean = u * sigma_v / sigma_u * rho,
+           sd = sqrt((1 - rho^2) * sigma_v ^ 2))
+
+
+### extract draws from xi = x*gamma
+xi &amp;lt;- qlogis(fitted(fit_hurdle, 
+                    newdata = x, 
+                    re_formula = NA, 
+                    dpar = &amp;quot;hu&amp;quot;,
+                    summary = FALSE))
+
+### extract draws from eta = x*beta
+eta &amp;lt;- fitted(fit_hurdle, 
+              newdata = x, 
+              re_formula = NA, 
+              dpar = &amp;quot;mu&amp;quot;,
+              summary = FALSE)
+
+ey &amp;lt;- (1 - plogis(xi + u)) * exp(eta + v + sigma_error ^ 2 / 2)
+
+round(quantile(ey, probs = c(0.025, 0.5, 0.975)), 3)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   2.5%    50%  97.5% 
+##  0.001  0.927 52.369&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;unconditional-expectation&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Unconditional expectation&lt;/h3&gt;
+&lt;p&gt;Instead of a patient-specific expectation, conditional on random effects, we might be more interested in targeting an overall expectation (for a new patient) where we integrate out the random effects. In other words, we want to take samples from&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\begin{align} g(\theta; x) &amp;amp; = E(Y \mid  \theta; x) \\
+&amp;amp; = \int   E(Y \mid u_{i&amp;#39;}, v_{i&amp;#39;}, \theta; x) f(u_{i&amp;#39;}, v_{i&amp;#39;} \mid \theta, \mathbf{y}) du_{i&amp;#39;}dv_{i&amp;#39;} \\ 
+&amp;amp;\approx  L^{-1}\sum_{l = 1}^{L}E(Y \mid u_{i&amp;#39;}^{(l)}, v_{i&amp;#39;}^{(l)}, \theta; x)\\
+&amp;amp;=  L^{-1}\sum_{l = 1}^{L}\left\lbrace 1 - \text{logit}^{-1} ( x^T \gamma + u_{i&amp;#39;}^{(l)}) \right\rbrace \exp(x^T\beta + v_{i&amp;#39;}^{(l)} + \frac{\sigma^2}{2}).\end{align}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;That is, I take &lt;span class=&#34;math inline&#34;&gt;\(g(\theta^{(k)}; x)\)&lt;/span&gt; for &lt;span class=&#34;math inline&#34;&gt;\(k = 1,\ldots,K\)&lt;/span&gt;. At each &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt;, for &lt;span class=&#34;math inline&#34;&gt;\(l= 1 \ldots,L\)&lt;/span&gt;, I take indpendent draws&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\left( \begin{array}{c}  u_{i&amp;#39;}^{(l)} \\ v_{i&amp;#39;}^{(l)} \\ \end{array} \right) \sim N\left(\left( \begin{array}{c}  0 \\ 0 \\ \end{array} \right), \left( \begin{array}{c c} (\sigma^{(k)}_u)^2 &amp;amp; \rho \sigma^{(k)}_u\sigma^{(k)}_v \\ \rho \sigma^{(k)}_u \sigma^{(k)}_v &amp;amp; (\sigma^{(k)}_v)^2\end{array}\right)\right).\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;to perform the inner Monte Carlo integration (probably not the best method for this 2-d example). I don’t think it’s possible to do this with &lt;code&gt;brms&lt;/code&gt; so I’ve written my own code (which only works for this specific model).&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;devtools::install_github(&amp;quot;dominicmagirr/hurlong&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;hurlong::marg_mean_q(newdata = x, 
+                     nsims = 1000, 
+                     fit = fit_hurdle)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   id time     2.5%      50%    97.5%
+## 1 NA    2 3.845286 7.511835 19.58231&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Longitudinal hurdle models</title>
+      <link>/post/longitudinal-hurdle-models/</link>
+      <pubDate>Wed, 16 Oct 2019 00:00:00 +0000</pubDate>
+      <guid>/post/longitudinal-hurdle-models/</guid>
+      <description>
+
+
+&lt;div id=&#34;data&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Data&lt;/h2&gt;
+&lt;p&gt;Recently, I have been modelling data that is longitudinal, contains excess zeros, and where the non-zero data is right-skewed and measured on a continuous scale, rather than being count data.&lt;/p&gt;
+&lt;p&gt;I’ll simulate a semi-realistic example data set from a lognormal hurdle model. The “random effects” for the pr(zero) and non-zero parts of the model are negatively correlated.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;set.seed(180)
+
+## 100 patients
+id &amp;lt;- 1:100
+
+## 2 timepoints
+time &amp;lt;- c(&amp;quot;1&amp;quot;, &amp;quot;2&amp;quot;)
+
+## random effects
+u &amp;lt;- rnorm(100, sd = 2)
+v &amp;lt;- rnorm(100, mean = -0.95 * u, sd = sqrt((1 - 0.95^2) * 4)) # p(zero) is negatively correlated with Y*
+
+## non-zero data (4 obs per id, at two timepoints)
+ystar1 &amp;lt;- exp(rnorm(400, mean = u, sd = 1))
+ystar2 &amp;lt;- exp(rnorm(400, mean = -0.5 + u, sd = 1))
+
+## z = 1 if &amp;quot;cross hurdle&amp;quot;, i.e. if not zero
+z1 &amp;lt;- rbinom(400, size = 1, prob = 1 - plogis(-2 + v)) # p(cross hurdle) = 1 - p(zero)
+z2 &amp;lt;- rbinom(400, size = 1, prob = 1 - plogis(-1 + v))
+
+dat &amp;lt;- data.frame(y = c(z1 * ystar1, z2 * ystar2),
+                  time = rep(time, each = 400),
+                  id = rep(id, 8))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;In this data set there are 100 patients and two timepoints. For each patient, at each timepoint, I have simulated 4 independent observations (I’ve only done this to make model convergence a bit easier). The important point is that the data is correlated within patient, and also z (hurdle part) and ystar (non-zero part) are correlated, so that patients who start with a smaller (non-zero) y at the first timepoint are more likely to have y = 0 at the second timepoint. This can be clearly seen in the plot below.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse)
+ggplot(data = dat,
+                mapping = aes(x = time, y = y, group = id)) +
+  geom_point() +
+  geom_line() +
+  scale_y_log10()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;../../post/2019-10-16-longitudinal-hurdle-models_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;fit-the-model&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Fit the model&lt;/h2&gt;
+&lt;p&gt;To fit the model I’m using the excellent &lt;code&gt;brms&lt;/code&gt; package (&lt;a href=&#34;https://github.com/paul-buerkner/brms&#34; class=&#34;uri&#34;&gt;https://github.com/paul-buerkner/brms&lt;/a&gt;)&lt;/p&gt;
+&lt;p&gt;Bürkner P. C. (2018). Advanced Bayesian Multilevel Modeling with the R Package brms. The R Journal. 10(1), 395-411. doi.org/10.32614/RJ-2018-017&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(brms)
+
+fit_hurdle &amp;lt;- brm(bf(y ~  time + (1 | q | id),
+                     hu ~ time + (1 | q | id)),
+                  data = dat,
+                  iter = 4000,
+                  family = hurdle_lognormal(),
+                  refresh = 0)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;summary(fit_hurdle)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##  Family: hurdle_lognormal 
+##   Links: mu = identity; sigma = identity; hu = logit 
+## Formula: y ~ time + (1 | q | id) 
+##          hu ~ time + (1 | q | id)
+##    Data: dat (Number of observations: 800) 
+## Samples: 4 chains, each with iter = 4000; warmup = 2000; thin = 1;
+##          total post-warmup samples = 8000
+## 
+## Group-Level Effects: 
+## ~id (Number of levels: 100) 
+##                             Estimate Est.Error l-95% CI u-95% CI Rhat
+## sd(Intercept)                   1.96      0.16     1.69     2.29 1.00
+## sd(hu_Intercept)                2.47      0.30     1.93     3.11 1.00
+## cor(Intercept,hu_Intercept)    -0.90      0.04    -0.97    -0.81 1.00
+##                             Bulk_ESS Tail_ESS
+## sd(Intercept)                   1452     2688
+## sd(hu_Intercept)                2979     5484
+## cor(Intercept,hu_Intercept)     2539     4394
+## 
+## Population-Level Effects: 
+##              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## Intercept        0.07      0.20    -0.34     0.45 1.00      885     1970
+## hu_Intercept    -2.72      0.34    -3.43    -2.07 1.00     1662     3089
+## time2           -0.33      0.08    -0.49    -0.18 1.00    14798     5985
+## hu_time2         1.26      0.24     0.80     1.73 1.00    12452     5627
+## 
+## Family Specific Parameters: 
+##       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## sigma     0.94      0.03     0.88     1.00 1.00    11293     6175
+## 
+## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
+## is a crude measure of effective sample size, and Rhat is the potential 
+## scale reduction factor on split chains (at convergence, Rhat = 1).&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;inference&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Inference&lt;/h2&gt;
+&lt;p&gt;From the output I can see that I have more-or-less recovered the parameters from my model. In practice, I could use this to make inference on the two parts of the model separately. In &lt;a href=&#34;../../post/longitudinal-hurdle-models-2&#34;&gt;future&lt;/a&gt; posts I’ll discuss how to make inference/predictions when combining the two parts of the model.&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
