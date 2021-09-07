@@ -5,12 +5,627 @@
     <link>/post/</link>
       <atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     <description>Posts</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sun, 17 Jan 2021 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Tue, 07 Sep 2021 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>Posts</title>
       <link>/post/</link>
     </image>
+    
+    <item>
+      <title>Multiple imputation without a specialist R package</title>
+      <link>/post/multiple-imputation-without-a-specialist-r-package/</link>
+      <pubDate>Tue, 07 Sep 2021 00:00:00 +0000</pubDate>
+      <guid>/post/multiple-imputation-without-a-specialist-r-package/</guid>
+      <description>
+
+
+&lt;p&gt;If you’re interested in doing multiple imputation in R, it’s best to use a specialist package. There are many good options out there, including &lt;code&gt;mice&lt;/code&gt; (&lt;a href=&#34;https://www.jstatsoft.org/article/view/v045i03&#34; class=&#34;uri&#34;&gt;https://www.jstatsoft.org/article/view/v045i03&lt;/a&gt;), &lt;code&gt;smcfcs&lt;/code&gt; (&lt;a href=&#34;https://cran.r-project.org/web/packages/smcfcs/vignettes/smcfcs-vignette.html&#34; class=&#34;uri&#34;&gt;https://cran.r-project.org/web/packages/smcfcs/vignettes/smcfcs-vignette.html&lt;/a&gt;), &lt;code&gt;norm2&lt;/code&gt; (&lt;a href=&#34;https://usermanual.wiki/Document/norm2UserGuide.911613350/view&#34; class=&#34;uri&#34;&gt;https://usermanual.wiki/Document/norm2UserGuide.911613350/view&lt;/a&gt;), and many others (&lt;a href=&#34;https://cran.r-project.org/web/views/MissingData.html&#34; class=&#34;uri&#34;&gt;https://cran.r-project.org/web/views/MissingData.html&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;The aim of this post is for me to deepen my understanding of multiple imputation and not forget it. More specifically, I want a middle way which is somewhere between a black box command (leaves me unsatisfied) and full gory details (ahhhhh!).&lt;/p&gt;
+&lt;p&gt;In terms of the methodological approach of using multiple imputation for sensitivity analysis, I’ll follow the excellent paper by Cro et al. (&lt;a href=&#34;https://onlinelibrary.wiley.com/doi/pdf/10.1002/sim.8569&#34; class=&#34;uri&#34;&gt;https://onlinelibrary.wiley.com/doi/pdf/10.1002/sim.8569&lt;/a&gt;). The paper comes with a Stata package (&lt;a href=&#34;https://journals.sagepub.com/doi/pdf/10.1177/1536867X1601600211&#34; class=&#34;uri&#34;&gt;https://journals.sagepub.com/doi/pdf/10.1177/1536867X1601600211&lt;/a&gt;) which was based on original SAS Macros by James Roger (&lt;a href=&#34;https://www.lshtm.ac.uk/research/centres-projects-groups/missing-data#dia-missing-data&#34; class=&#34;uri&#34;&gt;https://www.lshtm.ac.uk/research/centres-projects-groups/missing-data#dia-missing-data&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;The key tool I’ll be using in R is the &lt;code&gt;brms&lt;/code&gt; package (&lt;a href=&#34;https://cran.r-project.org/web/packages/brms/index.html&#34; class=&#34;uri&#34;&gt;https://cran.r-project.org/web/packages/brms/index.html&lt;/a&gt;). The brilliant thing about this is that I can understand each step conceptually, without knowing too much about the details.&lt;/p&gt;
+&lt;p&gt;This is probably an inefficient way to do this though. There could well be errors too.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse)
+library(brms)&lt;/code&gt;&lt;/pre&gt;
+&lt;div id=&#34;data-set&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Data set&lt;/h2&gt;
+&lt;p&gt;I’ll use the “low dropout” data set from Mallinckrodt et al. (&lt;a href=&#34;https://journals.sagepub.com/doi/pdf/10.1177/2168479013501310&#34; class=&#34;uri&#34;&gt;https://journals.sagepub.com/doi/pdf/10.1177/2168479013501310&lt;/a&gt;) which is available via &lt;a href=&#34;https://www.lshtm.ac.uk/research/centres-projects-groups/missing-data#dia-missing-data&#34; class=&#34;uri&#34;&gt;https://www.lshtm.ac.uk/research/centres-projects-groups/missing-data#dia-missing-data&lt;/a&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;low_data &amp;lt;- haven::read_sas(&amp;quot;low1.sas7bdat&amp;quot;)
+head(low_data)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 6 x 6
+##   PATIENT POOLINV trt   basval  week change
+##     &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;   &amp;lt;chr&amp;gt;  &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;  &amp;lt;dbl&amp;gt;
+## 1    1005 101     2         16     1     -3
+## 2    1005 101     2         16     2     -5
+## 3    1005 101     2         16     4    -10
+## 4    1005 101     2         16     6    -11
+## 5    1005 101     2         16     8    -13
+## 6    1006 101     2         17     1     -1&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This data set is in long format. It consists of patient ID, treatment (1 or 2), treatment centre (&lt;code&gt;POOLINV&lt;/code&gt;), baseline value, timepoint (&lt;code&gt;week&lt;/code&gt;), and change from baseline (the outcome variable).&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;I won’t describe the context here, or do any exploratory analysis – see the Mallinckrodt et al paper for this (&lt;a href=&#34;https://journals.sagepub.com/doi/pdf/10.1177/2168479013501310&#34; class=&#34;uri&#34;&gt;https://journals.sagepub.com/doi/pdf/10.1177/2168479013501310&lt;/a&gt;).&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;For my analysis, I’ll first convert it to a wide format, with a separate variable for the outcome at each timepoint (week 1, 2, 4, 6 and 8).&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;low_data_wide &amp;lt;- low_data %&amp;gt;%
+  pivot_wider(names_from = week, 
+              names_prefix = &amp;quot;week&amp;quot;,
+              values_from = change)
+
+head(low_data_wide)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 6 x 9
+##   PATIENT POOLINV trt   basval week1 week2 week4 week6 week8
+##     &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;   &amp;lt;chr&amp;gt;  &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;
+## 1    1005 101     2         16    -3    -5   -10   -11   -13
+## 2    1006 101     2         17    -1    -2    -6   -10   -12
+## 3    1008 101     1         32    -6   -12   -17   -20   -22
+## 4    1011 101     1         18    -1    -5    -8    NA    NA
+## 5    1012 101     1         22    -6    -9   -13   -16   -17
+## 6    1015 101     2         29    -6   -14   -14   -20   -25&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We can see now that there are some missing values.&lt;/p&gt;
+&lt;p&gt;At this point I’ll also split the data set by treatment group. This is because I’ll use a separate imputation model for each treatment.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;low_data_1 &amp;lt;- low_data_wide %&amp;gt;% dplyr::filter(trt == &amp;quot;1&amp;quot;)
+low_data_2 &amp;lt;- low_data_wide %&amp;gt;% dplyr::filter(trt == &amp;quot;2&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The next step is to fit the imputation model, which is basically a Bayesian MMRM, using &lt;code&gt;brms&lt;/code&gt;. The covariarates in each model are baseline (&lt;code&gt;basval&lt;/code&gt;) and centre (&lt;code&gt;POOLINV&lt;/code&gt;), which both get crossed with timepoint. And the covariance matrices are unstructured.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;fit_1 &amp;lt;- brm(data = low_data_1, 
+             family = gaussian,
+             bf(mvbind(week1, week2, week4, week6, week8) | mi() ~ basval + POOLINV) + 
+             set_rescor(TRUE),
+             refresh = 0)
+
+fit_2 &amp;lt;- brm(data = low_data_2, 
+             family = gaussian,
+             bf(mvbind(week1, week2, week4, week6, week8) | mi() ~ basval + POOLINV) + 
+             set_rescor(TRUE),
+             refresh = 0)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We can take a quick look at the summary of the first model fit to reassure ourselves it is giving us the right kind of thing.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;summary(fit_1)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##  Family: MV(gaussian, gaussian, gaussian, gaussian, gaussian) 
+##   Links: mu = identity; sigma = identity
+##          mu = identity; sigma = identity
+##          mu = identity; sigma = identity
+##          mu = identity; sigma = identity
+##          mu = identity; sigma = identity 
+## Formula: week1 | mi() ~ basval + POOLINV 
+##          week2 | mi() ~ basval + POOLINV 
+##          week4 | mi() ~ basval + POOLINV 
+##          week6 | mi() ~ basval + POOLINV 
+##          week8 | mi() ~ basval + POOLINV 
+##    Data: low_data_1 (Number of observations: 100) 
+## Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+##          total post-warmup samples = 4000
+## 
+## Population-Level Effects: 
+##                  Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS
+## week1_Intercept      1.60      1.57    -1.51     4.71 1.00     4000
+## week2_Intercept     -2.20      2.35    -6.71     2.43 1.00     3363
+## week4_Intercept     -0.25      2.56    -5.21     4.67 1.00     2839
+## week6_Intercept      0.25      2.94    -5.53     5.99 1.00     2658
+## week8_Intercept      5.11      3.18    -1.24    11.45 1.00     3234
+## week1_basval        -0.19      0.07    -0.33    -0.05 1.00     4603
+## week1_POOLINV121    -0.08      0.76    -1.60     1.41 1.00     3794
+## week1_POOLINV131     0.09      0.65    -1.19     1.42 1.00     3684
+## week1_POOLINV141     0.78      0.69    -0.60     2.10 1.00     3695
+## week2_basval        -0.13      0.10    -0.33     0.07 1.00     4158
+## week2_POOLINV121     1.12      1.14    -1.17     3.29 1.00     2923
+## week2_POOLINV131    -0.89      0.99    -2.79     1.07 1.00     2865
+## week2_POOLINV141     0.59      1.03    -1.41     2.61 1.00     3027
+## week4_basval        -0.34      0.11    -0.56    -0.12 1.00     3469
+## week4_POOLINV121     0.82      1.22    -1.56     3.15 1.00     2511
+## week4_POOLINV131    -1.74      1.08    -3.84     0.40 1.00     2620
+## week4_POOLINV141     0.24      1.13    -1.97     2.42 1.00     2610
+## week6_basval        -0.45      0.13    -0.70    -0.19 1.00     3247
+## week6_POOLINV121     0.29      1.42    -2.48     3.11 1.00     2632
+## week6_POOLINV131    -0.75      1.24    -3.17     1.66 1.00     2343
+## week6_POOLINV141    -0.25      1.27    -2.64     2.26 1.00     2458
+## week8_basval        -0.70      0.14    -0.97    -0.42 1.00     3638
+## week8_POOLINV121    -0.50      1.56    -3.53     2.56 1.00     3161
+## week8_POOLINV131    -2.67      1.36    -5.25    -0.00 1.00     2597
+## week8_POOLINV141    -1.22      1.39    -3.84     1.49 1.00     2932
+##                  Tail_ESS
+## week1_Intercept      3397
+## week2_Intercept      2979
+## week4_Intercept      2889
+## week6_Intercept      2744
+## week8_Intercept      3078
+## week1_basval         3552
+## week1_POOLINV121     3029
+## week1_POOLINV131     3199
+## week1_POOLINV141     3162
+## week2_basval         3157
+## week2_POOLINV121     3272
+## week2_POOLINV131     3013
+## week2_POOLINV141     3075
+## week4_basval         3213
+## week4_POOLINV121     2567
+## week4_POOLINV131     3273
+## week4_POOLINV141     2821
+## week6_basval         2879
+## week6_POOLINV121     2651
+## week6_POOLINV131     2558
+## week6_POOLINV141     2869
+## week8_basval         3229
+## week8_POOLINV121     2997
+## week8_POOLINV131     2840
+## week8_POOLINV141     3062
+## 
+## Family Specific Parameters: 
+##             Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## sigma_week1     2.50      0.18     2.18     2.89 1.00     5461     3139
+## sigma_week2     3.73      0.27     3.25     4.30 1.00     3838     3248
+## sigma_week4     4.05      0.29     3.54     4.66 1.00     3645     3259
+## sigma_week6     4.53      0.34     3.93     5.26 1.00     3573     2732
+## sigma_week8     4.88      0.38     4.19     5.71 1.00     4169     3132
+## 
+## Residual Correlations: 
+##                     Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS
+## rescor(week1,week2)     0.53      0.07     0.38     0.67 1.00     3978
+## rescor(week1,week4)     0.42      0.08     0.24     0.56 1.00     3800
+## rescor(week2,week4)     0.71      0.05     0.60     0.80 1.00     3129
+## rescor(week1,week6)     0.32      0.09     0.14     0.49 1.00     3557
+## rescor(week2,week6)     0.53      0.07     0.37     0.66 1.00     3500
+## rescor(week4,week6)     0.76      0.04     0.67     0.84 1.00     3506
+## rescor(week1,week8)     0.17      0.10    -0.03     0.36 1.00     3875
+## rescor(week2,week8)     0.33      0.09     0.14     0.50 1.00     3791
+## rescor(week4,week8)     0.55      0.07     0.39     0.68 1.00     3528
+## rescor(week6,week8)     0.85      0.03     0.78     0.90 1.00     3724
+##                     Tail_ESS
+## rescor(week1,week2)     3313
+## rescor(week1,week4)     3299
+## rescor(week2,week4)     3356
+## rescor(week1,week6)     3151
+## rescor(week2,week6)     2833
+## rescor(week4,week6)     2767
+## rescor(week1,week8)     3453
+## rescor(week2,week8)     3145
+## rescor(week4,week8)     3300
+## rescor(week6,week8)     3391
+## 
+## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
+## is a crude measure of effective sample size, and Rhat is the potential 
+## scale reduction factor on split chains (at convergence, Rhat = 1).&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Next, I’ll extract the posterior samples from the MCMC.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;p_1 &amp;lt;- posterior_samples(fit_1)
+dim(p_1)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 4000   58&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We can see that we have 4000 samples from 58 “parameters”. Actually, only the first 40 are what I would think of as model parameters, e.g., (printing the head of columns 1,2,3)&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;head(p_1[,c(1,2,3)])&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   b_week1_Intercept b_week2_Intercept b_week4_Intercept
+## 1         0.5154750        -5.1858678         -3.870133
+## 2         1.6749945        -3.3279521         -2.459063
+## 3         3.1583047        -0.7224206          4.742484
+## 4         3.4688916         1.9246520          2.719808
+## 5         4.2199799        -0.7346923          5.604683
+## 6         0.4128793        -4.0833588         -2.098488&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;the rest are samples from the predictive distribution of the missing data, e.g., (printing the head of columns 51,52,53)&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;head(p_1[,c(51,52,53)])&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   Ymi_week8[9] Ymi_week8[18] Ymi_week8[20]
+## 1    -4.059760    -13.807886     -5.103871
+## 2    -3.287829     -6.579197    -10.596638
+## 3    -2.680057      1.211975    -10.349368
+## 4    -1.487953     -8.258051     -5.253324
+## 5    -4.687085    -11.235663    -10.320470
+## 6    -1.184016     -5.524158     -5.053344&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We see this corresponds to missing data on the week 8 variable in rows 9,18, and 20, respectively, of the original data set (&lt;code&gt;low_data_1&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;That’s the beautiful thing about MCMC. I can sample from the predictive distribution of the missing data “for free”. To create mulitple imputed data sets, all I need to do is extract samples from the MCMC chain and use them to fill in the missing data in the original data set.&lt;/p&gt;
+&lt;p&gt;To actually do this, I need to introduce a small piece of ugly code (sorry!). Essentially, I’m extracting the location of the missing data in the original data set via the column names of the MCMC object.&lt;/p&gt;
+&lt;p&gt;I’m creating 5 imputed data sets because that’s all I’m prepared to type (one could easily take more and create a function to avoid typing). As I have 4000 (correlated) samples from the posterior, and need to create 5 imputed data sets, I’m picking out rows 800, 1600, 2400, 3200 and 4000.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;### create 5 copies of the data set (TRT 1), plus original (labelled 0).
+low_data_1_0 &amp;lt;- low_data_1 %&amp;gt;% mutate(.id = PATIENT, .imp = 0)
+low_data_1_1 &amp;lt;- low_data_1 %&amp;gt;% mutate(.id = PATIENT, .imp = 1)
+low_data_1_2 &amp;lt;- low_data_1 %&amp;gt;% mutate(.id = PATIENT, .imp = 2)
+low_data_1_3 &amp;lt;- low_data_1 %&amp;gt;% mutate(.id = PATIENT, .imp = 3)
+low_data_1_4 &amp;lt;- low_data_1 %&amp;gt;% mutate(.id = PATIENT, .imp = 4)
+low_data_1_5 &amp;lt;- low_data_1 %&amp;gt;% mutate(.id = PATIENT, .imp = 5)
+
+### extract the positions of NAs in data set that need to be replaced.
+s_1_1 &amp;lt;- str_split(names(p_1), &amp;quot;Ymi_&amp;quot;, simplify = TRUE)
+s_2_1 &amp;lt;- str_split(s_1_1[,2], &amp;quot;\\[&amp;quot;, simplify = TRUE)
+col_i_1 &amp;lt;- s_2_1[,1]
+row_i_1 &amp;lt;- as.numeric(str_split(s_2_1[,2], &amp;quot;\\]&amp;quot;, simplify = TRUE)[,1])
+
+
+### replace NAs with values from MCMC chain
+for (i in seq_along(col_i_1)){
+  
+  if(col_i_1[i] != &amp;quot;&amp;quot;){
+    
+    low_data_1_1[row_i_1[i], col_i_1[i]] &amp;lt;- as.numeric(p_1[800, i])    
+    low_data_1_2[row_i_1[i], col_i_1[i]] &amp;lt;- as.numeric(p_1[1600, i])  
+    low_data_1_3[row_i_1[i], col_i_1[i]] &amp;lt;- as.numeric(p_1[2400, i])  
+    low_data_1_4[row_i_1[i], col_i_1[i]] &amp;lt;- as.numeric(p_1[3200, i])  
+    low_data_1_5[row_i_1[i], col_i_1[i]] &amp;lt;- as.numeric(p_1[4000, i])  
+    
+  }
+  
+  
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;If we look at the first two rows of the original data set, followed by the first two rows of the first imputed data set, we can see that the missing values have been filled in.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;head(low_data_1_0, 2)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 2 x 11
+##   PATIENT POOLINV trt   basval week1 week2 week4 week6 week8   .id  .imp
+##     &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;   &amp;lt;chr&amp;gt;  &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;
+## 1    1008 101     1         32    -6   -12   -17   -20   -22  1008     0
+## 2    1011 101     1         18    -1    -5    -8    NA    NA  1011     0&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;head(low_data_1_1, 2)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 2 x 11
+##   PATIENT POOLINV trt   basval week1 week2 week4 week6 week8   .id  .imp
+##     &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;   &amp;lt;chr&amp;gt;  &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;
+## 1    1008 101     1         32    -6   -12   -17 -20   -22    1008     1
+## 2    1011 101     1         18    -1    -5    -8 -15.4 -17.4  1011     1&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;I now need to do exactly the same thing for the treatment 2 data set:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;p_2 &amp;lt;- posterior_samples(fit_2)
+
+### create 5 copies of the data set (TRT 1), plus original (labelled 0).
+low_data_2_0 &amp;lt;- low_data_2 %&amp;gt;% mutate(.id = PATIENT, .imp = 0)
+low_data_2_1 &amp;lt;- low_data_2 %&amp;gt;% mutate(.id = PATIENT, .imp = 1)
+low_data_2_2 &amp;lt;- low_data_2 %&amp;gt;% mutate(.id = PATIENT, .imp = 2)
+low_data_2_3 &amp;lt;- low_data_2 %&amp;gt;% mutate(.id = PATIENT, .imp = 3)
+low_data_2_4 &amp;lt;- low_data_2 %&amp;gt;% mutate(.id = PATIENT, .imp = 4)
+low_data_2_5 &amp;lt;- low_data_2 %&amp;gt;% mutate(.id = PATIENT, .imp = 5)
+
+### extract the positions of NAs in data set that need to be replaced.
+s_1_2 &amp;lt;- str_split(names(p_2), &amp;quot;Ymi_&amp;quot;, simplify = TRUE)
+s_2_2 &amp;lt;- str_split(s_1_2[,2], &amp;quot;\\[&amp;quot;, simplify = TRUE)
+col_i_2 &amp;lt;- s_2_2[,1]
+row_i_2 &amp;lt;- as.numeric(str_split(s_2_2[,2], &amp;quot;\\]&amp;quot;, simplify = TRUE)[,1])
+
+
+### replace NAs with values from MCMC chain
+for (i in seq_along(col_i_2)){
+  
+  if(col_i_2[i] != &amp;quot;&amp;quot;){
+    
+    low_data_2_1[row_i_2[i], col_i_2[i]] &amp;lt;- as.numeric(p_2[800, i])  
+    low_data_2_2[row_i_2[i], col_i_2[i]] &amp;lt;- as.numeric(p_2[1600, i]) 
+    low_data_2_3[row_i_2[i], col_i_2[i]] &amp;lt;- as.numeric(p_2[2400, i]) 
+    low_data_2_4[row_i_2[i], col_i_2[i]] &amp;lt;- as.numeric(p_2[3200, i]) 
+    low_data_2_5[row_i_2[i], col_i_2[i]] &amp;lt;- as.numeric(p_2[4000, i]) 
+    
+  }
+  
+  
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;and then I can stack all of the imputed data sets together. Note that I created a label &lt;code&gt;.imp&lt;/code&gt; for each imputed data set.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;low_data_mi &amp;lt;- rbind(low_data_1_0,
+                     low_data_2_0,
+                     low_data_1_1,
+                     low_data_2_1,
+                     low_data_1_2,
+                     low_data_2_2,
+                     low_data_1_3,
+                     low_data_2_3,
+                     low_data_1_4,
+                     low_data_2_4,
+                     low_data_1_5,
+                     low_data_2_5)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The final step is to fit an analysis model (ANCOVA: week 8 vs treatment, baseline and centre) to each imputed data set, and then combine the results using Rubin’s Rules (&lt;a href=&#34;https://bookdown.org/mwheymans/bookmi/rubins-rules.html&#34; class=&#34;uri&#34;&gt;https://bookdown.org/mwheymans/bookmi/rubins-rules.html&lt;/a&gt;). I claimed in the title that I wouldn’t use a specialist multiple imputation package, but I’ll borrow some code from &lt;code&gt;mice&lt;/code&gt; for this step (that’s why I created the &lt;code&gt;.id&lt;/code&gt; and &lt;code&gt;.imp&lt;/code&gt; columns above – &lt;code&gt;mice&lt;/code&gt; recognizes these):&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(mice)
+fit_mi &amp;lt;- with(as.mids(low_data_mi), lm(week8 ~ trt + POOLINV + basval))
+summary(pool(fit_mi))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##               estimate  std.error  statistic       df      p.value
+## (Intercept)  1.7477586 1.89808520  0.9208009 178.3657 3.583981e-01
+## trt2        -1.8635641 0.72553680 -2.5685315 103.8203 1.163510e-02
+## POOLINV121  -0.6095234 1.07376910 -0.5676484 153.3716 5.711037e-01
+## POOLINV131  -2.1373912 0.94122937 -2.2708505 126.8167 2.484221e-02
+## POOLINV141  -0.1464228 0.96397585 -0.1518946 114.2162 8.795380e-01
+## basval      -0.5532151 0.08369395 -6.6099764 186.9722 3.901515e-10&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We can see that the estimated treatment effect is around -1.8 with standard error around 0.7. Comparing this with Table 4 in the Mallinckrodt et al paper, we can see that it’s in the right ballpark, bearing in mind slight differences in the model and the low number of imputations.&lt;/p&gt;
+&lt;p&gt;Up until now I’ve only performed imputations under a missing-at-random assumption. Given that we could just fit an MMRM model directly, there wasn’t much point in going to the trouble of multiple imputation. However, the advantage of multiple imputation is that it’s easy to perform certain types of sensitivity analysis.&lt;/p&gt;
+&lt;p&gt;For example, to perform &lt;span class=&#34;math inline&#34;&gt;\(\delta\)&lt;/span&gt;-based sensitivity analysis (see Cro et al.), I may, as an example, add a fixed amount &lt;span class=&#34;math inline&#34;&gt;\(\delta = 2\)&lt;/span&gt; to the imputations on the experimental treatment arm. To do this, I’ll literally copy-paste by code above, but adding delta:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;delta &amp;lt;- 2
+
+### replace NAs with values from MCMC chain
+for (i in seq_along(col_i_2)){
+  
+  if(col_i_2[i] != &amp;quot;&amp;quot;){
+    
+    low_data_2_1[row_i_2[i], col_i_2[i]] &amp;lt;- as.numeric(p_2[800, i])  + delta 
+    low_data_2_2[row_i_2[i], col_i_2[i]] &amp;lt;- as.numeric(p_2[1600, i]) + delta 
+    low_data_2_3[row_i_2[i], col_i_2[i]] &amp;lt;- as.numeric(p_2[2400, i]) + delta 
+    low_data_2_4[row_i_2[i], col_i_2[i]] &amp;lt;- as.numeric(p_2[3200, i]) + delta 
+    low_data_2_5[row_i_2[i], col_i_2[i]] &amp;lt;- as.numeric(p_2[4000, i]) + delta 
+    
+  }
+  
+  
+}
+
+low_data_mi &amp;lt;- rbind(low_data_1_0,
+                     low_data_2_0,
+                     low_data_1_1,
+                     low_data_2_1,
+                     low_data_1_2,
+                     low_data_2_2,
+                     low_data_1_3,
+                     low_data_2_3,
+                     low_data_1_4,
+                     low_data_2_4,
+                     low_data_1_5,
+                     low_data_2_5)
+
+fit_mi &amp;lt;- with(as.mids(low_data_mi), lm(week8 ~ trt + POOLINV + basval))
+summary(pool(fit_mi))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##               estimate  std.error   statistic       df      p.value
+## (Intercept)  1.3996455 1.90747537  0.73376861 178.5648 4.640521e-01
+## trt2        -1.7184241 0.72878966 -2.35791501 104.6129 2.023692e-02
+## POOLINV121  -0.6247259 1.07890860 -0.57903510 153.8860 5.634121e-01
+## POOLINV131  -2.1714417 0.94558853 -2.29639171 127.5395 2.328443e-02
+## POOLINV141  -0.0533222 0.96836491 -0.05506416 114.9899 9.561829e-01
+## basval      -0.5368745 0.08411448 -6.38266384 187.0423 1.336286e-09&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We can see that this reduces the treatment effect somewhat. The standard error has not changed much.&lt;/p&gt;
+&lt;p&gt;An alternative to &lt;span class=&#34;math inline&#34;&gt;\(\delta\)&lt;/span&gt;-based sensitivity analysis is reference-based sensitivity analysis, where more qualitative types of assumption are made about the missing data. See Cro et al. for a disscussion of pros and cons of the two approaches. My very personal opinion is that I prefer the &lt;span class=&#34;math inline&#34;&gt;\(\delta\)&lt;/span&gt;-based approach. But maybe that’s influenced by its computational simplicity. There’s no way I could do an exercise like this for a reference-based approach in 100 lines of code.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;references&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;References&lt;/h2&gt;
+&lt;p&gt;Mallinckrodt, Craig, et al. “Recent developments in the prevention and treatment of missing data.” Therapeutic innovation &amp;amp; regulatory science 48.1 (2014): 68-80.&lt;/p&gt;
+&lt;p&gt;Cro, Suzie, et al. “Sensitivity analysis for clinical trials with missing continuous outcome data using controlled multiple imputation: a practical guide.” Statistics in medicine 39.21 (2020): 2815-2842.&lt;/p&gt;
+&lt;p&gt;Cro, Suzie, et al. “Reference-based sensitivity analysis via multiple imputation for longitudinal trials with protocol deviation.” The Stata Journal 16.2 (2016): 443-463.&lt;/p&gt;
+&lt;p&gt;Bürkner, Paul-Christian. “brms: An R package for Bayesian multilevel models using Stan.” Journal of statistical software 80.1 (2017): 1-28.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;helpful-links&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Helpful links&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://thestatsgeek.com/category/missing-data/&#34; class=&#34;uri&#34;&gt;https://thestatsgeek.com/category/missing-data/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://discourse.mc-stan.org/t/unstructured-error-covariance-matrix-in-a-multilevel-growth-model/21792/4&#34; class=&#34;uri&#34;&gt;https://discourse.mc-stan.org/t/unstructured-error-covariance-matrix-in-a-multilevel-growth-model/21792/4&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.lshtm.ac.uk/research/centres-projects-groups/missing-data#dia-missing-data&#34; class=&#34;uri&#34;&gt;https://www.lshtm.ac.uk/research/centres-projects-groups/missing-data#dia-missing-data&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Landmark/Milestone analysis under a Royston-Parmar flexible parametric survival model using the R package flexsurv</title>
+      <link>/post/landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv/</link>
+      <pubDate>Sat, 22 May 2021 00:00:00 +0000</pubDate>
+      <guid>/post/landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv/</guid>
+      <description>
+
+
+&lt;p&gt;The aim of this post is to demonstrate a landmark/milestone analysis of RCT time-to-event data with a Royston-Parmar flexible parametric survival model. The original reference is:&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Royston P, Parmar M (2002). “Flexible Parametric Proportional-Hazards and Proportional-Odds Models for Censored Survival Data, with Application to Prognostic Modelling and
+Estimation of Treatment Effects.” Statistics in Medicine, 21(1), 2175–2197. &lt;a href=&#34;doi:10.1002/&#34; class=&#34;uri&#34;&gt;doi:10.1002/&lt;/a&gt;
+sim.1203&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;This model has been expertly coded and documented by Chris Jackson in the R package &lt;strong&gt;flexsurv&lt;/strong&gt; (&lt;a href=&#34;https://www.jstatsoft.org/article/view/v070i08&#34; class=&#34;uri&#34;&gt;https://www.jstatsoft.org/article/view/v070i08&lt;/a&gt;). In this post I’ll be making a big meal out of the same material in an effort to increase my own understanding.&lt;/p&gt;
+&lt;p&gt;I need a dataset, so I’ll re-use one from a &lt;a href=&#34;../post/adjusting-for-covariates-under-non-proportional-hazards&#34;&gt;previous blogpost&lt;/a&gt; – this is
+&lt;a href=&#34;https://www.nature.com/articles/s41591-018-0134-3&#34;&gt;publically available data&lt;/a&gt; from the OAK RCT comparing a checkpoint inhibitor (MPDL3280A) versus chemotherapy (Docetaxel).&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(survival)
+library(dplyr)
+library(flexsurv)
+dat_oak &amp;lt;- readxl::read_excel(&amp;quot;41591_2018_134_MOESM3_ESM.xlsx&amp;quot;,
+                              sheet = 3) %&amp;gt;% 
+  select(PtID, ECOGGR, OS, OS.CNSR, TRT01P) %&amp;gt;%
+  mutate(OS.EVENT = -1 * (OS.CNSR - 1))
+
+head(dat_oak)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 6 x 6
+##    PtID ECOGGR    OS OS.CNSR TRT01P    OS.EVENT
+##   &amp;lt;dbl&amp;gt;  &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;   &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;        &amp;lt;dbl&amp;gt;
+## 1   318      1  5.19       0 Docetaxel        1
+## 2  1088      0  4.83       0 Docetaxel        1
+## 3   345      1  1.94       0 Docetaxel        1
+## 4   588      0 24.6        1 Docetaxel        0
+## 5   306      1  5.98       0 MPDL3280A        1
+## 6   718      1 19.2        1 Docetaxel        0&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;ECOG grade is a prognostic covariate. Initially I’m going to ignore this covariate, but I’ll come back to it later in the post.&lt;/p&gt;
+&lt;p&gt;I’ll start by plotting the survival curves using the &lt;code&gt;survminer&lt;/code&gt; package (&lt;a href=&#34;https://cran.r-project.org/web/packages/survminer/index.html&#34; class=&#34;uri&#34;&gt;https://cran.r-project.org/web/packages/survminer/index.html&lt;/a&gt;)…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;km_oak &amp;lt;- survfit(Surv(OS, OS.EVENT) ~ TRT01P,
+                  data = dat_oak)
+
+
+survminer::ggsurvplot(km_oak, 
+                      data = dat_oak, 
+                      risk.table = TRUE, 
+                      break.x.by = 6,
+                      legend.title = &amp;quot;&amp;quot;,
+                      xlab = &amp;quot;Time (months)&amp;quot;,
+                      ylab = &amp;quot;Overall survival&amp;quot;,
+                      risk.table.fontsize = 4,
+                      legend = c(0.8,0.8))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;../post/2021-05-22-landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;In &lt;a href=&#34;../post/flexsurv-2&#34;&gt;another previous post&lt;/a&gt; I discussed using &lt;code&gt;flexsurv::flexsurvreg&lt;/code&gt; to fit a Weibull model. In brief, we can describe this model as two parallel straight lines on the log cumumlative hazard scale (versus log time).&lt;/p&gt;
+&lt;p&gt;Here, I’ll fit a Weibull model to the OAK data and plot the log cumulative hazard versus log time, on top of the non-parametric equivalent. Note that I’m creating functions here because I’ll want to make this graph repeatedly as we add flexibility to the model.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;###########################
+### Non-parametric analysis
+###########################
+
+# Vector of time in months (for plotting):
+t_seq &amp;lt;- seq(1, 24, length.out = 100)
+# Extract km estimates
+km_sum &amp;lt;- summary(km_oak, times = t_seq, extend = TRUE)
+
+# Function to plot km estimates (log-cumhaz scale)
+plot_non_param &amp;lt;- function(){
+  
+  plot(log(t_seq), log(km_sum$cumhaz[1:100]), type = &amp;quot;l&amp;quot;, 
+       xlab = &amp;quot;log(time)&amp;quot;, ylab = &amp;quot;log cumulative hazard&amp;quot;)
+  points(log(t_seq), log(km_sum$cumhaz[101:200]), type = &amp;quot;l&amp;quot;, col = 2)
+  legend(&amp;quot;bottomright&amp;quot;, c(&amp;quot;Docetaxel&amp;quot;, &amp;quot;MPDL3280A&amp;quot;),
+         lty = c(1,1), col = 1:2)       
+  
+}
+
+#########################
+### Weibull regression
+#########################
+fit_weibull &amp;lt;- flexsurvreg(Surv(OS, OS.EVENT) ~ TRT01P,
+                           data = dat_oak,
+                           dist = &amp;quot;weibull&amp;quot;)
+
+
+#Function to add parametric estimate of log-cumulative hazard
+#to the KM-based plot
+add_model_estimate &amp;lt;- function(fit){
+  
+  ### Add Docetaxel estimate
+  summary(fit, 
+          newdata = data.frame(TRT01P = &amp;quot;Docetaxel&amp;quot;),
+          t = t_seq, type = &amp;quot;cumhaz&amp;quot;)[[1]][,&amp;quot;est&amp;quot;] %&amp;gt;% 
+    log() %&amp;gt;% 
+    points(x = log(t_seq), type = &amp;quot;l&amp;quot;, lty = 2)
+  
+  ### Add MPDL3280A estimate
+  summary(fit, 
+          newdata = data.frame(TRT01P = &amp;quot;MPDL3280A&amp;quot;),
+          t = t_seq, type = &amp;quot;cumhaz&amp;quot;)[[1]][,&amp;quot;est&amp;quot;] %&amp;gt;% 
+    log() %&amp;gt;% 
+    points(x = log(t_seq), type = &amp;quot;l&amp;quot;, lty = 2, col = 2)
+}
+
+
+# plot Weibull regression on top of KM estimates
+plot_non_param()
+add_model_estimate(fit_weibull)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;../post/2021-05-22-landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;We can see this is not a good fit at early timepoints. Parallel lines on this scale is the same as saying the hazards are proportional, which is clearly not the case. We therefore need to relax the proportional hazards assumption. One option is to maintain the log-cumulative-hazard-versus-log-time perspective, also maintain &lt;em&gt;straight&lt;/em&gt; lines on this scale, but give each treatment its own slope. In other words, this is a Weibull model but with a different shape parameter per treatment. One way I could achieve this is to split the data set and fit two separate models. I won’t do this though. Instead I’ll use the &lt;code&gt;flexsurv::flexsurvspline&lt;/code&gt; function.
+First I’m just going do it. Later I’ll explain the model and syntax.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# spline model with 0 internal knots and where each treatment has its
+# own intercept (gamma0) and its own slope (gamma1) 
+fit_spline_0_1 &amp;lt;- flexsurvspline(Surv(OS, OS.EVENT) ~ TRT01P + gamma1(TRT01P), 
+                                 data = dat_oak,
+                                 k = 0,
+                                 scale = &amp;quot;hazard&amp;quot;)
+
+plot_non_param()
+add_model_estimate(fit_spline_0_1)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;../post/2021-05-22-landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;This perhaps looks a bit better, but still not great. At this point we might be tempted to introduce more complex splines. That is, we move away from modelling the log-cumulative hazard versus log time as straight lines. In my &lt;a href=&#34;../post/flexsurv-2&#34;&gt;previous post&lt;/a&gt; I talked about this, but still in the context of a proportional hazards model. That is, allowing curved lines, but proportional. For completeness, this went something like this:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# spline model with 1 internal knot and where each treatment has its 
+# own intercept (gamma0), but common slope (gamma1) and common gamma2 -- I&amp;#39;ll explain later.
+fit_spline_1_0 &amp;lt;- flexsurvspline(Surv(OS, OS.EVENT) ~ TRT01P, 
+                                 data = dat_oak,
+                                 k = 1,
+                                 scale = &amp;quot;hazard&amp;quot;)
+
+plot_non_param()
+add_model_estimate(fit_spline_1_0)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;../post/2021-05-22-landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;As mentioned, this doesn’t capture the non-proportional hazards. We need something a bit more flexible…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# spline model with 1 internal knot and where each treatment has its 
+# own intercept (gamma0), its own slope (gamma1), but common gamma2 -- I&amp;#39;ll explain later.
+fit_spline_1_1 &amp;lt;- flexsurvspline(Surv(OS, OS.EVENT) ~ TRT01P + gamma1(TRT01P), 
+                               data = dat_oak,
+                               k = 1,
+                               scale = &amp;quot;hazard&amp;quot;)
+
+plot_non_param()
+add_model_estimate(fit_spline_1_1)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;../post/2021-05-22-landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;This is starting to look better. Now to expain a bit more what’s going on. Let’s look at the maximum likelihood estimates from the last model:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;fit_spline_1_1$res&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##                                 est        L95%        U95%         se
+## gamma0                  -3.12264755 -3.44183503 -2.80346006 0.16285375
+## gamma1                   1.73312765  1.33785579  2.12839950 0.20167302
+## gamma2                   0.03389207  0.01200609  0.05577806 0.01116653
+## TRT01PMPDL3280A         -0.10551890 -0.56579074  0.35475295 0.23483689
+## gamma1(TRT01PMPDL3280A) -0.07747115 -0.23538127  0.08043896 0.08056787&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The corresponding model is&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\log H(t;~Docetaxel) = \gamma_0 + \gamma_1 \times \log(t) + \gamma_2 \times f(\log(t))\]&lt;/span&gt;
+and&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\log H(t;~MPDL3280A) = \gamma_0 + \text{`TRT01PMPDL3280A`} + \gamma_1 \times \log(t) + \text{`gamma1(TRT01PMPDL3280A)`} \times \log(t) + \gamma_2 \times f(\log(t))\]&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;Now the question is: what is &lt;span class=&#34;math inline&#34;&gt;\(f(\log(t))\)&lt;/span&gt;?&lt;/p&gt;
+&lt;p&gt;The best way to answer that is probably to plot it, together with the other two basis functions (constant and linear) in this model:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;my_basis &amp;lt;- flexsurv:::basis(knots = fit_spline_1_1$knots, log(1:24))
+my_gamma &amp;lt;- fit_spline_1_1$res[c(&amp;quot;gamma0&amp;quot;, &amp;quot;gamma1&amp;quot;, &amp;quot;gamma2&amp;quot;), &amp;quot;est&amp;quot;]
+
+plot(log(1:24),colSums(t(my_basis) * c(0,0,1)) / -50,
+     main = &amp;quot;Basis funs (re-scaled to fit on same plot)&amp;quot;,
+     xlab = &amp;quot;log(time)&amp;quot;,
+     ylab = &amp;quot;Arbitrary scale&amp;quot;,
+     type = &amp;quot;l&amp;quot;, ylim = c(-0.5, 1.5))
+points(log(1:24),colSums(t(my_basis) * c(0,1,0)) / 3, type = &amp;quot;l&amp;quot;, col = 2)
+points(log(1:24),colSums(t(my_basis) * c(1,0,0)) , type = &amp;quot;l&amp;quot;, col = 3)
+
+legend(&amp;quot;bottomright&amp;quot;, c(&amp;quot;const&amp;quot;, &amp;quot;log(t)&amp;quot;, &amp;quot;f(log(t))&amp;quot;),
+       lty = c(1,1,1),
+       col = 3:1)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;../post/2021-05-22-landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv_files/figure-html/unnamed-chunk-8-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;The formulas are given in the &lt;code&gt;flexsurv&lt;/code&gt; documentation but I won’t repeat it here because I don’t really care. The important thing is that I’m allowing the log-cumulative hazard function to be a linear combination of more complex basis functions in &lt;span class=&#34;math inline&#34;&gt;\(log(t)\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;Hopefully I’ve done enough examples that you can see what the syntax is doing. Basically, by specifying &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt; internal knots, the baseline log-cumulative hazard is a linear combination of &lt;span class=&#34;math inline&#34;&gt;\(k+2\)&lt;/span&gt; basis functions, including a constant function, a linear function, and &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt; more complex things. By default, if you just write something like &lt;code&gt;formula = Surv(OS, OS.EVENT) ~ TRT01P&lt;/code&gt; then this will give you a separate constant (&lt;code&gt;gamma0&lt;/code&gt;) for each treatment. For the other basis functions, if you want each treatment to have its own version then you must explicitly specify this by adding e.g. &lt;code&gt;gamma1(TRT01P)&lt;/code&gt; into the formula. In principle, I don’t see any reason why you couldn’t fit the following model with a common slope (&lt;code&gt;gamma1&lt;/code&gt;) but separate &lt;code&gt;gamma2&lt;/code&gt;, to give an alternative to &lt;code&gt;fit_spline_1_1&lt;/code&gt; but with the same number of parameters:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# spline model with 1 internal knot and where each treatment has its 
+# own intercept (gamma0), its own gamma2, but common slope (gamma1).
+fit_spline_1_2 &amp;lt;- flexsurvspline(Surv(OS, OS.EVENT) ~ TRT01P + gamma2(TRT01P), 
+                               data = dat_oak,
+                               k = 1,
+                               scale = &amp;quot;hazard&amp;quot;)
+
+plot_non_param()
+add_model_estimate(fit_spline_1_2)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;../post/2021-05-22-landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv_files/figure-html/unnamed-chunk-9-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;As a final flourish for this post, I’ll do the landmark/milestone analysis based on the model &lt;code&gt;fit_spline_1_1&lt;/code&gt;. Let’s pick 18 months as the landmark time. I’ll take the same approach as the &lt;code&gt;flexsurv&lt;/code&gt; package. This simulates from the multivariate normal distribution with mean equal to the maximum likelihood estimates and variance equal to the variance of the maximum likelihood estimates. These random draws are then put through a function outputting the quantity of interest (in our case the difference in survival probabilities at 18 months) and we can then take quantiles to give us an estimate and confidence interval.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## simulate from MVN distribution
+sims &amp;lt;- normboot.flexsurvreg(fit_spline_1_1, 
+                             B = 1e5, 
+                             raw = TRUE)
+
+## give S(18) on docetaxel for each draw 
+s_18_docetaxel &amp;lt;-  1 - psurvspline(18, 
+                                   gamma = sims[,c(&amp;quot;gamma0&amp;quot;, &amp;quot;gamma1&amp;quot;, &amp;quot;gamma2&amp;quot;)], 
+                                   knots = fit_spline_1_1$knots)
+
+## give S(18) on MPDL3280A for each draw 
+s_18_MPDL3280A &amp;lt;-  1 - psurvspline(18, 
+                                   gamma = cbind(sims[,&amp;quot;gamma0&amp;quot;], 
+                                                 sims[,&amp;quot;gamma1&amp;quot;]+sims[,&amp;quot;gamma1(TRT01PMPDL3280A)&amp;quot;], 
+                                                 sims[,&amp;quot;gamma2&amp;quot;]),
+                                   offset = sims[,&amp;quot;TRT01PMPDL3280A&amp;quot;],
+                                   knots = fit_spline_1_1$knots)
+
+## 95% CI and estimate for diff in survival 
+## at 18 months (MPDL3280A - docetaxel)
+quantile(s_18_MPDL3280A - s_18_docetaxel,
+         probs = c(0.025, 0.5, 0.975))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##       2.5%        50%      97.5% 
+## 0.05959083 0.12016872 0.17982301&lt;/code&gt;&lt;/pre&gt;
+&lt;div id=&#34;p.s.-prognostic-covariate&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;p.s. prognostic covariate&lt;/h2&gt;
+&lt;p&gt;I promised at one point to discuss the prognostic covariate ECOG status which was available in the data set (in this particular data set it takes values 0 and 1). This post is already longer than I expected, so I won’t dwell on this, but &lt;a href=&#34;https://www.jstatsoft.org/article/view/v070i08&#34;&gt;as explained in the flexsurv tutorial&lt;/a&gt; it’s possible to do a parametric equivalent of a stratified Cox model by using a spline and allowing each ECOG status to have its own &lt;code&gt;gamma0&lt;/code&gt;, &lt;code&gt;gamma1&lt;/code&gt;,…,&lt;code&gt;gamma[k+1]&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Make sure ECOGGR is a factor
+dat_oak$ECOGGR &amp;lt;- factor(dat_oak$ECOGGR)
+
+# spline model with 2 internal knots and where each ECOG grade has its own 
+# complex spline, but where treatment effect within strata is a constant shift
+fit_spline_ecog_0 &amp;lt;- flexsurvspline(Surv(OS, OS.EVENT) ~ TRT01P + 
+                                      ECOGGR + gamma1(ECOGGR) + gamma2(ECOGGR) + gamma3(ECOGGR), 
+                               data = dat_oak,
+                               k = 2,
+                               scale = &amp;quot;hazard&amp;quot;)
+
+fit_spline_ecog_0$res&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##                         est       L95%       U95%         se
+## gamma0          -4.39991075 -5.1904477 -3.6093738 0.40334259
+## gamma1           2.28385223  0.3406304  4.2270740 0.99145792
+## gamma2          -0.02574156 -0.3626805  0.3111974 0.17191077
+## gamma3           0.11146845 -0.3340140  0.5569509 0.22729116
+## TRT01PMPDL3280A -0.33780623 -0.5033559 -0.1722565 0.08446569
+## ECOGGR1          1.63784166  0.7727434  2.5029399 0.44138477
+## gamma1(ECOGGR1) -0.85035950 -2.8680837  1.1673647 1.02947003
+## gamma2(ECOGGR1) -0.03861271 -0.4030762  0.3258508 0.18595417
+## gamma3(ECOGGR1)  0.02669129 -0.4635331  0.5169156 0.25011906&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This is back to being a proportional hazards model which may not be appropriate. We could then make the treatment effect more flexible, e.g.,&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Make sure ECOGGR is a factor
+dat_oak$ECOGGR &amp;lt;- factor(dat_oak$ECOGGR)
+
+# spline model with 2 internal knots and where each ECOG grade has its own 
+# complex spline, but where treatment effect within strata is handled using a 
+# constant and linear term only.
+fit_spline_ecog_1 &amp;lt;- flexsurvspline(Surv(OS, OS.EVENT) ~ TRT01P + gamma1(TRT01P) +
+                                      ECOGGR + gamma1(ECOGGR) + gamma2(ECOGGR) + gamma3(ECOGGR), 
+                               data = dat_oak,
+                               k = 2,
+                               scale = &amp;quot;hazard&amp;quot;)
+
+fit_spline_ecog_1$res&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##                                  est       L95%        U95%         se
+## gamma0                  -4.524045821 -5.3443397 -3.70375194 0.41852498
+## gamma1                   2.296987159  0.3559155  4.23805878 0.99036086
+## gamma2                  -0.030850110 -0.3674476  0.30574735 0.17173655
+## gamma3                   0.117629309 -0.3273831  0.56264169 0.22705131
+## TRT01PMPDL3280A         -0.085983706 -0.5482385  0.37627105 0.23584859
+## ECOGGR1                  1.660089705  0.7948724  2.52530704 0.44144553
+## gamma1(TRT01PMPDL3280A) -0.093731710 -0.2545742  0.06711074 0.08206398
+## gamma1(ECOGGR1)         -0.799217529 -2.8168457  1.21841060 1.02942102
+## gamma2(ECOGGR1)         -0.024330400 -0.3890199  0.34035906 0.18606947
+## gamma3(ECOGGR1)          0.006536356 -0.4839968  0.49706953 0.25027663&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;It then becomes difficult to summarise the treatment effect succinctly. This is an interesting but complicated topic that I won’t discuss now.&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
     
     <item>
       <title>That&#39;ll do: simulated annealing instead of maths</title>
