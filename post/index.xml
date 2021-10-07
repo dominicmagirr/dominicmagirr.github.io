@@ -5,12 +5,240 @@
     <link>/post/</link>
       <atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     <description>Posts</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Tue, 07 Sep 2021 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Thu, 07 Oct 2021 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>Posts</title>
       <link>/post/</link>
     </image>
+    
+    <item>
+      <title>A stratified log-rank test does not control alpha for a marginal null hypothesis and that&#39;s ok</title>
+      <link>/post/a-stratified-log-rank-test-does-not-control-alpha-for-a-marginal-null-hypothesis-and-that-s-ok/</link>
+      <pubDate>Thu, 07 Oct 2021 00:00:00 +0000</pubDate>
+      <guid>/post/a-stratified-log-rank-test-does-not-control-alpha-for-a-marginal-null-hypothesis-and-that-s-ok/</guid>
+      <description>
+
+
+&lt;p&gt;Recently, I’ve become interested in the robustness of standard statistical methods for RCTs under model misspecification. It seems to be a hot topic at the moment. I’d like to believe this is not such a big problem. I don’t think it is a big problem. But I’m trying to challenge my beliefs nevertheless.&lt;/p&gt;
+&lt;div id=&#34;stratified-log-rank-test&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Stratified log-rank test&lt;/h2&gt;
+&lt;p&gt;The null hypothesis that is generally considered when performing an unstratified log-rank test is:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[H_{0}: S_{E}(t) = S_{C}(t)\text{ for all }t&amp;gt;0\]&lt;/span&gt;
+where &lt;span class=&#34;math inline&#34;&gt;\(S_{E}\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(S_{C}\)&lt;/span&gt; denote the survival distributions on the experimental and control arms, respectively, in the full trial population. Personally, I prefer one-sided testing and a null hypothesis&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\tilde{H}_{0}: S_{E}(t) \leq S_{C}(t)\text{ for all }t&amp;gt;0\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;but this is unconventional (strictly speaking, it’s harder to reject &lt;span class=&#34;math inline&#34;&gt;\(\tilde{H}_{0}\)&lt;/span&gt; than &lt;span class=&#34;math inline&#34;&gt;\(H_{0}\)&lt;/span&gt;, but some might argue that &lt;span class=&#34;math inline&#34;&gt;\(\tilde{H}_{0}\)&lt;/span&gt; is still too easy to reject and we need a bigger null hypothesis space – a subject for another post). In any case, under some standard assumptions, an unstratified log-rank test controls &lt;span class=&#34;math inline&#34;&gt;\(\alpha\)&lt;/span&gt; when testing &lt;span class=&#34;math inline&#34;&gt;\(H_{0}\)&lt;/span&gt; or &lt;span class=&#34;math inline&#34;&gt;\(\tilde{H}_{0}\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;The null hypothesis that is generally considered when performing a stratified log-rank test is:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[H_{0,S}: S_{E,i}(t) = S_{C,i}(t)\text{ for all }t&amp;gt;0\text{ and for all strata }i\]&lt;/span&gt;
+where &lt;span class=&#34;math inline&#34;&gt;\(S_{E,i}\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(S_{C,i}\)&lt;/span&gt; denote the survival distributions on the experimental and control arms, respectively, in the &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt;th stratum. Again, I would prefer a one-sided version&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\tilde{H}_{0,S}: S_{E,i}(t) \leq S_{C,i}(t)\text{ for all }t&amp;gt;0\text{ and for all strata }i.\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;A stratified log-rank test controls &lt;span class=&#34;math inline&#34;&gt;\(\alpha\)&lt;/span&gt; when testing &lt;span class=&#34;math inline&#34;&gt;\(H_{0,S}\)&lt;/span&gt; or &lt;span class=&#34;math inline&#34;&gt;\(\tilde{H}_{0,S}\)&lt;/span&gt;, but a question some people might ask is: does a stratified log-rank test control &lt;span class=&#34;math inline&#34;&gt;\(\alpha\)&lt;/span&gt; when thought of as a test of &lt;span class=&#34;math inline&#34;&gt;\(H_{0}\)&lt;/span&gt; or &lt;span class=&#34;math inline&#34;&gt;\(\tilde{H}_{0}\)&lt;/span&gt;? (I’m not entirely convinced this is a sensible question, but let’s leave that aside).&lt;/p&gt;
+&lt;p&gt;The answer to the question is no. Below is a (rather extreme) example where the population consists of two equally sized strata. Under the control treatment, the first stratum has much poorer survival than the second stratum. The experimental treatment is beneficial in the first stratum and harmful in the second stratum. However, overall, marginally, the survival distributions on the two arms are practically the same (experimental very fractionally worse).&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../post/2021-10-07-a-stratified-log-rank-test-does-not-control-alpha-for-a-marginal-null-hypothesis-and-that-s-ok_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Now consider a trial in this population, where 1000 patients are recruited at a uniform rate for 12 months, and patients are subsequently followed-up for a further 12 months, making the total trial length 24 months, at which point all the survival times for all surviving patients are censored.&lt;/p&gt;
+&lt;p&gt;I simulated this trial 10,000 times, and the percentage of times that the stratified log-rank test (actually I used a stratified Cox model with treatment as the only covariate – all code below) produced a Z-value for the treatment term that was below the 2.5% quantile of the normal distribution (low values of Z favouring the experimental arm) was 38%. The percentage of times for the unstratified Cox model was 1%.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;is-this-a-problem&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Is this a problem?&lt;/h2&gt;
+&lt;p&gt;No I don’t think so. Firstly, there is no problem for the null hypotheses &lt;span class=&#34;math inline&#34;&gt;\(H_{0,S}\)&lt;/span&gt; or &lt;span class=&#34;math inline&#34;&gt;\(\tilde{H}_{0,S}\)&lt;/span&gt;. Secondly, this is a very extreme violation of the assumptions of the stratified Cox model. Thirdly, consider the point estimates for the hazard ratios in the two strata in the subset of simulated data sets where the stratified log-rank test rejects and the unstratified log-rank test does not. These are highlighted in blue below. In these cases we would observe a point estimate between 0.5 and 0.7 in the first stratum, and a point estimate between 1.1 and 1.6 in the second stratum.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;hrs_stratified.png&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;So I see this as more of a curiosity than a practical problem. It’s interesting to compare with logistic regression, where it’s been shown (&lt;a href=&#34;https://biostats.bepress.com/jhubiostat/paper281/&#34;&gt;here&lt;/a&gt;) that a stratified test controls &lt;span class=&#34;math inline&#34;&gt;\(\alpha\)&lt;/span&gt; not only for the stratified null but also for the overall trial population null (see also &lt;a href=&#34;https://arxiv.org/pdf/2107.07278.pdf&#34;&gt;here&lt;/a&gt;). The same goes for continuous data analyzed by ANCOVA which I think is quite well known.&lt;/p&gt;
+&lt;p&gt;As a final comment, it’s important to keep in mind the efficiency gains from using a stratified test in more typical situations where its assumptions are reasonable.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;code&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Code&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## survival probability for a 2-piece exponential
+surv_2 &amp;lt;- function(t, 
+                   lambda_1, 
+                   lambda_2, 
+                   t_star){
+  
+  p_1 &amp;lt;- exp(-lambda_1 * t)
+  p_2 &amp;lt;- exp(-lambda_1 * t_star) * exp(-lambda_2 * pmax(0, (t - t_star)))
+  
+  (t &amp;lt; t_star) * p_1 + (t &amp;gt;= t_star) * p_2
+  
+}
+
+## function to plot the three survival distributions
+plot_strat &amp;lt;- function(t_end = 24, 
+                       t_star_1 = 9,
+                       t_star_0 = 9,
+                       strat_1_rate_c_1 = log(2) / 4,
+                       strat_1_rate_c_2 = log(2) / 4,
+                       strat_1_rate_e_1 = log(2) / 4 * 0.6,
+                       strat_1_rate_e_2 = log(2) / 4 * 0.6,
+                       strat_0_rate_c_1 = log(2) / 15,
+                       strat_0_rate_c_2 = log(2) / 15,
+                       strat_0_rate_e_1 = log(2) / 15 * 1.1,
+                       strat_0_rate_e_2 = log(2) / 15 * 1,
+                       prop_strat_1 = 0.1){
+  
+  t_seq &amp;lt;- seq(0, t_end, length.out = 100)
+  
+  s_c_1 &amp;lt;- surv_2(t_seq, lambda_1 = strat_1_rate_c_1, lambda_2 = strat_1_rate_c_2, t_star = t_star_1)
+  s_e_1 &amp;lt;- surv_2(t_seq, lambda_1 = strat_1_rate_e_1, lambda_2 = strat_1_rate_e_2, t_star = t_star_1)
+  s_c_0 &amp;lt;- surv_2(t_seq, lambda_1 = strat_0_rate_c_1, lambda_2 = strat_0_rate_c_2, t_star = t_star_0)
+  s_e_0 &amp;lt;- surv_2(t_seq, lambda_1 = strat_0_rate_e_1, lambda_2 = strat_0_rate_e_2, t_star = t_star_0)
+  
+  par(mfrow = c(1,3))
+  
+  plot(t_seq, s_c_1, type = &amp;quot;l&amp;quot;, ylim = c(0,1), xlab = &amp;quot;time&amp;quot;, ylab = &amp;quot;Surv&amp;quot;, 
+       main = paste(&amp;quot;First stratum (&amp;quot;, prop_strat_1,&amp;quot;)&amp;quot;))
+  points(t_seq, s_e_1, type = &amp;quot;l&amp;quot;, col = 2)
+  legend(&amp;quot;topright&amp;quot;, c(&amp;quot;Control&amp;quot;, &amp;quot;Experimental&amp;quot;), lty = c(1,1), col = c(1,2))
+  
+  plot(t_seq, s_c_0, type = &amp;quot;l&amp;quot;,  ylim = c(0,1), col = 1, lty = 1, xlab = &amp;quot;time&amp;quot;, ylab = &amp;quot;Surv&amp;quot;, 
+       main = paste(&amp;quot;Second stratum (&amp;quot;, 1 - prop_strat_1,&amp;quot;)&amp;quot;))
+  points(t_seq, s_e_0, type = &amp;quot;l&amp;quot;, col = 2, lty = 1)
+  legend(&amp;quot;topright&amp;quot;, c(&amp;quot;Control&amp;quot;, &amp;quot;Experimental&amp;quot;), lty = c(1,1), col = c(1,2))
+  
+  plot(t_seq, prop_strat_1 * s_c_1 + (1 - prop_strat_1) * s_c_0, type = &amp;quot;l&amp;quot;, ylim = c(0,1), xlab = &amp;quot;time&amp;quot;, ylab = &amp;quot;Surv&amp;quot;, main = &amp;quot;Overall&amp;quot;)
+  points(t_seq, prop_strat_1 * s_e_1 + (1 - prop_strat_1) * s_e_0, type = &amp;quot;l&amp;quot;, col = 2)
+  legend(&amp;quot;topright&amp;quot;, c(&amp;quot;Control&amp;quot;, &amp;quot;Experimental&amp;quot;), lty = c(1,1), col = c(1,2))
+}
+
+## plot the three survival distributions
+plot_strat(t_end = 24, 
+           t_star_1 = 9,
+           t_star_0 = 6,
+           strat_1_rate_c_1 = log(2) / 4,
+           strat_1_rate_c_2 = log(2) / 4,
+           strat_1_rate_e_1 = log(2) / 4 * 0.6,
+           strat_1_rate_e_2 = log(2) / 4 * 0.6,
+           strat_0_rate_c_1 = log(2) / 15,
+           strat_0_rate_c_2 = log(2) / 15,
+           strat_0_rate_e_1 = log(2) / 15 * 2.3,
+           strat_0_rate_e_2 = log(2) / 15 * 0.9,
+           prop_strat_1 = 0.5)
+
+
+## function for simulating from a piece-wise exponential distribution
+t_piecewise_exp &amp;lt;- function(n = 10, 
+                            change_points = c(6, 12),
+                            lambdas = c(log(2) / 9, log(2) / 9, log(2) / 9)){
+  
+  t_lim &amp;lt;- matrix(rep(c(diff(c(0, change_points)), Inf), each = n), nrow = n)
+  t_sep &amp;lt;- do.call(cbind, purrr::map(lambdas, rexp, n = n))
+  which_cells &amp;lt;- t(apply(t_sep &amp;lt; t_lim, 1, function(x){
+    rep(c(T,F), c(min(which(x)), length(x) - min(which(x))))
+  } ))
+  rowSums(pmin(t_sep, t_lim) * which_cells)
+}
+
+## function to simulate trial data (uncensored)
+sim_t_uncensored &amp;lt;- function(model,
+                             recruitment){
+  
+  rec_0 &amp;lt;- recruitment$r_period * runif(recruitment$n_0) ^ (1 / recruitment$k)
+  rec_1 &amp;lt;- recruitment$r_period * runif(recruitment$n_1) ^ (1 / recruitment$k)
+  
+  time_0 &amp;lt;- t_piecewise_exp(recruitment$n_0, model$change_points, model$lambdas_0)
+  time_1 &amp;lt;- t_piecewise_exp(recruitment$n_1, model$change_points, model$lambdas_1)
+  
+  data.frame(time = c(time_0, time_1),
+             rec = c(rec_0, rec_1),
+             group = rep(c(&amp;quot;control&amp;quot;, &amp;quot;experimental&amp;quot;), c(recruitment$n_0, recruitment$n_1)))
+  
+}
+
+## function to apply a data cut off to uncensored data set
+apply_dco &amp;lt;- function(df,
+                      dco = NULL,
+                      events = NULL){
+  
+  if (is.null(dco) &amp;amp;&amp;amp; is.null(events)) stop(&amp;quot;Must specify either dco or events&amp;quot;)
+  
+  df$cal_time &amp;lt;- df$time + df$rec
+  
+  if (is.null(dco)){
+    dco &amp;lt;- sort(df$cal_time)[events]
+  }
+  
+  df_dco &amp;lt;- df[df$rec &amp;lt; dco, ]
+  df_dco$event &amp;lt;-  df_dco$cal_time &amp;lt;= dco
+  df_dco$time &amp;lt;- pmin(df_dco$time, dco - df_dco$rec)
+  df_dco$dco &amp;lt;- dco
+  
+  df_dco
+  
+}
+
+## function to simulate and analyze a single trial
+sim_1_trial &amp;lt;- function(dummy, 
+                        model_1, ## strata 1
+                        model_0, ## strata 0
+                        recruitment_1,
+                        recruitment_0){
+  
+  
+  df_uncensored_1 &amp;lt;- sim_t_uncensored(model_1, recruitment_1)
+  df_uncensored_0 &amp;lt;- sim_t_uncensored(model_0, recruitment_0)
+  
+  df_final_1 &amp;lt;- apply_dco(df_uncensored_1, dco = 24)
+  df_final_0 &amp;lt;- apply_dco(df_uncensored_0, dco = 24)
+  
+  df_final_1$cov &amp;lt;- &amp;quot;1&amp;quot;
+  df_final_0$cov &amp;lt;- &amp;quot;0&amp;quot;
+  
+  df_final &amp;lt;- rbind(df_final_1, df_final_0)
+  
+  cox_str &amp;lt;-   summary(coxph(Surv(time, event) ~ group + strata(cov), data = df_final))
+  cox_unstr &amp;lt;- summary(coxph(Surv(time, event) ~ group, data = df_final))
+  
+  cox_0 &amp;lt;- summary(coxph(Surv(time, event) ~ group, data = df_final %&amp;gt;% filter(cov == &amp;quot;0&amp;quot;)))
+  cox_1 &amp;lt;- summary(coxph(Surv(time, event) ~ group, data = df_final %&amp;gt;% filter(cov == &amp;quot;1&amp;quot;)))
+
+  
+  data.frame(z_str = cox_str$coefficients[1,&amp;quot;z&amp;quot;],
+             z_unstr = cox_unstr$coefficients[1,&amp;quot;z&amp;quot;],
+             hr_1 = cox_1$coefficients[1,&amp;quot;exp(coef)&amp;quot;],
+             hr_0 = cox_0$coefficients[1,&amp;quot;exp(coef)&amp;quot;])
+  
+  
+}
+
+
+## specify recruitment
+recruitment_1 = list(n_0 = 250, n_1 = 250, r_period = 12, k = 1)
+recruitment_0 = list(n_0 = 250, n_1 = 250, r_period = 12, k = 1)
+
+## specify models
+model_1 = list(change_points = c(9),
+               lambdas_0 = c(log(2) / 4, log(2) / 4),
+               lambdas_1 = c(log(2) / 4 * 0.6, log(2) / 4 * 0.6))
+
+
+model_0 = list(change_points = c(6),
+               lambdas_0 = c(log(2) / 15, log(2) / 15),
+               lambdas_1 = c(log(2) / 15 * 2.3, log(2) / 15 * 0.9))
+
+set.seed(352)
+res &amp;lt;- purrr::map_df(1:10000, 
+                     sim_1_trial, 
+                     model_1 = model_1, 
+                     model_0 = model_0, 
+                     recruitment_1 = recruitment_1, 
+                     recruitment_0 = recruitment_0)
+
+## rejections from stratified test
+mean(res$z_str &amp;lt; qnorm(0.025))
+
+## rejections from unstratified test
+mean(res$z_unstr &amp;lt; qnorm(0.025))
+
+
+## plot hazard ratios by strata
+res &amp;lt;- res %&amp;gt;% mutate(only_stratified_rejects = z_str &amp;lt; qnorm(0.025) &amp;amp; z_unstr &amp;gt; qnorm(0.025))
+ggplot(res, aes(x = hr_0, y = hr_1, colour = only_stratified_rejects)) + 
+  geom_point() +
+  xlab(&amp;quot;estimated HR second strata&amp;quot;) + 
+  ylab(&amp;quot;estimated HR first strata&amp;quot;) +
+  scale_x_continuous(limits = c(0.9, 2.2)) +
+  scale_y_continuous(limits = c(0.4, 0.8)) &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</description>
+    </item>
     
     <item>
       <title>Multiple imputation without a specialist R package</title>

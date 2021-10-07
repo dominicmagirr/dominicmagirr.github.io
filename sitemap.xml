@@ -18,12 +18,17 @@
   </url>
   
   <url>
-    <loc>/post/multiple-imputation-without-a-specialist-r-package/</loc>
-    <lastmod>2021-09-07T20:04:06+02:00</lastmod>
+    <loc>/post/a-stratified-log-rank-test-does-not-control-alpha-for-a-marginal-null-hypothesis-and-that-s-ok/</loc>
+    <lastmod>2021-10-07T19:35:49+02:00</lastmod>
   </url>
   
   <url>
     <loc>/post/</loc>
+    <lastmod>2021-10-07T19:35:49+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/multiple-imputation-without-a-specialist-r-package/</loc>
     <lastmod>2021-09-07T20:04:06+02:00</lastmod>
   </url>
   
