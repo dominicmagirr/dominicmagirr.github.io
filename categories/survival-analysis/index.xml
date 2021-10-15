@@ -5,12 +5,64 @@
     <link>/categories/survival-analysis/</link>
       <atom:link href="/categories/survival-analysis/index.xml" rel="self" type="application/rss+xml" />
     <description>survival analysis</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 22 May 2021 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Fri, 15 Oct 2021 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>survival analysis</title>
       <link>/categories/survival-analysis/</link>
     </image>
+    
+    <item>
+      <title>Trouble with tau</title>
+      <link>/post/trouble-with-tau/</link>
+      <pubDate>Fri, 15 Oct 2021 00:00:00 +0000</pubDate>
+      <guid>/post/trouble-with-tau/</guid>
+      <description>
+
+
+&lt;p&gt;This post is to express some minor frustration with some papers I’ve read recently evaluating the performance of restricted mean survival time as a summary measure in oncology studies.&lt;/p&gt;
+&lt;p&gt;I should say that I’m not a saint when it comes to designing simulation studies. Consiously and/or unconsiously, it’s tempting to give our favourite methods an easier ride.&lt;/p&gt;
+&lt;p&gt;Nevertheless, a couple of things bother me, and they’re related to each other. One is the choice of censoring distribution, and the other is the choice of &lt;span class=&#34;math inline&#34;&gt;\(\tau\)&lt;/span&gt; in the definition of restricted mean survival time (I’ll explain).&lt;/p&gt;
+&lt;div id=&#34;restricted-mean-survival-time&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Restricted mean survival time&lt;/h2&gt;
+&lt;p&gt;The restricted mean survival time up until month &lt;span class=&#34;math inline&#34;&gt;\(\tau\)&lt;/span&gt; is the average amount of time patients are alive for out of the first &lt;span class=&#34;math inline&#34;&gt;\(\tau\)&lt;/span&gt; months:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\text{RMST}(\tau):=E\left\lbrace \text{min}(\tau, T)\right\rbrace\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;It’s sometimes defined as the area under the survival curve &lt;span class=&#34;math inline&#34;&gt;\(\text{RMST}(\tau):=\int_{0}^{\tau}S(t)dt\)&lt;/span&gt;. Is it obvious that that’s the same thing? Maybe it should be, but not to me right now…&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{aligned}
+ E\left\lbrace \text{min}(\tau, T)\right\rbrace &amp;amp; = \int_{0}^{\tau}tf(t)dt + \tau\int_{\tau}^{\infty}f(t)dt\\
+   &amp;amp; = \left[ tF(t)  \right]_0^{\tau} - \int_{0}^{\tau}F(t)dt +\tau S(\tau)\\
+   &amp;amp;= \tau\left\lbrace 1 - S(\tau)  \right\rbrace - \int_{0}^{\tau}\left\lbrace 1 - S(t)\right\rbrace dt +\tau S(\tau) \\
+   &amp;amp;= \int_{0}^{\tau}S(t)dt
+\end{aligned}
+\]&lt;/span&gt;
+As a summary measure for treatment effect, one could use a difference &lt;span class=&#34;math inline&#34;&gt;\(\text{RMST}_E(\tau)-\text{RMST}_C(\tau)\)&lt;/span&gt;, or a ratio &lt;span class=&#34;math inline&#34;&gt;\(\text{RMST}_E(\tau)/\text{RMST}_C(\tau)\)&lt;/span&gt; contrasting the exerimental and control arms. One could perform estimation by plugging in the Kaplan Meier estimates, &lt;span class=&#34;math inline&#34;&gt;\(\hat{S}_E(t)\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(\hat{S}_C(t)\)&lt;/span&gt;, for example.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;how-to-choose-tau&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;How to choose &lt;span class=&#34;math inline&#34;&gt;\(\tau\)&lt;/span&gt;?&lt;/h2&gt;
+&lt;p&gt;A very basic consideration is that everything later than &lt;span class=&#34;math inline&#34;&gt;\(\tau\)&lt;/span&gt; will be ignored. This suggests that taking &lt;span class=&#34;math inline&#34;&gt;\(\tau\)&lt;/span&gt; as large as possible might generally (not always) be the most powerful strategy.&lt;/p&gt;
+&lt;div id=&#34;censoring-distributions&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Censoring distributions&lt;/h3&gt;
+&lt;p&gt;This brings me on to censoring distributions, and comparisons with the log-rank test / Cox model. With the log-rank test, every event contributes to the test statistic. So whatever the choice of &lt;span class=&#34;math inline&#34;&gt;\(\tau\)&lt;/span&gt;, if there are many events after &lt;span class=&#34;math inline&#34;&gt;\(\tau\)&lt;/span&gt;, then this often (not always!) means that RMST will tend to lose power compared to log-rank / Cox. So if you’re conducting a simulation study and you would like to show the benefits of RMST, what’s a good censoring distribution?&lt;/p&gt;
+&lt;p&gt;Well, something that looks like this…&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../../img/censoring_dist.PNG&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;I see this again and again. What this graph is showing is that there is some reasonably high (e.g. 30%) number of patients who’s censoring time is equal to the length of the study. In other words these 30% of patients are recruited immediately upon the study starting. In this situation there’s no problem with pushing &lt;span class=&#34;math inline&#34;&gt;\(\tau\)&lt;/span&gt; right up to the length of the study, and RMST would use all of the data in the same way as log-rank / Cox.&lt;/p&gt;
+&lt;p&gt;The problem of course is that recruitment never looks like this! If a more realistic censoring distribution were used where recruitment starts slowly and increases gradually, then this would create a problem for pushing &lt;span class=&#34;math inline&#34;&gt;\(\tau\)&lt;/span&gt; right up to the length of the study, because things would become unstable when only a few patients are at risk. One would be forced to bring &lt;span class=&#34;math inline&#34;&gt;\(\tau\)&lt;/span&gt; earlier, and one would see power loss (under certain situations) compared to the log-rank test.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;comparisons-based-on-real-trial-data&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Comparisons based on real trial data&lt;/h3&gt;
+&lt;p&gt;Simulation studies can be manipulated to favour one method or another. Why not take a large selection of real studies and see which method performed best? Yes, an excellent idea from &lt;a href=&#34;https://journals.sagepub.com/doi/full/10.1177/1740774520940256&#34;&gt;Horiguchi and colleagues&lt;/a&gt;. And to be fair, not only an idea, they’ve actually gone to the trouble of doing it. I still don’t think the comparison is totally fair though. They define &lt;span class=&#34;math inline&#34;&gt;\(\tau\)&lt;/span&gt; as “the minimum of the maximum observed times from two groups”. To see what this really means, I took a look at Kaplan-Meier curves from their first study (alphabetically), and drew (very badly) a line where &lt;span class=&#34;math inline&#34;&gt;\(\tau\)&lt;/span&gt; is. I don’t think anyone could report a difference in RMST at this &lt;span class=&#34;math inline&#34;&gt;\(\tau\)&lt;/span&gt; and keep a straight face. It’s clearly ridiculous. Regardless of &lt;a href=&#34;https://onlinelibrary.wiley.com/doi/pdf/10.1111/biom.13237&#34;&gt;whether or not the aymptotics hold well enough to give a valid test&lt;/a&gt; (they probably don’t), you’d simply have to bring &lt;span class=&#34;math inline&#34;&gt;\(\tau\)&lt;/span&gt; forward.&lt;/p&gt;
+&lt;p&gt;It won’t look this silly for every study of course, but that’s difficult to predict. As a general strategy, I think one would need to be more conservative.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../../img/first_km.PNG&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;From &lt;em&gt;Agarwala, Sanjiv S., et al. Journal of Clinical Oncology 35.8 (2017): 885.&lt;/em&gt; (&lt;a href=&#34;https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5455684/&#34; class=&#34;uri&#34;&gt;https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5455684/&lt;/a&gt;)&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;conclusions&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Conclusions&lt;/h2&gt;
+&lt;p&gt;I don’t want to dismiss restricted mean survival time as a useful summary measure. In some situations I’m sure it is a good idea. In some situations a log-rank test / Cox model is a bad idea. All I’m saying is that power comparisons should be a bit fairer, or at least, we should look at the details more closely. Like I said, I’m not immune to this kind of bias.&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
     
     <item>
       <title>Landmark/Milestone analysis under a Royston-Parmar flexible parametric survival model using the R package flexsurv</title>
