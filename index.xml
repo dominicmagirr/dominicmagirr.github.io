@@ -349,6 +349,7 @@ where &lt;span class=&#34;math inline&#34;&gt;\(S_{E,i}\)&lt;/span&gt; and &lt;s
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(survival)
 library(dplyr)
 library(purrr)
+library(ggplot2)
 ## survival probability for a 2-piece exponential
 surv_2 &amp;lt;- function(t, 
                    lambda_1, 
@@ -412,10 +413,9 @@ plot_strat(t_end = 24,
            strat_0_rate_c_2 = log(2) / 15,
            strat_0_rate_e_1 = log(2) / 15 * 2.3,
            strat_0_rate_e_2 = log(2) / 15 * 0.9,
-           prop_strat_1 = 0.5)
-
-
-## function for simulating from a piece-wise exponential distribution
+           prop_strat_1 = 0.5)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2021-10-07-a-stratified-log-rank-test-does-not-control-alpha-under-a-marginal-null-hypothesis-and-that-s-ok_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## function for simulating from a piece-wise exponential distribution
 t_piecewise_exp &amp;lt;- function(n = 10, 
                             change_points = c(6, 12),
                             lambdas = c(log(2) / 9, log(2) / 9, log(2) / 9)){
@@ -524,13 +524,12 @@ res &amp;lt;- purrr::map_df(1:10000,
                      recruitment_0 = recruitment_0)
 
 ## rejections from stratified test
-mean(res$z_str &amp;lt; qnorm(0.025))
-
-## rejections from unstratified test
-mean(res$z_unstr &amp;lt; qnorm(0.025))
-
-
-## plot hazard ratios by strata
+mean(res$z_str &amp;lt; qnorm(0.025))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.3774&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## rejections from unstratified test
+mean(res$z_unstr &amp;lt; qnorm(0.025))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.0111&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## plot hazard ratios by strata
 res &amp;lt;- res %&amp;gt;% mutate(only_stratified_rejects = z_str &amp;lt; qnorm(0.025) &amp;amp; z_unstr &amp;gt; qnorm(0.025))
 ggplot(res, aes(x = hr_0, y = hr_1, colour = only_stratified_rejects)) + 
   geom_point() +
@@ -538,6 +537,7 @@ ggplot(res, aes(x = hr_0, y = hr_1, colour = only_stratified_rejects)) +
   ylab(&amp;quot;estimated HR first strata&amp;quot;) +
   scale_x_continuous(limits = c(0.9, 2.2)) +
   scale_y_continuous(limits = c(0.4, 0.8)) &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2021-10-07-a-stratified-log-rank-test-does-not-control-alpha-under-a-marginal-null-hypothesis-and-that-s-ok_files/figure-html/unnamed-chunk-2-2.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 </description>
     </item>
