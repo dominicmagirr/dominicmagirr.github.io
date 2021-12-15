@@ -5,36 +5,12 @@
     <link>/authors/admin/</link>
       <atom:link href="/authors/admin/index.xml" rel="self" type="application/rss+xml" />
     <description>Dominic Magirr</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 26 May 2018 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language>
     <image>
       <url>/img/icon-192.png</url>
       <title>Dominic Magirr</title>
       <link>/authors/admin/</link>
     </image>
-    
-    <item>
-      <title>Modestly weighted logrank tests</title>
-      <link>/publication/wlrt/</link>
-      <pubDate>Sat, 26 May 2018 00:00:00 +0000</pubDate>
-      <guid>/publication/wlrt/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Sample Size Reassessment and Hypothesis Testing in Adaptive Survival Trials</title>
-      <link>/publication/adaptive_survival_trials/</link>
-      <pubDate>Mon, 01 Feb 2016 00:00:00 +0000</pubDate>
-      <guid>/publication/adaptive_survival_trials/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>A generalized Dunnett test for multi-arm multi-stage clinical studies with treatment selection</title>
-      <link>/publication/generalized_dunnett/</link>
-      <pubDate>Fri, 01 Jun 2012 00:00:00 +0000</pubDate>
-      <guid>/publication/generalized_dunnett/</guid>
-      <description></description>
-    </item>
     
   </channel>
 </rss>

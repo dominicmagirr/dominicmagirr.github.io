@@ -45,7 +45,7 @@ As a summary measure for treatment effect, one could use a difference &lt;span c
 &lt;h3&gt;Censoring distributions&lt;/h3&gt;
 &lt;p&gt;This brings me on to censoring distributions, and comparisons with the log-rank test / Cox model. With the log-rank test, every event contributes to the test statistic. So whatever the choice of &lt;span class=&#34;math inline&#34;&gt;\(\tau\)&lt;/span&gt;, if there are many events after &lt;span class=&#34;math inline&#34;&gt;\(\tau\)&lt;/span&gt;, then this often (not always!) means that RMST will tend to lose power compared to log-rank / Cox. So if you’re conducting a simulation study and you would like to show the benefits of RMST, what’s a good censoring distribution?&lt;/p&gt;
 &lt;p&gt;Well, something that looks like this…&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;../../img/censoring_dist.PNG&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/censoring_dist.PNG&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;I see this again and again. What this graph is showing is that there is some reasonably high (e.g. 30%) number of patients who’s censoring time is equal to the length of the study. In other words these 30% of patients are recruited immediately upon the study starting. In this situation there’s no problem with pushing &lt;span class=&#34;math inline&#34;&gt;\(\tau\)&lt;/span&gt; right up to the length of the study, and RMST would use all of the data in the same way as log-rank / Cox.&lt;/p&gt;
 &lt;p&gt;The problem of course is that recruitment never looks like this! If a more realistic censoring distribution were used where recruitment starts slowly and increases gradually, then this would create a problem for pushing &lt;span class=&#34;math inline&#34;&gt;\(\tau\)&lt;/span&gt; right up to the length of the study, because things would become unstable when only a few patients are at risk. One would be forced to bring &lt;span class=&#34;math inline&#34;&gt;\(\tau\)&lt;/span&gt; earlier, and one would see power loss (under certain situations) compared to the log-rank test.&lt;/p&gt;
 &lt;/div&gt;
@@ -53,7 +53,7 @@ As a summary measure for treatment effect, one could use a difference &lt;span c
 &lt;h3&gt;Comparisons based on real trial data&lt;/h3&gt;
 &lt;p&gt;Simulation studies can be manipulated to favour one method or another. Why not take a large selection of real studies and see which method performed best? Yes, an excellent idea from &lt;a href=&#34;https://journals.sagepub.com/doi/full/10.1177/1740774520940256&#34;&gt;Horiguchi and colleagues&lt;/a&gt;. And to be fair, not only an idea, they’ve actually gone to the trouble of doing it. I still don’t think the comparison is totally fair though. They define &lt;span class=&#34;math inline&#34;&gt;\(\tau\)&lt;/span&gt; as “the minimum of the maximum observed times from two groups”. To see what this really means, I took a look at Kaplan-Meier curves from their first study (alphabetically), and drew (very badly) a line where &lt;span class=&#34;math inline&#34;&gt;\(\tau\)&lt;/span&gt; is. I don’t think anyone could report a difference in RMST at this &lt;span class=&#34;math inline&#34;&gt;\(\tau\)&lt;/span&gt; and keep a straight face. It’s clearly ridiculous. Regardless of &lt;a href=&#34;https://onlinelibrary.wiley.com/doi/pdf/10.1111/biom.13237&#34;&gt;whether or not the asymptotics hold well enough to give a valid test&lt;/a&gt; (they probably don’t), you’d simply have to bring &lt;span class=&#34;math inline&#34;&gt;\(\tau\)&lt;/span&gt; forward.&lt;/p&gt;
 &lt;p&gt;It won’t look this silly for every study of course, but that’s difficult to predict. As a general strategy, I think one would need to be more conservative.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;../../img/first_km.PNG&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/first_km.PNG&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;From &lt;em&gt;Agarwala, Sanjiv S., et al. Journal of Clinical Oncology 35.8 (2017): 885.&lt;/em&gt; (&lt;a href=&#34;https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5455684/&#34; class=&#34;uri&#34;&gt;https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5455684/&lt;/a&gt;)&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -77,7 +77,7 @@ As a summary measure for treatment effect, one could use a difference &lt;span c
 Estimation of Treatment Effects.” Statistics in Medicine, 21(1), 2175–2197. &lt;a href=&#34;doi:10.1002/&#34; class=&#34;uri&#34;&gt;doi:10.1002/&lt;/a&gt;
 sim.1203&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;This model has been expertly coded and documented by Chris Jackson in the R package &lt;strong&gt;flexsurv&lt;/strong&gt; (&lt;a href=&#34;https://www.jstatsoft.org/article/view/v070i08&#34; class=&#34;uri&#34;&gt;https://www.jstatsoft.org/article/view/v070i08&lt;/a&gt;). In this post I’ll be making a big meal out of the same material in an effort to increase my own understanding.&lt;/p&gt;
-&lt;p&gt;I need a dataset, so I’ll re-use one from a &lt;a href=&#34;../../post/adjusting-for-covariates-under-non-proportional-hazards&#34;&gt;previous blogpost&lt;/a&gt; – this is
+&lt;p&gt;I need a dataset, so I’ll re-use one from a &lt;a href=&#34;/post/adjusting-for-covariates-under-non-proportional-hazards&#34;&gt;previous blogpost&lt;/a&gt; – this is
 &lt;a href=&#34;https://www.nature.com/articles/s41591-018-0134-3&#34;&gt;publically available data&lt;/a&gt; from the OAK RCT comparing a checkpoint inhibitor (MPDL3280A) versus chemotherapy (Docetaxel).&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(survival)
 library(dplyr)
@@ -112,8 +112,8 @@ survminer::ggsurvplot(km_oak,
                       ylab = &amp;quot;Overall survival&amp;quot;,
                       risk.table.fontsize = 4,
                       legend = c(0.8,0.8))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;../../post/2021-05-22-landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;In &lt;a href=&#34;../../post/flexsurv-2&#34;&gt;another previous post&lt;/a&gt; I discussed using &lt;code&gt;flexsurv::flexsurvreg&lt;/code&gt; to fit a Weibull model. In brief, we can describe this model as two parallel straight lines on the log cumumlative hazard scale (versus log time).&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2021-05-22-landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;In &lt;a href=&#34;/post/flexsurv-2&#34;&gt;another previous post&lt;/a&gt; I discussed using &lt;code&gt;flexsurv::flexsurvreg&lt;/code&gt; to fit a Weibull model. In brief, we can describe this model as two parallel straight lines on the log cumumlative hazard scale (versus log time).&lt;/p&gt;
 &lt;p&gt;Here, I’ll fit a Weibull model to the OAK data and plot the log cumulative hazard versus log time, on top of the non-parametric equivalent. Note that I’m creating functions here because I’ll want to make this graph repeatedly as we add flexibility to the model.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;###########################
 ### Non-parametric analysis
@@ -166,7 +166,7 @@ add_model_estimate &amp;lt;- function(fit){
 # plot Weibull regression on top of KM estimates
 plot_non_param()
 add_model_estimate(fit_weibull)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;../../post/2021-05-22-landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2021-05-22-landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;We can see this is not a good fit at early timepoints. Parallel lines on this scale is the same as saying the hazards are proportional, which is clearly not the case. We therefore need to relax the proportional hazards assumption. One option is to maintain the log-cumulative-hazard-versus-log-time perspective, also maintain &lt;em&gt;straight&lt;/em&gt; lines on this scale, but give each treatment its own slope. In other words, this is a Weibull model but with a different shape parameter per treatment. One way I could achieve this is to split the data set and fit two separate models. I won’t do this though. Instead I’ll use the &lt;code&gt;flexsurv::flexsurvspline&lt;/code&gt; function.
 First I’m just going do it. Later I’ll explain the model and syntax.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# spline model with 0 internal knots and where each treatment has its
@@ -178,8 +178,8 @@ fit_spline_0_1 &amp;lt;- flexsurvspline(Surv(OS, OS.EVENT) ~ TRT01P + gamma1(TRT
 
 plot_non_param()
 add_model_estimate(fit_spline_0_1)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;../../post/2021-05-22-landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;This perhaps looks a bit better, but still not great. At this point we might be tempted to introduce more complex splines. That is, we move away from modelling the log-cumulative hazard versus log time as straight lines. In my &lt;a href=&#34;../../post/flexsurv-2&#34;&gt;previous post&lt;/a&gt; I talked about this, but still in the context of a proportional hazards model. That is, allowing curved lines, but proportional. For completeness, this went something like this:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2021-05-22-landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;This perhaps looks a bit better, but still not great. At this point we might be tempted to introduce more complex splines. That is, we move away from modelling the log-cumulative hazard versus log time as straight lines. In my &lt;a href=&#34;/post/flexsurv-2&#34;&gt;previous post&lt;/a&gt; I talked about this, but still in the context of a proportional hazards model. That is, allowing curved lines, but proportional. For completeness, this went something like this:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# spline model with 1 internal knot and where each treatment has its 
 # own intercept (gamma0), but common slope (gamma1) and common gamma2 -- I&amp;#39;ll explain later.
 fit_spline_1_0 &amp;lt;- flexsurvspline(Surv(OS, OS.EVENT) ~ TRT01P, 
@@ -189,7 +189,7 @@ fit_spline_1_0 &amp;lt;- flexsurvspline(Surv(OS, OS.EVENT) ~ TRT01P,
 
 plot_non_param()
 add_model_estimate(fit_spline_1_0)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;../../post/2021-05-22-landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2021-05-22-landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;As mentioned, this doesn’t capture the non-proportional hazards. We need something a bit more flexible…&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# spline model with 1 internal knot and where each treatment has its 
 # own intercept (gamma0), its own slope (gamma1), but common gamma2 -- I&amp;#39;ll explain later.
@@ -200,7 +200,7 @@ fit_spline_1_1 &amp;lt;- flexsurvspline(Surv(OS, OS.EVENT) ~ TRT01P + gamma1(TRT
 
 plot_non_param()
 add_model_estimate(fit_spline_1_1)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;../../post/2021-05-22-landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2021-05-22-landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;This is starting to look better. Now to expain a bit more what’s going on. Let’s look at the maximum likelihood estimates from the last model:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;fit_spline_1_1$res&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;##                                 est        L95%        U95%         se
@@ -229,7 +229,7 @@ points(log(1:24),colSums(t(my_basis) * c(1,0,0)) , type = &amp;quot;l&amp;quot;,
 legend(&amp;quot;bottomright&amp;quot;, c(&amp;quot;const&amp;quot;, &amp;quot;log(t)&amp;quot;, &amp;quot;f(log(t))&amp;quot;),
        lty = c(1,1,1),
        col = 3:1)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;../../post/2021-05-22-landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv_files/figure-html/unnamed-chunk-8-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2021-05-22-landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv_files/figure-html/unnamed-chunk-8-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;The formulas are given in the &lt;code&gt;flexsurv&lt;/code&gt; documentation but I won’t repeat it here because I don’t really care. The important thing is that I’m allowing the log-cumulative hazard function to be a linear combination of more complex basis functions in &lt;span class=&#34;math inline&#34;&gt;\(log(t)\)&lt;/span&gt;.&lt;/p&gt;
 &lt;p&gt;Hopefully I’ve done enough examples that you can see what the syntax is doing. Basically, by specifying &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt; internal knots, the baseline log-cumulative hazard is a linear combination of &lt;span class=&#34;math inline&#34;&gt;\(k+2\)&lt;/span&gt; basis functions, including a constant function, a linear function, and &lt;span class=&#34;math inline&#34;&gt;\(k\)&lt;/span&gt; more complex things. By default, if you just write something like &lt;code&gt;formula = Surv(OS, OS.EVENT) ~ TRT01P&lt;/code&gt; then this will give you a separate constant (&lt;code&gt;gamma0&lt;/code&gt;) for each treatment. For the other basis functions, if you want each treatment to have its own version then you must explicitly specify this by adding e.g. &lt;code&gt;gamma1(TRT01P)&lt;/code&gt; into the formula. In principle, I don’t see any reason why you couldn’t fit the following model with a common slope (&lt;code&gt;gamma1&lt;/code&gt;) but separate &lt;code&gt;gamma2&lt;/code&gt;, to give an alternative to &lt;code&gt;fit_spline_1_1&lt;/code&gt; but with the same number of parameters:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# spline model with 1 internal knot and where each treatment has its 
@@ -241,7 +241,7 @@ fit_spline_1_2 &amp;lt;- flexsurvspline(Surv(OS, OS.EVENT) ~ TRT01P + gamma2(TRT
 
 plot_non_param()
 add_model_estimate(fit_spline_1_2)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;../../post/2021-05-22-landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv_files/figure-html/unnamed-chunk-9-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2021-05-22-landmark-milestone-analysis-under-a-royston-parmar-flexible-survival-model-using-the-r-package-flexsurv_files/figure-html/unnamed-chunk-9-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;As a final flourish for this post, I’ll do the landmark/milestone analysis based on the model &lt;code&gt;fit_spline_1_1&lt;/code&gt;. Let’s pick 18 months as the landmark time. I’ll take the same approach as the &lt;code&gt;flexsurv&lt;/code&gt; package. This simulates from the multivariate normal distribution with mean equal to the maximum likelihood estimates and variance equal to the variance of the maximum likelihood estimates. These random draws are then put through a function outputting the quantity of interest (in our case the difference in survival probabilities at 18 months) and we can then take quantiles to give us an estimate and confidence interval.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## simulate from MVN distribution
 sims &amp;lt;- normboot.flexsurvreg(fit_spline_1_1, 
@@ -330,7 +330,7 @@ fit_spline_ecog_1$res&lt;/code&gt;&lt;/pre&gt;
       <description>
 
 
-&lt;p&gt;I’ve written a lot recently about &lt;a href=&#34;../../post/non-proportional-hazards-in-immuno-oncology-is-an-old-perspective-needed&#34;&gt;non-proportional hazards in immuno-oncology&lt;/a&gt;. One aspect that I have unfortunately overlooked is covariate adjustment. Perhaps this is because it’s so easy to work with &lt;a href=&#34;../../post/extract-patient-level-data-from-a-kaplan-meier-plot&#34;&gt;extracted data from published Kaplan-Meier plots&lt;/a&gt;, where the covariate data is not available. But we know from &lt;a href=&#34;https://www.jstor.org/stable/2531154&#34;&gt;theoretical&lt;/a&gt; and &lt;a href=&#34;https://trialsjournal.biomedcentral.com/articles/10.1186/1745-6215-15-139&#34;&gt;empirical&lt;/a&gt; work that covariate adjustment can lead to big increases in power, and perhaps this is equally important or even more important than the power gains from using a weighted log-rank test to match the anticipated non-proportional hazards. To investigate this, we would need access to immuno-oncology RCT data. In general this is not so easy, but fortunately there’s &lt;a href=&#34;https://www.nature.com/articles/s41591-018-0134-3&#34;&gt;this article&lt;/a&gt; containing clinical data from two RCTs (OAK and POPLAR) comparing a checkpoint inhibitor (atezolizumab) versus chemotherapy.&lt;/p&gt;
+&lt;p&gt;I’ve written a lot recently about &lt;a href=&#34;/post/non-proportional-hazards-in-immuno-oncology-is-an-old-perspective-needed&#34;&gt;non-proportional hazards in immuno-oncology&lt;/a&gt;. One aspect that I have unfortunately overlooked is covariate adjustment. Perhaps this is because it’s so easy to work with &lt;a href=&#34;/post/extract-patient-level-data-from-a-kaplan-meier-plot&#34;&gt;extracted data from published Kaplan-Meier plots&lt;/a&gt;, where the covariate data is not available. But we know from &lt;a href=&#34;https://www.jstor.org/stable/2531154&#34;&gt;theoretical&lt;/a&gt; and &lt;a href=&#34;https://trialsjournal.biomedcentral.com/articles/10.1186/1745-6215-15-139&#34;&gt;empirical&lt;/a&gt; work that covariate adjustment can lead to big increases in power, and perhaps this is equally important or even more important than the power gains from using a weighted log-rank test to match the anticipated non-proportional hazards. To investigate this, we would need access to immuno-oncology RCT data. In general this is not so easy, but fortunately there’s &lt;a href=&#34;https://www.nature.com/articles/s41591-018-0134-3&#34;&gt;this article&lt;/a&gt; containing clinical data from two RCTs (OAK and POPLAR) comparing a checkpoint inhibitor (atezolizumab) versus chemotherapy.&lt;/p&gt;
 &lt;p&gt;Gandara, D.R., Paul, S.M., Kowanetz, M. et al. Blood-based tumor mutational burden as a predictor of clinical benefit in non-small-cell lung cancer patients treated with atezolizumab. Nat Med 24, 1441–1448 (2018). &lt;a href=&#34;https://doi.org/10.1038/s41591-018-0134-3&#34; class=&#34;uri&#34;&gt;https://doi.org/10.1038/s41591-018-0134-3&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;A number of covariates are provided but I will focus on baseline ECOG grade, which is a performance status indicator – a “0” means fully active; a “1” means restricted in physically strenuous activity. Generally, you would expect patients with lower ECOG status to have longer survival.&lt;/p&gt;
 &lt;p&gt;Let’s have a look at the OAK data first…&lt;/p&gt;
@@ -376,7 +376,7 @@ survminer::ggsurvplot(km_oak,
                       ylab = &amp;quot;Overall survival&amp;quot;,
                       risk.table.fontsize = 4,
                       legend = c(0.8,0.8))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;../../post/2020-09-12-adjusting-for-covariates-under-non-proportional-hazards_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-09-12-adjusting-for-covariates-under-non-proportional-hazards_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;coxph(Surv(OS, OS.EVENT) ~ TRT01P, data = dat_oak)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## Call:
 ## coxph(formula = Surv(OS, OS.EVENT) ~ TRT01P, data = dat_oak)
@@ -462,7 +462,7 @@ survminer::ggsurvplot(km_poplar,
                       ylab = &amp;quot;Overall survival&amp;quot;,
                       risk.table.fontsize = 4,
                       legend = c(0.8,0.8))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;../../post/2020-09-12-adjusting-for-covariates-under-non-proportional-hazards_files/figure-html/unnamed-chunk-7-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-09-12-adjusting-for-covariates-under-non-proportional-hazards_files/figure-html/unnamed-chunk-7-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;coxph(Surv(OS, OS.EVENT) ~ TRT01P, data = dat_poplar)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## Call:
 ## coxph(formula = Surv(OS, OS.EVENT) ~ TRT01P, data = dat_poplar)
@@ -524,7 +524,7 @@ survminer::ggsurvplot(km_oak_ecog,
                       ylab = &amp;quot;Overall survival&amp;quot;,
                       risk.table.fontsize = 4,
                       legend = c(0.8,0.8))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;../../post/2020-09-12-adjusting-for-covariates-under-non-proportional-hazards_files/figure-html/unnamed-chunk-9-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-09-12-adjusting-for-covariates-under-non-proportional-hazards_files/figure-html/unnamed-chunk-9-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;…whereas for POPLAR there is still a clear difference but median only increased by about 33%…&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;km_poplar_ecog &amp;lt;- survfit(Surv(OS, OS.EVENT) ~ ECOGGR,
                           data = dat_poplar)
@@ -539,7 +539,7 @@ survminer::ggsurvplot(km_poplar_ecog,
                       ylab = &amp;quot;Overall survival&amp;quot;,
                       risk.table.fontsize = 4,
                       legend = c(0.8,0.8))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;../../post/2020-09-12-adjusting-for-covariates-under-non-proportional-hazards_files/figure-html/unnamed-chunk-10-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-09-12-adjusting-for-covariates-under-non-proportional-hazards_files/figure-html/unnamed-chunk-10-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;conclusions&#34; class=&#34;section level3&#34;&gt;
 &lt;h3&gt;Conclusions&lt;/h3&gt;
@@ -583,7 +583,7 @@ p1 &amp;lt;- survminer::ggsurvplot(km_est,
                             legend = c(0.8,0.8))
 
 p1&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;../../post/2020-07-27-a-bayesian-approach-to-non-proportional-hazards_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-07-27-a-bayesian-approach-to-non-proportional-hazards_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;It looks like there is a trade-off between short-term survival and long-term survival on the two treatments. But is the apparent long term benefit real? How sure are we? That is my main question of interest here: does treatment “1” improve long term survival?&lt;/p&gt;
 &lt;p&gt;Probably the best tool for flexible parametric Bayesian survival analysis is now the rstanarm package (&lt;a href=&#34;https://arxiv.org/abs/2002.09633&#34; class=&#34;uri&#34;&gt;https://arxiv.org/abs/2002.09633&lt;/a&gt;). This looks awesome. Unfortunately, I only have access to my work computer at the moment which doesn’t have the latest version installed. Instead I’ll be using the brms package – which is also excellent.&lt;/p&gt;
 &lt;p&gt;Before I can fit a piece-wise exponential model (with changepoints every 6 months), I need to use a little trick (the survSplit function) to change my covariates into time-dependent ones – this kind of thing is explained &lt;a href=&#34;https://cran.r-project.org/web/packages/survival/vignettes/timedep.pdf&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
@@ -709,7 +709,7 @@ p1$plot +
                     mapping = aes(x = time, y = mean_1), colour = &amp;quot;red&amp;quot;) +
   geom_line(data = df_sims,
             mapping = aes(x = time, y = mean_2), colour = &amp;quot;blue&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;../../post/2020-07-27-a-bayesian-approach-to-non-proportional-hazards_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-07-27-a-bayesian-approach-to-non-proportional-hazards_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Now suppose I’m interested in the difference in survival probabilities at 24 months, &lt;span class=&#34;math inline&#34;&gt;\(S_1(24) - S_2(24)\)&lt;/span&gt;. I can make a 95% credible interval:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;diff_24 &amp;lt;- get_s(24, ps) - get_s(24, ps, arm = &amp;quot;2&amp;quot;)
 quantile(diff_24, probs = c(0.025, 0.975)) %&amp;gt;% round(2)&lt;/code&gt;&lt;/pre&gt;

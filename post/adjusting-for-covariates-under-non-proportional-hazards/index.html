@@ -31,7 +31,7 @@
   <meta name="description" content="I’ve written a lot recently about non-proportional hazards in immuno-oncology. One aspect that I have unfortunately overlooked is covariate adjustment. Perhaps this is because it’s so easy to work with extracted data from published Kaplan-Meier plots, where the covariate data is not available. But we know from theoretical and empirical work that covariate adjustment can lead to big increases in power, and perhaps this is equally important or even more important than the power gains from using a weighted log-rank test to match the anticipated non-proportional hazards.">
 
   
-  <link rel="alternate" hreflang="en-us" href="../../post/adjusting-for-covariates-under-non-proportional-hazards/">
+  <link rel="alternate" hreflang="en-us" href="/post/adjusting-for-covariates-under-non-proportional-hazards/">
 
   
 
@@ -84,7 +84,7 @@
   
   
   
-  <link rel="stylesheet" href="../../css/academic.css">
+  <link rel="stylesheet" href="/css/academic.css">
 
   
 
@@ -96,11 +96,11 @@
 
   
 
-  <link rel="manifest" href="../../index.webmanifest">
-  <link rel="icon" type="image/png" href="../../img/icon-32.png">
-  <link rel="apple-touch-icon" type="image/png" href="../../img/icon-192.png">
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon-32.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
 
-  <link rel="canonical" href="../../post/adjusting-for-covariates-under-non-proportional-hazards/">
+  <link rel="canonical" href="/post/adjusting-for-covariates-under-non-proportional-hazards/">
 
   
   
@@ -228,7 +228,7 @@
   <div class="container">
 
     
-      <a class="navbar-brand" href="../../">Dominic Magirr</a>
+      <a class="navbar-brand" href="/">Dominic Magirr</a>
       
       <button type="button" class="navbar-toggler" data-toggle="collapse"
               data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -267,7 +267,7 @@
         
 
         <li class="nav-item">
-          <a class="nav-link " href="../../#posts"><span>Posts</span></a>
+          <a class="nav-link " href="/#posts"><span>Posts</span></a>
         </li>
 
         
@@ -296,7 +296,7 @@
         
 
         <li class="nav-item">
-          <a class="nav-link " href="../../#publications"><span>Publications</span></a>
+          <a class="nav-link " href="/#publications"><span>Publications</span></a>
         </li>
 
         
@@ -325,7 +325,7 @@
         
 
         <li class="nav-item">
-          <a class="nav-link " href="../../#talks"><span>Talks</span></a>
+          <a class="nav-link " href="/#talks"><span>Talks</span></a>
         </li>
 
         
@@ -424,7 +424,7 @@
   
   <span class="middot-divider"></span>
   <span class="article-categories">
-    <i class="fas fa-folder mr-1"></i><a href="../../categories/survival-analysis/">survival analysis</a>, <a href="../../categories/clinical-trials/">clinical trials</a></span>
+    <i class="fas fa-folder mr-1"></i><a href="/categories/survival-analysis/">survival analysis</a>, <a href="/categories/clinical-trials/">clinical trials</a></span>
   
 
 </div>
@@ -455,7 +455,7 @@
       
 
 
-<p>I’ve written a lot recently about <a href="../../post/non-proportional-hazards-in-immuno-oncology-is-an-old-perspective-needed">non-proportional hazards in immuno-oncology</a>. One aspect that I have unfortunately overlooked is covariate adjustment. Perhaps this is because it’s so easy to work with <a href="../../post/extract-patient-level-data-from-a-kaplan-meier-plot">extracted data from published Kaplan-Meier plots</a>, where the covariate data is not available. But we know from <a href="https://www.jstor.org/stable/2531154">theoretical</a> and <a href="https://trialsjournal.biomedcentral.com/articles/10.1186/1745-6215-15-139">empirical</a> work that covariate adjustment can lead to big increases in power, and perhaps this is equally important or even more important than the power gains from using a weighted log-rank test to match the anticipated non-proportional hazards. To investigate this, we would need access to immuno-oncology RCT data. In general this is not so easy, but fortunately there’s <a href="https://www.nature.com/articles/s41591-018-0134-3">this article</a> containing clinical data from two RCTs (OAK and POPLAR) comparing a checkpoint inhibitor (atezolizumab) versus chemotherapy.</p>
+<p>I’ve written a lot recently about <a href="/post/non-proportional-hazards-in-immuno-oncology-is-an-old-perspective-needed">non-proportional hazards in immuno-oncology</a>. One aspect that I have unfortunately overlooked is covariate adjustment. Perhaps this is because it’s so easy to work with <a href="/post/extract-patient-level-data-from-a-kaplan-meier-plot">extracted data from published Kaplan-Meier plots</a>, where the covariate data is not available. But we know from <a href="https://www.jstor.org/stable/2531154">theoretical</a> and <a href="https://trialsjournal.biomedcentral.com/articles/10.1186/1745-6215-15-139">empirical</a> work that covariate adjustment can lead to big increases in power, and perhaps this is equally important or even more important than the power gains from using a weighted log-rank test to match the anticipated non-proportional hazards. To investigate this, we would need access to immuno-oncology RCT data. In general this is not so easy, but fortunately there’s <a href="https://www.nature.com/articles/s41591-018-0134-3">this article</a> containing clinical data from two RCTs (OAK and POPLAR) comparing a checkpoint inhibitor (atezolizumab) versus chemotherapy.</p>
 <p>Gandara, D.R., Paul, S.M., Kowanetz, M. et al. Blood-based tumor mutational burden as a predictor of clinical benefit in non-small-cell lung cancer patients treated with atezolizumab. Nat Med 24, 1441–1448 (2018). <a href="https://doi.org/10.1038/s41591-018-0134-3" class="uri">https://doi.org/10.1038/s41591-018-0134-3</a></p>
 <p>A number of covariates are provided but I will focus on baseline ECOG grade, which is a performance status indicator – a “0” means fully active; a “1” means restricted in physically strenuous activity. Generally, you would expect patients with lower ECOG status to have longer survival.</p>
 <p>Let’s have a look at the OAK data first…</p>
@@ -501,7 +501,7 @@ survminer::ggsurvplot(km_oak,
                       ylab = &quot;Overall survival&quot;,
                       risk.table.fontsize = 4,
                       legend = c(0.8,0.8))</code></pre>
-<p><img src="../../post/2020-09-12-adjusting-for-covariates-under-non-proportional-hazards_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><img src="/post/2020-09-12-adjusting-for-covariates-under-non-proportional-hazards_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <pre class="r"><code>coxph(Surv(OS, OS.EVENT) ~ TRT01P, data = dat_oak)</code></pre>
 <pre><code>## Call:
 ## coxph(formula = Surv(OS, OS.EVENT) ~ TRT01P, data = dat_oak)
@@ -587,7 +587,7 @@ survminer::ggsurvplot(km_poplar,
                       ylab = &quot;Overall survival&quot;,
                       risk.table.fontsize = 4,
                       legend = c(0.8,0.8))</code></pre>
-<p><img src="../../post/2020-09-12-adjusting-for-covariates-under-non-proportional-hazards_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="/post/2020-09-12-adjusting-for-covariates-under-non-proportional-hazards_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <pre class="r"><code>coxph(Surv(OS, OS.EVENT) ~ TRT01P, data = dat_poplar)</code></pre>
 <pre><code>## Call:
 ## coxph(formula = Surv(OS, OS.EVENT) ~ TRT01P, data = dat_poplar)
@@ -649,7 +649,7 @@ survminer::ggsurvplot(km_oak_ecog,
                       ylab = &quot;Overall survival&quot;,
                       risk.table.fontsize = 4,
                       legend = c(0.8,0.8))</code></pre>
-<p><img src="../../post/2020-09-12-adjusting-for-covariates-under-non-proportional-hazards_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><img src="/post/2020-09-12-adjusting-for-covariates-under-non-proportional-hazards_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <p>…whereas for POPLAR there is still a clear difference but median only increased by about 33%…</p>
 <pre class="r"><code>km_poplar_ecog &lt;- survfit(Surv(OS, OS.EVENT) ~ ECOGGR,
                           data = dat_poplar)
@@ -664,7 +664,7 @@ survminer::ggsurvplot(km_poplar_ecog,
                       ylab = &quot;Overall survival&quot;,
                       risk.table.fontsize = 4,
                       legend = c(0.8,0.8))</code></pre>
-<p><img src="../../post/2020-09-12-adjusting-for-covariates-under-non-proportional-hazards_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="/post/2020-09-12-adjusting-for-covariates-under-non-proportional-hazards_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 </div>
 <div id="conclusions" class="section level3">
 <h3>Conclusions</h3>
@@ -714,11 +714,11 @@ survminer::ggsurvplot(km_poplar_ecog,
   <div class="media author-card content-widget-hr">
     
       
-      <img class="portrait mr-3" src="../../authors/admin/avatar_hu3ad799765e91f69a41f3acc2fc665a63_309343_250x250_fill_q90_lanczos_center.jpg" alt="Avatar">
+      <img class="portrait mr-3" src="/authors/admin/avatar_hu3ad799765e91f69a41f3acc2fc665a63_309343_250x250_fill_q90_lanczos_center.jpg" alt="Avatar">
     
 
     <div class="media-body">
-      <h5 class="card-title"><a href="../../">Dominic Magirr</a></h5>
+      <h5 class="card-title"><a href="/">Dominic Magirr</a></h5>
       <h6 class="card-subtitle">Medical Statistician</h6>
       <p class="card-text">Interested in the design, analysis and interpretation of clinical trials.</p>
       <ul class="network-icon" aria-hidden="true">
@@ -782,7 +782,7 @@ survminer::ggsurvplot(km_poplar_ecog,
       
     
     <li>
-      <a href="../../files/cv.pdf" >
+      <a href="/files/cv.pdf" >
         <i class="ai ai-cv"></i>
       </a>
     </li>
@@ -907,7 +907,7 @@ survminer::ggsurvplot(km_poplar_ecog,
     
     
     
-    <script src="../../js/academic.min.d6bd04fdad2ad213aa8111c5a3b72fc5.js"></script>
+    <script src="/js/academic.min.b59fdb6275ef5e6e2859c30582fc271a.js"></script>
 
     
 
@@ -920,16 +920,6 @@ survminer::ggsurvplot(km_poplar_ecog,
   
   <div class="container">
     <footer class="site-footer">
-  
-  <p class="powered-by">
-    
-      <a href="../../privacy/">Privacy Policy</a>
-    
-    
-       &middot; 
-      <a href="../../terms/">Terms</a>
-    
-  </p>
   
 
   <p class="powered-by">

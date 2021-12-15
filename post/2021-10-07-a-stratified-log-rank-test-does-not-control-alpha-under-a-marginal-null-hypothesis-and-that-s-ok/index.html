@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.5.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Dominic Magirr">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Recently, I’ve become interested in the robustness of standard statistical methods for RCTs under model misspecification. It seems to be a hot topic at the moment. I’d like to believe this is not such a big problem. I don’t think it is a big problem. But I’m trying to challenge my beliefs nevertheless.
+Stratified log-rank test The null hypothesis that is generally considered when performing an unstratified log-rank test is:">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/post/2021-10-07-a-stratified-log-rank-test-does-not-control-alpha-under-a-marginal-null-hypothesis-and-that-s-ok/">
+
+  
+
+
+  
+  
+  
+  <meta name="theme-color" content="#2962ff">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" integrity="sha256-+N4/V/SbAFiW1MPBCXnfnP9QSN3+Keu+NlB+0ev/YKQ=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" integrity="sha256-SHMGCYmST46SoyGgo4YR/9AlK1vf3ff84Aq9yK4hdqM=" crossorigin="anonymous">
+    
+
+    
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700%7CRoboto:400,400italic,700%7CRoboto+Mono&display=swap">
+  
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.css">
+
+  
+
+
+
+
+  
+
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon-32.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="/post/2021-10-07-a-stratified-log-rank-test-does-not-control-alpha-under-a-marginal-null-hypothesis-and-that-s-ok/">
+
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="og:site_name" content="Dominic Magirr">
+  <meta property="og:url" content="/post/2021-10-07-a-stratified-log-rank-test-does-not-control-alpha-under-a-marginal-null-hypothesis-and-that-s-ok/">
+  <meta property="og:title" content="A stratified log-rank test does not control alpha under a marginal null hypothesis, and that&#39;s ok | Dominic Magirr">
+  <meta property="og:description" content="Recently, I’ve become interested in the robustness of standard statistical methods for RCTs under model misspecification. It seems to be a hot topic at the moment. I’d like to believe this is not such a big problem. I don’t think it is a big problem. But I’m trying to challenge my beliefs nevertheless.
+Stratified log-rank test The null hypothesis that is generally considered when performing an unstratified log-rank test is:"><meta property="og:image" content="/img/icon-192.png">
+  <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
+  
+    
+      <meta property="article:published_time" content="2021-10-07T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2021-10-07T15:06:34&#43;00:00">
+  
+
+  
+
+
+    
+
+
+
+
+
+
+  
+
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "/post/2021-10-07-a-stratified-log-rank-test-does-not-control-alpha-under-a-marginal-null-hypothesis-and-that-s-ok/"
+  },
+  "headline": "A stratified log-rank test does not control alpha under a marginal null hypothesis, and that's ok",
+  
+  "datePublished": "2021-10-07T00:00:00Z",
+  "dateModified": "2021-10-07T15:06:34Z",
+  
+  "author": {
+    "@type": "Person",
+    "name": "Dominic Magirr"
+  },
+  
+  "publisher": {
+    "@type": "Organization",
+    "name": "Dominic Magirr",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "/img/icon-512.png"
+    }
+  },
+  "description": "Recently, I’ve become interested in the robustness of standard statistical methods for RCTs under model misspecification. It seems to be a hot topic at the moment. I’d like to believe this is not such a big problem. I don’t think it is a big problem. But I’m trying to challenge my beliefs nevertheless.\nStratified log-rank test The null hypothesis that is generally considered when performing an unstratified log-rank test is:"
+}
+</script>
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>A stratified log-rank test does not control alpha under a marginal null hypothesis, and that&#39;s ok | Dominic Magirr</title>
+
+</head>
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0 compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Dominic Magirr</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav mr-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#posts"><span>Posts</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#publications"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#talks"><span>Talks</span></a>
+        </li>
+
+        
+        
+
+      
+      </ul>
+      <ul class="navbar-nav ml-auto">
+      
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-search" href="#"><i class="fas fa-search" aria-hidden="true"></i></a>
+        </li>
+        
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-dark-toggle" href="#"><i class="fas fa-moon" aria-hidden="true"></i></a>
+        </li>
+        
+
+      </ul>
+
+    </div>
+  </div>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+</nav>
+
+
+  <article class="article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1>A stratified log-rank test does not control alpha under a marginal null hypothesis, and that&#39;s ok</h1>
+
+  
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+          Last updated on
+      
+    
+    Oct 7, 2021
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    8 min read
+  </span>
+  
+
+  
+  
+  
+
+  
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style">
+      
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<p>Recently, I’ve become interested in the robustness of standard statistical methods for RCTs under model misspecification. It seems to be a hot topic at the moment. I’d like to believe this is not such a big problem. I don’t think it is a big problem. But I’m trying to challenge my beliefs nevertheless.</p>
+<div id="stratified-log-rank-test" class="section level2">
+<h2>Stratified log-rank test</h2>
+<p>The null hypothesis that is generally considered when performing an unstratified log-rank test is:</p>
+<p><span class="math display">\[H_{0}: S_{E}(t) = S_{C}(t)\text{ for all }t&gt;0\]</span>
+where <span class="math inline">\(S_{E}\)</span> and <span class="math inline">\(S_{C}\)</span> denote the survival distributions on the experimental and control arms, respectively, in the full trial population. Personally, I prefer one-sided testing and a null hypothesis</p>
+<p><span class="math display">\[\tilde{H}_{0}: S_{E}(t) \leq S_{C}(t)\text{ for all }t&gt;0\]</span></p>
+<p>but this is unconventional (strictly speaking, it’s harder to reject <span class="math inline">\(\tilde{H}_{0}\)</span> than <span class="math inline">\(H_{0}\)</span>, but some might argue that <span class="math inline">\(\tilde{H}_{0}\)</span> is still too easy to reject and we need a bigger null hypothesis space – a subject for another post). In any case, under some standard assumptions, an unstratified log-rank test controls <span class="math inline">\(\alpha\)</span> when testing <span class="math inline">\(H_{0}\)</span> or <span class="math inline">\(\tilde{H}_{0}\)</span>.</p>
+<p>The null hypothesis that is generally considered when performing a stratified log-rank test is:</p>
+<p><span class="math display">\[H_{0,S}: S_{E,i}(t) = S_{C,i}(t)\text{ for all }t&gt;0\text{ and for all strata }i\]</span>
+where <span class="math inline">\(S_{E,i}\)</span> and <span class="math inline">\(S_{C,i}\)</span> denote the survival distributions on the experimental and control arms, respectively, in the <span class="math inline">\(i\)</span>th stratum. Again, I would prefer a one-sided version</p>
+<p><span class="math display">\[\tilde{H}_{0,S}: S_{E,i}(t) \leq S_{C,i}(t)\text{ for all }t&gt;0\text{ and for all strata }i.\]</span></p>
+<p>A stratified log-rank test controls <span class="math inline">\(\alpha\)</span> when testing <span class="math inline">\(H_{0,S}\)</span> or <span class="math inline">\(\tilde{H}_{0,S}\)</span>, but a question some people might ask is: does a stratified log-rank test control <span class="math inline">\(\alpha\)</span> when thought of as a test of <span class="math inline">\(H_{0}\)</span> or <span class="math inline">\(\tilde{H}_{0}\)</span>? (I’m not entirely convinced this is a sensible question, but let’s leave that aside).</p>
+<p>The answer to the question is no. Below is a (rather extreme) example where the population consists of two equally sized strata. Under the control treatment, the first stratum has much poorer survival than the second stratum. The experimental treatment is beneficial in the first stratum and harmful in the second stratum. However, overall, marginally, the survival distributions on the two arms are practically the same (experimental very fractionally worse).</p>
+<p><img src="/post/2021-10-07-a-stratified-log-rank-test-does-not-control-alpha-under-a-marginal-null-hypothesis-and-that-s-ok_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p>Now consider a trial in this population, where 1000 patients are recruited at a uniform rate for 12 months, and patients are subsequently followed-up for a further 12 months, making the total trial length 24 months, at which point all the survival times for all surviving patients are censored.</p>
+<p>I simulated this trial 10,000 times, and the percentage of times that the stratified log-rank test (actually I used a stratified Cox model with treatment as the only covariate – all code below) produced a Z-value for the treatment term that was below the 2.5% quantile of the normal distribution (low values of Z favouring the experimental arm) was 38%. The percentage of times for the unstratified Cox model was 1%.</p>
+</div>
+<div id="is-this-a-problem" class="section level2">
+<h2>Is this a problem?</h2>
+<p>No I don’t think so. Firstly, there is no problem for the null hypotheses <span class="math inline">\(H_{0,S}\)</span> or <span class="math inline">\(\tilde{H}_{0,S}\)</span>. Secondly, this is a very extreme violation of the assumptions of the stratified Cox model. Thirdly, consider the point estimates for the hazard ratios in the two strata in the subset of simulated data sets where the stratified log-rank test rejects and the unstratified log-rank test does not. These are highlighted in blue in the figure below. In these cases we would observe a point estimate between 0.5 and 0.7 in the first stratum, and a point estimate between 1.1 and 1.6 in the second stratum.</p>
+<p>So I see this as more of a curiosity than a practical problem. It’s interesting to compare with logistic regression, where it’s been shown (<a href="https://biostats.bepress.com/jhubiostat/paper281/">here</a>) that a stratified test controls <span class="math inline">\(\alpha\)</span> not only for the stratified null but also for the overall trial population null (see also <a href="https://arxiv.org/pdf/2107.07278.pdf">here</a>). The same goes for continuous data analyzed by ANCOVA which I think is quite well known.</p>
+<p>As a final comment, it’s important to keep in mind the efficiency gains from using a stratified test in more typical situations where its assumptions are reasonable.</p>
+</div>
+<div id="code" class="section level2">
+<h2>Code</h2>
+<pre class="r"><code>library(survival)
+library(dplyr)
+library(purrr)
+## survival probability for a 2-piece exponential
+surv_2 &lt;- function(t, 
+                   lambda_1, 
+                   lambda_2, 
+                   t_star){
+  
+  p_1 &lt;- exp(-lambda_1 * t)
+  p_2 &lt;- exp(-lambda_1 * t_star) * exp(-lambda_2 * pmax(0, (t - t_star)))
+  
+  (t &lt; t_star) * p_1 + (t &gt;= t_star) * p_2
+  
+}
+
+## function to plot the three survival distributions
+plot_strat &lt;- function(t_end = 24, 
+                       t_star_1 = 9,
+                       t_star_0 = 9,
+                       strat_1_rate_c_1 = log(2) / 4,
+                       strat_1_rate_c_2 = log(2) / 4,
+                       strat_1_rate_e_1 = log(2) / 4 * 0.6,
+                       strat_1_rate_e_2 = log(2) / 4 * 0.6,
+                       strat_0_rate_c_1 = log(2) / 15,
+                       strat_0_rate_c_2 = log(2) / 15,
+                       strat_0_rate_e_1 = log(2) / 15 * 1.1,
+                       strat_0_rate_e_2 = log(2) / 15 * 1,
+                       prop_strat_1 = 0.1){
+  
+  t_seq &lt;- seq(0, t_end, length.out = 100)
+  
+  s_c_1 &lt;- surv_2(t_seq, lambda_1 = strat_1_rate_c_1, lambda_2 = strat_1_rate_c_2, t_star = t_star_1)
+  s_e_1 &lt;- surv_2(t_seq, lambda_1 = strat_1_rate_e_1, lambda_2 = strat_1_rate_e_2, t_star = t_star_1)
+  s_c_0 &lt;- surv_2(t_seq, lambda_1 = strat_0_rate_c_1, lambda_2 = strat_0_rate_c_2, t_star = t_star_0)
+  s_e_0 &lt;- surv_2(t_seq, lambda_1 = strat_0_rate_e_1, lambda_2 = strat_0_rate_e_2, t_star = t_star_0)
+  
+  par(mfrow = c(1,3))
+  
+  plot(t_seq, s_c_1, type = &quot;l&quot;, ylim = c(0,1), xlab = &quot;time&quot;, ylab = &quot;Surv&quot;, 
+       main = paste(&quot;First stratum (&quot;, prop_strat_1,&quot;)&quot;))
+  points(t_seq, s_e_1, type = &quot;l&quot;, col = 2)
+  legend(&quot;topright&quot;, c(&quot;Control&quot;, &quot;Experimental&quot;), lty = c(1,1), col = c(1,2))
+  
+  plot(t_seq, s_c_0, type = &quot;l&quot;,  ylim = c(0,1), col = 1, lty = 1, xlab = &quot;time&quot;, ylab = &quot;Surv&quot;, 
+       main = paste(&quot;Second stratum (&quot;, 1 - prop_strat_1,&quot;)&quot;))
+  points(t_seq, s_e_0, type = &quot;l&quot;, col = 2, lty = 1)
+  legend(&quot;topright&quot;, c(&quot;Control&quot;, &quot;Experimental&quot;), lty = c(1,1), col = c(1,2))
+  
+  plot(t_seq, prop_strat_1 * s_c_1 + (1 - prop_strat_1) * s_c_0, type = &quot;l&quot;, ylim = c(0,1), xlab = &quot;time&quot;, ylab = &quot;Surv&quot;, main = &quot;Overall&quot;)
+  points(t_seq, prop_strat_1 * s_e_1 + (1 - prop_strat_1) * s_e_0, type = &quot;l&quot;, col = 2)
+  legend(&quot;topright&quot;, c(&quot;Control&quot;, &quot;Experimental&quot;), lty = c(1,1), col = c(1,2))
+}
+
+## plot the three survival distributions
+plot_strat(t_end = 24, 
+           t_star_1 = 9,
+           t_star_0 = 6,
+           strat_1_rate_c_1 = log(2) / 4,
+           strat_1_rate_c_2 = log(2) / 4,
+           strat_1_rate_e_1 = log(2) / 4 * 0.6,
+           strat_1_rate_e_2 = log(2) / 4 * 0.6,
+           strat_0_rate_c_1 = log(2) / 15,
+           strat_0_rate_c_2 = log(2) / 15,
+           strat_0_rate_e_1 = log(2) / 15 * 2.3,
+           strat_0_rate_e_2 = log(2) / 15 * 0.9,
+           prop_strat_1 = 0.5)
+
+
+## function for simulating from a piece-wise exponential distribution
+t_piecewise_exp &lt;- function(n = 10, 
+                            change_points = c(6, 12),
+                            lambdas = c(log(2) / 9, log(2) / 9, log(2) / 9)){
+  
+  t_lim &lt;- matrix(rep(c(diff(c(0, change_points)), Inf), each = n), nrow = n)
+  t_sep &lt;- do.call(cbind, purrr::map(lambdas, rexp, n = n))
+  which_cells &lt;- t(apply(t_sep &lt; t_lim, 1, function(x){
+    rep(c(T,F), c(min(which(x)), length(x) - min(which(x))))
+  } ))
+  rowSums(pmin(t_sep, t_lim) * which_cells)
+}
+
+## function to simulate trial data (uncensored)
+sim_t_uncensored &lt;- function(model,
+                             recruitment){
+  
+  rec_0 &lt;- recruitment$r_period * runif(recruitment$n_0) ^ (1 / recruitment$k)
+  rec_1 &lt;- recruitment$r_period * runif(recruitment$n_1) ^ (1 / recruitment$k)
+  
+  time_0 &lt;- t_piecewise_exp(recruitment$n_0, model$change_points, model$lambdas_0)
+  time_1 &lt;- t_piecewise_exp(recruitment$n_1, model$change_points, model$lambdas_1)
+  
+  data.frame(time = c(time_0, time_1),
+             rec = c(rec_0, rec_1),
+             group = rep(c(&quot;control&quot;, &quot;experimental&quot;), c(recruitment$n_0, recruitment$n_1)))
+  
+}
+
+## function to apply a data cut off to uncensored data set
+apply_dco &lt;- function(df,
+                      dco = NULL,
+                      events = NULL){
+  
+  if (is.null(dco) &amp;&amp; is.null(events)) stop(&quot;Must specify either dco or events&quot;)
+  
+  df$cal_time &lt;- df$time + df$rec
+  
+  if (is.null(dco)){
+    dco &lt;- sort(df$cal_time)[events]
+  }
+  
+  df_dco &lt;- df[df$rec &lt; dco, ]
+  df_dco$event &lt;-  df_dco$cal_time &lt;= dco
+  df_dco$time &lt;- pmin(df_dco$time, dco - df_dco$rec)
+  df_dco$dco &lt;- dco
+  
+  df_dco
+  
+}
+
+## function to simulate and analyze a single trial
+sim_1_trial &lt;- function(dummy, 
+                        model_1, ## strata 1
+                        model_0, ## strata 0
+                        recruitment_1,
+                        recruitment_0){
+  
+  
+  df_uncensored_1 &lt;- sim_t_uncensored(model_1, recruitment_1)
+  df_uncensored_0 &lt;- sim_t_uncensored(model_0, recruitment_0)
+  
+  df_final_1 &lt;- apply_dco(df_uncensored_1, dco = 24)
+  df_final_0 &lt;- apply_dco(df_uncensored_0, dco = 24)
+  
+  df_final_1$cov &lt;- &quot;1&quot;
+  df_final_0$cov &lt;- &quot;0&quot;
+  
+  df_final &lt;- rbind(df_final_1, df_final_0)
+  
+  cox_str &lt;-   summary(coxph(Surv(time, event) ~ group + strata(cov), data = df_final))
+  cox_unstr &lt;- summary(coxph(Surv(time, event) ~ group, data = df_final))
+  
+  cox_0 &lt;- summary(coxph(Surv(time, event) ~ group, data = df_final %&gt;% filter(cov == &quot;0&quot;)))
+  cox_1 &lt;- summary(coxph(Surv(time, event) ~ group, data = df_final %&gt;% filter(cov == &quot;1&quot;)))
+
+  
+  data.frame(z_str = cox_str$coefficients[1,&quot;z&quot;],
+             z_unstr = cox_unstr$coefficients[1,&quot;z&quot;],
+             hr_1 = cox_1$coefficients[1,&quot;exp(coef)&quot;],
+             hr_0 = cox_0$coefficients[1,&quot;exp(coef)&quot;])
+  
+  
+}
+
+
+## specify recruitment
+recruitment_1 = list(n_0 = 250, n_1 = 250, r_period = 12, k = 1)
+recruitment_0 = list(n_0 = 250, n_1 = 250, r_period = 12, k = 1)
+
+## specify models
+model_1 = list(change_points = c(9),
+               lambdas_0 = c(log(2) / 4, log(2) / 4),
+               lambdas_1 = c(log(2) / 4 * 0.6, log(2) / 4 * 0.6))
+
+
+model_0 = list(change_points = c(6),
+               lambdas_0 = c(log(2) / 15, log(2) / 15),
+               lambdas_1 = c(log(2) / 15 * 2.3, log(2) / 15 * 0.9))
+
+set.seed(352)
+res &lt;- purrr::map_df(1:10000, 
+                     sim_1_trial, 
+                     model_1 = model_1, 
+                     model_0 = model_0, 
+                     recruitment_1 = recruitment_1, 
+                     recruitment_0 = recruitment_0)
+
+## rejections from stratified test
+mean(res$z_str &lt; qnorm(0.025))
+
+## rejections from unstratified test
+mean(res$z_unstr &lt; qnorm(0.025))
+
+
+## plot hazard ratios by strata
+res &lt;- res %&gt;% mutate(only_stratified_rejects = z_str &lt; qnorm(0.025) &amp; z_unstr &gt; qnorm(0.025))
+ggplot(res, aes(x = hr_0, y = hr_1, colour = only_stratified_rejects)) + 
+  geom_point() +
+  xlab(&quot;estimated HR second strata&quot;) + 
+  ylab(&quot;estimated HR first strata&quot;) +
+  scale_x_continuous(limits = c(0.9, 2.2)) +
+  scale_y_continuous(limits = c(0.4, 0.8)) </code></pre>
+</div>
+
+    </div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+  
+    
+  
+  
+  <div class="media author-card content-widget-hr">
+    
+      
+      <img class="portrait mr-3" src="/authors/admin/avatar_hu3ad799765e91f69a41f3acc2fc665a63_309343_250x250_fill_q90_lanczos_center.jpg" alt="Avatar">
+    
+
+    <div class="media-body">
+      <h5 class="card-title"><a href="/">Dominic Magirr</a></h5>
+      <h6 class="card-subtitle">Medical Statistician</h6>
+      <p class="card-text">Interested in the design, analysis and interpretation of clinical trials.</p>
+      <ul class="network-icon" aria-hidden="true">
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://www.linkedin.com/in/dominic-magirr-87666b12b/" target="_blank" rel="noopener">
+        <i class="fab fa-linkedin"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://scholar.google.co.uk/citations?user=obri2xMAAAAJ&amp;hl=en" target="_blank" rel="noopener">
+        <i class="ai ai-google-scholar"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://github.com/dominicmagirr" target="_blank" rel="noopener">
+        <i class="fab fa-github"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="/files/cv.pdf" >
+        <i class="ai ai-cv"></i>
+      </a>
+    </li>
+  
+</ul>
+
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js" integrity="sha256-1zu+3BnLYV9LdiY85uXMzii3bdrkelyp37e0ZyTAQh0=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/languages/r.min.js"></script>
+        
+      
+
+      
+      
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js" integrity="sha256-EErZamuLefUnbMBQbsEqu1USa+btR2oIlCpBJbyD4/g=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    
+    
+    
+    
+    <script>
+      const search_config = {"indexURI":"/index.json","minLength":1,"threshold":0.3};
+      const i18n = {"no_results":"No results found","placeholder":"Search...","results":"results found"};
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.b59fdb6275ef5e6e2859c30582fc271a.js"></script>
+
+    
+
+
+
+
+
+
+  
+  
+  <div class="container">
+    <footer class="site-footer">
+  
+
+  <p class="powered-by">
+    
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" class="back-to-top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+</footer>
+
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

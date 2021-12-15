@@ -20,7 +20,7 @@
       <description>
 
 
-&lt;p&gt;&lt;a href=&#34;../../post/flexsurv&#34;&gt;Previously,&lt;/a&gt; I started discussing the &lt;code&gt;flexsurv&lt;/code&gt; package. I used it to fit a Weibull model. This is implemented as an accelerated failure time model. It is also a proportional hazards model (although, as I found previously, converting between the two is not so straightforward, but it can be done by &lt;code&gt;SurvRegCensCov&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;/post/flexsurv&#34;&gt;Previously,&lt;/a&gt; I started discussing the &lt;code&gt;flexsurv&lt;/code&gt; package. I used it to fit a Weibull model. This is implemented as an accelerated failure time model. It is also a proportional hazards model (although, as I found previously, converting between the two is not so straightforward, but it can be done by &lt;code&gt;SurvRegCensCov&lt;/code&gt;).&lt;/p&gt;
 &lt;p&gt;Now let’s compare Weibull regression with Cox regression. Firstly, Weibull regression:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;assumes proportional hazards;&lt;/li&gt;
@@ -82,7 +82,7 @@ ggplot(data = df,
   theme_bw() +
   scale_x_continuous(limits = c(2,8)) +
   scale_y_continuous(limits = c(-6,0))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;../../post/2019-11-01-flexsurv-2_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-11-01-flexsurv-2_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;What’s going on here? Well, the first thing to acknowledge is that the hazards only appear to be proportional after about 150 (&lt;span class=&#34;math inline&#34;&gt;\(e^5\)&lt;/span&gt;) days. I’m not sure I would immediately abandon a proportional-hazards model, though, as most of the events happen when the hazards are proportional (only 10-15% of the events happen before day 150), so the right-hand-side of the plot is far more important. Looking to the right then: the relationship between the log-cumulative hazard and log-time is not really linear. The distance between the two lines is roughly the same for the two models (Weibull and non-parametric), suggesting that the Weibull model does ok at estimating the hazard ratio. However, the lack of linearity will lead to poor estimates for the medians, &lt;span class=&#34;math inline&#34;&gt;\(P(S&amp;gt;s^*)\)&lt;/span&gt;, etc., as can be confirmed by plotting the survival curves:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ggplot(data = df,
        mapping = aes(x = exp(log_time),
@@ -94,7 +94,7 @@ ggplot(data = df,
                           colour = trt),
             linetype = 2) +
   theme_bw()&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;../../post/2019-11-01-flexsurv-2_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-11-01-flexsurv-2_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;To improve the model, given this lack of linearity, it seems quite natural to change from&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\log H(t;x) = a\log t - a\log(b) - a x^T\gamma\]&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;to&lt;/p&gt;
@@ -124,7 +124,7 @@ ggplot(data = df2,
   scale_x_continuous(limits = c(2,8)) +
   scale_y_continuous(limits = c(-6,0)) +
   geom_vline(xintercept = fit_spline_2$knots)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;../../post/2019-11-01-flexsurv-2_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-11-01-flexsurv-2_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;This looks a lot better, and we can see the improvement in the survival curves:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ggplot(data = df2,
        mapping = aes(x = exp(log_time),
@@ -136,7 +136,7 @@ ggplot(data = df2,
                           colour = trt),
             linetype = 2) +
   theme_bw()&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;../../post/2019-11-01-flexsurv-2_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-11-01-flexsurv-2_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;from-cox-regression-to-weibull-regression.&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;From Cox regression to Weibull regression.&lt;/h2&gt;
@@ -263,7 +263,7 @@ data.frame(HR = exp(log_hr),
 &lt;/div&gt;
 &lt;div id=&#34;splines&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Splines&lt;/h2&gt;
-&lt;p&gt;The second thing I really like about &lt;code&gt;flexsurv&lt;/code&gt; is the proportional hazards model with a spline for the baseline hazard. I’ll explore this in &lt;a href=&#34;../../post/flexsurv-2&#34;&gt;another post&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The second thing I really like about &lt;code&gt;flexsurv&lt;/code&gt; is the proportional hazards model with a spline for the baseline hazard. I’ll explore this in &lt;a href=&#34;/post/flexsurv-2&#34;&gt;another post&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;
 </description>
     </item>
