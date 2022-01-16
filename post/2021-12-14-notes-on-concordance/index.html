@@ -416,7 +416,7 @@ Suppose in the context of a clinical trial we use a Cox model to compare an expe
   
   <span class="middot-divider"></span>
   <span class="article-reading-time">
-    11 min read
+    16 min read
   </span>
   
 
@@ -642,6 +642,142 @@ I can estimate this empirically as</p>
 <li>a non-proportional hazards example.</li>
 </ul>
 <p>But I’ve run out of steam. Maybe I’ll come back to it another time.</p>
+</div>
+<div id="p.s.-standard-errors" class="section level2">
+<h2>P.S. standard errors</h2>
+<p>Follows (<a href="https://cran.r-project.org/web/packages/survival/vignettes/concordance.pdf" class="uri">https://cran.r-project.org/web/packages/survival/vignettes/concordance.pdf</a>) closely.</p>
+<p>Let’s take the same example as before, except we reduce the sample size from 10,000 to 400 so that it makes sense to worry about standard errors.</p>
+<pre class="r"><code>library(dplyr)
+library(survival)
+
+set.seed(325)
+
+df_ex &lt;- data.frame(rec = runif(400, 0, 12),
+                    y_star = c(rexp(200, rate = log(2) / 12),
+                               rexp(200, rate = log(2) / 18)),
+                    delta_star = 1,
+                    trt = rep(c(&quot;0&quot;, &quot;1&quot;), each = 200)) %&gt;% 
+   mutate(delta = as.numeric(y_star + rec &lt; 18),
+          y = pmin(y_star, 18 - rec))
+
+head(df_ex)</code></pre>
+<pre><code>##         rec    y_star delta_star trt delta         y
+## 1 3.4275172 39.246498          1   0     0 14.572483
+## 2 9.3391460 25.012807          1   0     0  8.660854
+## 3 2.1307085  1.414864          1   0     1  1.414864
+## 4 2.1295279 12.747489          1   0     1 12.747489
+## 5 0.6061914 17.157924          1   0     1 17.157924
+## 6 6.3240452 10.810010          1   0     1 10.810010</code></pre>
+<pre class="r"><code>fit_inf &lt;- survfit(Surv(y_star, delta_star) ~ trt, data = df_ex)
+fit_18 &lt;- survfit(Surv(y, delta) ~ trt, data = df_ex)
+
+plot(fit_inf, col = 1:2)</code></pre>
+<p><img src="/post/2021-12-14-notes-on-concordance_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<pre class="r"><code>plot(fit_18, col = 1:2)</code></pre>
+<p><img src="/post/2021-12-14-notes-on-concordance_files/figure-html/unnamed-chunk-8-2.png" width="672" /></p>
+<div id="confidence-interval-for-probabilistic-index-using-the-relationship-phi-1-1-theta" class="section level3">
+<h3>Confidence interval for Probabilistic Index using the relationship <span class="math inline">\(\phi = 1 / (1 + \theta)\)</span></h3>
+<pre class="r"><code>## Infinite follow-up
+cph_inf &lt;- coxph(Surv(y_star, delta_star) ~ trt, data = df_ex)
+
+## Point estimate
+1 / (1 + exp(cph_inf$coefficients))</code></pre>
+<pre><code>##      trt1 
+## 0.5793188</code></pre>
+<pre class="r"><code>## CI
+rev(1 / (1 + exp(confint(cph_inf))))</code></pre>
+<pre><code>## [1] 0.5299843 0.6271182</code></pre>
+<pre class="r"><code>## 18 month max follow-up
+cph_18 &lt;- coxph(Surv(y, delta) ~ trt, data = df_ex)
+
+## Point estimate
+1 / (1 + exp(cph_18$coefficients))</code></pre>
+<pre><code>##      trt1 
+## 0.5730088</code></pre>
+<pre class="r"><code>## CI
+rev(1 / (1 + exp(confint(cph_18))))</code></pre>
+<pre><code>## [1] 0.4958763 0.6467470</code></pre>
+</div>
+<div id="standard-error-of-concordance-empirical" class="section level3">
+<h3>Standard error of concordance (empirical)</h3>
+<p>The standard error for the empirical estimator of the concordance can be calculated <a href="https://www.mayo.edu/research/documents/bsi-techreport-85/doc-20433003">based on the nice observation by Therneau and Watson</a> that a standardized version of this estimator is equal to the score statistic from a Cox model with a time-dependent covariate <span class="math inline">\(n(t_i)r_i(t_i)\)</span>, where <span class="math inline">\(n(t_i)\)</span> and <span class="math inline">\(r_i(t_i)\)</span> are defined as ” the number of subjects still at risk at time t” and “the rank of <span class="math inline">\(x_i\)</span> among all those still at risk at time <span class="math inline">\(t\)</span>”, respectively. I found it quite difficult to get my head around the <em>exact</em> definition of <span class="math inline">\(n(t_i)\)</span> and <span class="math inline">\(r_i(t_i)\)</span>, and also to understand why there is this equivalence. To avoid that pain again, I’ll now try to explain in excessive detail…</p>
+<p>Starting with the empirical estimate for concordance:</p>
+<p><span class="math display">\[ \tilde{C} = \frac{\sum_{\text{pairs}: E_{i,j}\cap (T_i &lt; T_j)} I(\hat{T}_i&lt;\hat{T}_j)+ 0.5I(\hat{T}_i&lt;\hat{T}_j)}{\sum_{\text{pairs}: E_{i,j}\cap (T_i &lt; T_j) } I(\hat{T}_i&lt;\hat{T}_j) + I(\hat{T}_i&gt;\hat{T}_j) + I(\hat{T}_i=\hat{T}_j)}\]</span></p>
+<p>where <span class="math inline">\(E_{i,j}\)</span> is the event that it’s possible to establish which of <span class="math inline">\(T_i\)</span> and <span class="math inline">\(T_j\)</span> is larger given censoring, we can then rearrange:</p>
+<p><span class="math display">\[ \left\lbrace \sum_{\text{pairs}: E_{i,j}\cap (T_i &lt; T_j)} 1 \right\rbrace \left( 2\tilde{C}-1 \right) = \sum_{\text{pairs}: E_{i,j}\cap (T_i &lt; T_j)} I(\hat{T}_i&lt;\hat{T}_j) - I(\hat{T}_i&gt;\hat{T}_j) =: U.\]</span></p>
+<p>The next step is to recognize that we can sum up the terms in <span class="math inline">\(U\)</span> in a particular order:</p>
+<p><span class="math display">\[ U = \sum_i \sum_{j: E_{i,j} \cap (T_j &gt; T_i)} \text{sign}(\hat{T}_j - \hat{T}_i)\]</span>
+where <span class="math inline">\(\text{sign}(z)\)</span>=-1,0 or 1, depending if <span class="math inline">\(z\)</span> is <span class="math inline">\(&lt;0\)</span>, <span class="math inline">\(=0\)</span> or <span class="math inline">\(&gt;0\)</span>.</p>
+<p>For a pair <span class="math inline">\((i,j)\)</span> to satisfy <span class="math inline">\(E_{i,j} \cap (T_j &gt; T_i)\)</span>, we firstly need the survival time <span class="math inline">\(T_i\)</span> to be uncensored. Also, we need patient <span class="math inline">\(j\)</span> to be in the at-risk set at time <span class="math inline">\(T_i\)</span>. This is sufficient to satisfy the condition. So we have</p>
+<p><span class="math display">\[U = \sum_i \delta_i \sum_{j: j\neq i,j\in R(T_i) } \text{sign}(\hat{T}_j - \hat{T}_i),\]</span></p>
+<p>where <span class="math inline">\(\delta_i\)</span> is an indicator that patient <span class="math inline">\(i\)</span> has an event, and <span class="math inline">\(R\)</span> denotes the risk set. The same expression is found in <a href="https://www.mayo.edu/research/documents/bsi-techreport-85/doc-20433003">Appendix A of Therneau and Watson</a>. At this point, we can introduce the more precise definitions for <span class="math inline">\(r_i(t_i)\)</span> and <span class="math inline">\(n(t_i)\)</span>:</p>
+<p><span class="math display">\[r_i(t_i):= \frac{1}{n(t_i)}\sum_{j: j\neq i,j\in R(T_i)} \left[ I(\hat{T}_i &lt; \hat{T}_j) + \frac{1}{2}I(\hat{T}_i = \hat{T}_j)\right], \]</span>
+where <span class="math inline">\(n(t_i):= |j: j\neq i,j\in R(T_i)|\)</span>, i.e., the size of the risk set (excluding <span class="math inline">\(i\)</span> itself). Next (following T&amp;W),</p>
+<p><span class="math display">\[
+\begin{align}
+ r_i(t_i) &amp;= \frac{1}{n(t_i)}\sum_{j: j\neq i,j\in R(T_i)} \left[ I(\hat{T}_i &lt; \hat{T}_j) + \frac{1}{2}I(\hat{T}_i = \hat{T}_j)\right]\\
+ &amp;= \frac{1}{n(t_i)}\sum_{j: j\neq i,j\in R(T_i)} \left[ \text{sign}(\hat{T}_j - \hat{T}_i)  + 1   \right] /2\\
+ &amp;= \frac{1}{2} +  \frac{1}{n(t_i)}\sum_{j: j\neq i,j\in R(T_i)}  \frac{\text{sign}(\hat{T}_j - \hat{T}_i)}{2}
+\end{align}
+\]</span></p>
+<p>and therefore</p>
+<p><span class="math display">\[U = \sum_i 2\delta_i n(t_i)\{r_i(t_i) - 1 / 2\}\]</span></p>
+<p>To see that this is equivalent to a Cox model, we must further recognize that <span class="math inline">\(\bar{r} = 1/2\)</span>, where <span class="math inline">\(\bar{r}\)</span> is the average of the <span class="math inline">\(r_i\)</span> across all <span class="math inline">\(i\)</span> at risk at time <span class="math inline">\(t_i\)</span> (this is because the <span class="math inline">\(j\neq i\)</span> terms cancel each other out), and finally write down the partial likelihood from the Cox model with a time-dependent covariate <span class="math inline">\(z(t)\)</span>:</p>
+<p><span class="math display">\[\sum_i \delta_i \left[ z_i(t_i) - \frac{\sum_{j \in R(t_i)} z_j(t_i) \exp\left[ z_j(t_i)\beta \right]}{\exp\left[ z_j(t_i)\beta \right]} \right] \mid_{\beta = 0} = \sum_i \delta_i \left[ z_i(t_i) - \bar{z}(t_i)\right],\]</span></p>
+<p>observing the equivalence between this expression and the expression for <span class="math inline">\(U\)</span> when <span class="math inline">\(z_i(t_i) =2 n(t_i)r_i(t_i)\)</span>.</p>
+<p>A nice consequence of using the Cox model is that we can write down the variance of this statistic under the null hypothesis (see, e.g., page 128 of <a href="https://www4.stat.ncsu.edu/~dzhang2/st745/chap6.pdf" class="uri">https://www4.stat.ncsu.edu/~dzhang2/st745/chap6.pdf</a>):</p>
+<p><span class="math display">\[ \sum_i \delta_i \left[ \sum_{j \in R(t_i)} \frac{z_j(t_i)^2}{n(t_i)} - \bar{z}(t_i)^2  \right].\]</span>
+In principle, I think this is enough to be able to calculate the variance for the empirical estimate of concordance for a general Cox model, but I can’t be bothered any more to actually go through a more complicated example (i.e. a Cox model with more than one variable).</p>
+<p>In the context of just two predictions (e.g. in a simple RCT with <span class="math inline">\(A=0\)</span> and <span class="math inline">\(A=1\)</span>), the score statistic reduces to the Gehan-Wilcoxon statistic (this is also shown in the appendix of <a href="https://www.mayo.edu/research/documents/bsi-techreport-85/doc-20433003" class="uri">https://www.mayo.edu/research/documents/bsi-techreport-85/doc-20433003</a>)</p>
+<p><span class="math display">\[ U= \sum_k n_k (d_{1,k} - \frac{n_{1,k}}{n_1}) \]</span></p>
+<p>with variance</p>
+<p><span class="math display">\[\text{var}({U}) = \sum_kn_{k}^2 \times\text{var}\left(d_{1,k} - \frac{n_{1,k}}{n_1}\right)\]</span>.</p>
+<p>And from these formulas I can reconstruct the estimate of the variance for our example.</p>
+<p>The terms <span class="math inline">\(\{2r_i(t_i) - 1\}\)</span> are guaranteed to be between <span class="math inline">\(-1\)</span> and <span class="math inline">\(1\)</span>, and they are provided in the <code>rank</code> column by <code>survival::concordance</code>, if we explicitly ask for it:</p>
+<pre class="r"><code>con_inf &lt;- concordance(cph_inf, ranks = TRUE)
+head(con_inf$ranks)</code></pre>
+<pre><code>##           time       rank timewt casewt  variance
+## 98  0.01382162  0.5012531    399      1 0.2500000
+## 313 0.06709051 -0.5000000    398      1 0.2499984
+## 257 0.09001529 -0.5012594    397      1 0.2500000
+## 40  0.12598446  0.5000000    396      1 0.2499984
+## 395 0.14877580 -0.5012658    395      1 0.2500000
+## 262 0.18041986 -0.5025381    394      1 0.2499984</code></pre>
+<pre class="r"><code>tail(con_inf$ranks)</code></pre>
+<pre><code>##          time       rank timewt casewt  variance
+## 332  98.80991 -0.1666667      6      1 0.1224490
+## 348  99.66819 -0.2000000      5      1 0.1388889
+## 164 108.75980  1.0000000      4      1 0.1600000
+## 368 109.71749  0.0000000      3      1 0.0000000
+## 205 111.79013  0.0000000      2      1 0.0000000
+## 396 113.71013  0.0000000      1      1 0.0000000</code></pre>
+<p>Next I print out the concordance again…</p>
+<pre class="r"><code>con_inf</code></pre>
+<pre><code>## Call:
+## concordance.coxph(object = cph_inf, ranks = TRUE)
+## 
+## n= 400 
+## Concordance= 0.5331 se= 0.01436
+## concordant discordant     tied.x     tied.y    tied.xy 
+##      22640      17360      39800          0          0</code></pre>
+<p>…and show I can reproduce it from the formula above for <span class="math inline">\(U\)</span> based on <span class="math inline">\(r\)</span> and <span class="math inline">\(n\)</span> (79800 is the total number of pairs)…</p>
+<pre class="r"><code>(sum(con_inf$ranks[,&quot;rank&quot;] * con_inf$ranks[,&quot;timewt&quot;]) / 79800 + 1) / 2</code></pre>
+<pre><code>## [1] 0.5330827</code></pre>
+<p>…and I can reproduce the variance for the specific case of just two groups</p>
+<pre class="r"><code>con_inf$cvar</code></pre>
+<pre><code>## [1] 0.0002092043</code></pre>
+<pre class="r"><code>(sum((con_inf$ranks[&quot;timewt&quot;] + 1) ^2 * con_inf$ranks[&quot;variance&quot;])) / (79800^2) / 4</code></pre>
+<pre><code>## [1] 0.0002092043</code></pre>
+</div>
+<div id="still-to-do" class="section level3">
+<h3>Still to do</h3>
+<ul>
+<li>jacknife estimate of variance</li>
+<li>weighted version of concordance</li>
+<li>non-proportional hazards</li>
+</ul>
+<p>I don’t think I’ll get round to this now. Refer to <a href="https://www.mayo.edu/research/documents/bsi-techreport-85/doc-20433003" class="uri">https://www.mayo.edu/research/documents/bsi-techreport-85/doc-20433003</a></p>
+</div>
 </div>
 <div id="references" class="section level2">
 <h2>References</h2>

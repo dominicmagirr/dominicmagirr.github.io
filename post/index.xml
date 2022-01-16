@@ -208,6 +208,142 @@ I can estimate this empirically as&lt;/p&gt;
 &lt;/ul&gt;
 &lt;p&gt;But I’ve run out of steam. Maybe I’ll come back to it another time.&lt;/p&gt;
 &lt;/div&gt;
+&lt;div id=&#34;p.s.-standard-errors&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;P.S. standard errors&lt;/h2&gt;
+&lt;p&gt;Follows (&lt;a href=&#34;https://cran.r-project.org/web/packages/survival/vignettes/concordance.pdf&#34; class=&#34;uri&#34;&gt;https://cran.r-project.org/web/packages/survival/vignettes/concordance.pdf&lt;/a&gt;) closely.&lt;/p&gt;
+&lt;p&gt;Let’s take the same example as before, except we reduce the sample size from 10,000 to 400 so that it makes sense to worry about standard errors.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(dplyr)
+library(survival)
+
+set.seed(325)
+
+df_ex &amp;lt;- data.frame(rec = runif(400, 0, 12),
+                    y_star = c(rexp(200, rate = log(2) / 12),
+                               rexp(200, rate = log(2) / 18)),
+                    delta_star = 1,
+                    trt = rep(c(&amp;quot;0&amp;quot;, &amp;quot;1&amp;quot;), each = 200)) %&amp;gt;% 
+   mutate(delta = as.numeric(y_star + rec &amp;lt; 18),
+          y = pmin(y_star, 18 - rec))
+
+head(df_ex)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##         rec    y_star delta_star trt delta         y
+## 1 3.4275172 39.246498          1   0     0 14.572483
+## 2 9.3391460 25.012807          1   0     0  8.660854
+## 3 2.1307085  1.414864          1   0     1  1.414864
+## 4 2.1295279 12.747489          1   0     1 12.747489
+## 5 0.6061914 17.157924          1   0     1 17.157924
+## 6 6.3240452 10.810010          1   0     1 10.810010&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;fit_inf &amp;lt;- survfit(Surv(y_star, delta_star) ~ trt, data = df_ex)
+fit_18 &amp;lt;- survfit(Surv(y, delta) ~ trt, data = df_ex)
+
+plot(fit_inf, col = 1:2)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2021-12-14-notes-on-concordance_files/figure-html/unnamed-chunk-8-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot(fit_18, col = 1:2)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2021-12-14-notes-on-concordance_files/figure-html/unnamed-chunk-8-2.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;div id=&#34;confidence-interval-for-probabilistic-index-using-the-relationship-phi-1-1-theta&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Confidence interval for Probabilistic Index using the relationship &lt;span class=&#34;math inline&#34;&gt;\(\phi = 1 / (1 + \theta)\)&lt;/span&gt;&lt;/h3&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## Infinite follow-up
+cph_inf &amp;lt;- coxph(Surv(y_star, delta_star) ~ trt, data = df_ex)
+
+## Point estimate
+1 / (1 + exp(cph_inf$coefficients))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##      trt1 
+## 0.5793188&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## CI
+rev(1 / (1 + exp(confint(cph_inf))))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.5299843 0.6271182&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## 18 month max follow-up
+cph_18 &amp;lt;- coxph(Surv(y, delta) ~ trt, data = df_ex)
+
+## Point estimate
+1 / (1 + exp(cph_18$coefficients))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##      trt1 
+## 0.5730088&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## CI
+rev(1 / (1 + exp(confint(cph_18))))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.4958763 0.6467470&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;standard-error-of-concordance-empirical&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Standard error of concordance (empirical)&lt;/h3&gt;
+&lt;p&gt;The standard error for the empirical estimator of the concordance can be calculated &lt;a href=&#34;https://www.mayo.edu/research/documents/bsi-techreport-85/doc-20433003&#34;&gt;based on the nice observation by Therneau and Watson&lt;/a&gt; that a standardized version of this estimator is equal to the score statistic from a Cox model with a time-dependent covariate &lt;span class=&#34;math inline&#34;&gt;\(n(t_i)r_i(t_i)\)&lt;/span&gt;, where &lt;span class=&#34;math inline&#34;&gt;\(n(t_i)\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(r_i(t_i)\)&lt;/span&gt; are defined as ” the number of subjects still at risk at time t” and “the rank of &lt;span class=&#34;math inline&#34;&gt;\(x_i\)&lt;/span&gt; among all those still at risk at time &lt;span class=&#34;math inline&#34;&gt;\(t\)&lt;/span&gt;”, respectively. I found it quite difficult to get my head around the &lt;em&gt;exact&lt;/em&gt; definition of &lt;span class=&#34;math inline&#34;&gt;\(n(t_i)\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(r_i(t_i)\)&lt;/span&gt;, and also to understand why there is this equivalence. To avoid that pain again, I’ll now try to explain in excessive detail…&lt;/p&gt;
+&lt;p&gt;Starting with the empirical estimate for concordance:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[ \tilde{C} = \frac{\sum_{\text{pairs}: E_{i,j}\cap (T_i &amp;lt; T_j)} I(\hat{T}_i&amp;lt;\hat{T}_j)+ 0.5I(\hat{T}_i&amp;lt;\hat{T}_j)}{\sum_{\text{pairs}: E_{i,j}\cap (T_i &amp;lt; T_j) } I(\hat{T}_i&amp;lt;\hat{T}_j) + I(\hat{T}_i&amp;gt;\hat{T}_j) + I(\hat{T}_i=\hat{T}_j)}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;where &lt;span class=&#34;math inline&#34;&gt;\(E_{i,j}\)&lt;/span&gt; is the event that it’s possible to establish which of &lt;span class=&#34;math inline&#34;&gt;\(T_i\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(T_j\)&lt;/span&gt; is larger given censoring, we can then rearrange:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[ \left\lbrace \sum_{\text{pairs}: E_{i,j}\cap (T_i &amp;lt; T_j)} 1 \right\rbrace \left( 2\tilde{C}-1 \right) = \sum_{\text{pairs}: E_{i,j}\cap (T_i &amp;lt; T_j)} I(\hat{T}_i&amp;lt;\hat{T}_j) - I(\hat{T}_i&amp;gt;\hat{T}_j) =: U.\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;The next step is to recognize that we can sum up the terms in &lt;span class=&#34;math inline&#34;&gt;\(U\)&lt;/span&gt; in a particular order:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[ U = \sum_i \sum_{j: E_{i,j} \cap (T_j &amp;gt; T_i)} \text{sign}(\hat{T}_j - \hat{T}_i)\]&lt;/span&gt;
+where &lt;span class=&#34;math inline&#34;&gt;\(\text{sign}(z)\)&lt;/span&gt;=-1,0 or 1, depending if &lt;span class=&#34;math inline&#34;&gt;\(z\)&lt;/span&gt; is &lt;span class=&#34;math inline&#34;&gt;\(&amp;lt;0\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(=0\)&lt;/span&gt; or &lt;span class=&#34;math inline&#34;&gt;\(&amp;gt;0\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;For a pair &lt;span class=&#34;math inline&#34;&gt;\((i,j)\)&lt;/span&gt; to satisfy &lt;span class=&#34;math inline&#34;&gt;\(E_{i,j} \cap (T_j &amp;gt; T_i)\)&lt;/span&gt;, we firstly need the survival time &lt;span class=&#34;math inline&#34;&gt;\(T_i\)&lt;/span&gt; to be uncensored. Also, we need patient &lt;span class=&#34;math inline&#34;&gt;\(j\)&lt;/span&gt; to be in the at-risk set at time &lt;span class=&#34;math inline&#34;&gt;\(T_i\)&lt;/span&gt;. This is sufficient to satisfy the condition. So we have&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[U = \sum_i \delta_i \sum_{j: j\neq i,j\in R(T_i) } \text{sign}(\hat{T}_j - \hat{T}_i),\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;where &lt;span class=&#34;math inline&#34;&gt;\(\delta_i\)&lt;/span&gt; is an indicator that patient &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt; has an event, and &lt;span class=&#34;math inline&#34;&gt;\(R\)&lt;/span&gt; denotes the risk set. The same expression is found in &lt;a href=&#34;https://www.mayo.edu/research/documents/bsi-techreport-85/doc-20433003&#34;&gt;Appendix A of Therneau and Watson&lt;/a&gt;. At this point, we can introduce the more precise definitions for &lt;span class=&#34;math inline&#34;&gt;\(r_i(t_i)\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(n(t_i)\)&lt;/span&gt;:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[r_i(t_i):= \frac{1}{n(t_i)}\sum_{j: j\neq i,j\in R(T_i)} \left[ I(\hat{T}_i &amp;lt; \hat{T}_j) + \frac{1}{2}I(\hat{T}_i = \hat{T}_j)\right], \]&lt;/span&gt;
+where &lt;span class=&#34;math inline&#34;&gt;\(n(t_i):= |j: j\neq i,j\in R(T_i)|\)&lt;/span&gt;, i.e., the size of the risk set (excluding &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt; itself). Next (following T&amp;amp;W),&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{align}
+ r_i(t_i) &amp;amp;= \frac{1}{n(t_i)}\sum_{j: j\neq i,j\in R(T_i)} \left[ I(\hat{T}_i &amp;lt; \hat{T}_j) + \frac{1}{2}I(\hat{T}_i = \hat{T}_j)\right]\\
+ &amp;amp;= \frac{1}{n(t_i)}\sum_{j: j\neq i,j\in R(T_i)} \left[ \text{sign}(\hat{T}_j - \hat{T}_i)  + 1   \right] /2\\
+ &amp;amp;= \frac{1}{2} +  \frac{1}{n(t_i)}\sum_{j: j\neq i,j\in R(T_i)}  \frac{\text{sign}(\hat{T}_j - \hat{T}_i)}{2}
+\end{align}
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;and therefore&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[U = \sum_i 2\delta_i n(t_i)\{r_i(t_i) - 1 / 2\}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;To see that this is equivalent to a Cox model, we must further recognize that &lt;span class=&#34;math inline&#34;&gt;\(\bar{r} = 1/2\)&lt;/span&gt;, where &lt;span class=&#34;math inline&#34;&gt;\(\bar{r}\)&lt;/span&gt; is the average of the &lt;span class=&#34;math inline&#34;&gt;\(r_i\)&lt;/span&gt; across all &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt; at risk at time &lt;span class=&#34;math inline&#34;&gt;\(t_i\)&lt;/span&gt; (this is because the &lt;span class=&#34;math inline&#34;&gt;\(j\neq i\)&lt;/span&gt; terms cancel each other out), and finally write down the partial likelihood from the Cox model with a time-dependent covariate &lt;span class=&#34;math inline&#34;&gt;\(z(t)\)&lt;/span&gt;:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\sum_i \delta_i \left[ z_i(t_i) - \frac{\sum_{j \in R(t_i)} z_j(t_i) \exp\left[ z_j(t_i)\beta \right]}{\exp\left[ z_j(t_i)\beta \right]} \right] \mid_{\beta = 0} = \sum_i \delta_i \left[ z_i(t_i) - \bar{z}(t_i)\right],\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;observing the equivalence between this expression and the expression for &lt;span class=&#34;math inline&#34;&gt;\(U\)&lt;/span&gt; when &lt;span class=&#34;math inline&#34;&gt;\(z_i(t_i) =2 n(t_i)r_i(t_i)\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;A nice consequence of using the Cox model is that we can write down the variance of this statistic under the null hypothesis (see, e.g., page 128 of &lt;a href=&#34;https://www4.stat.ncsu.edu/~dzhang2/st745/chap6.pdf&#34; class=&#34;uri&#34;&gt;https://www4.stat.ncsu.edu/~dzhang2/st745/chap6.pdf&lt;/a&gt;):&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[ \sum_i \delta_i \left[ \sum_{j \in R(t_i)} \frac{z_j(t_i)^2}{n(t_i)} - \bar{z}(t_i)^2  \right].\]&lt;/span&gt;
+In principle, I think this is enough to be able to calculate the variance for the empirical estimate of concordance for a general Cox model, but I can’t be bothered any more to actually go through a more complicated example (i.e. a Cox model with more than one variable).&lt;/p&gt;
+&lt;p&gt;In the context of just two predictions (e.g. in a simple RCT with &lt;span class=&#34;math inline&#34;&gt;\(A=0\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(A=1\)&lt;/span&gt;), the score statistic reduces to the Gehan-Wilcoxon statistic (this is also shown in the appendix of &lt;a href=&#34;https://www.mayo.edu/research/documents/bsi-techreport-85/doc-20433003&#34; class=&#34;uri&#34;&gt;https://www.mayo.edu/research/documents/bsi-techreport-85/doc-20433003&lt;/a&gt;)&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[ U= \sum_k n_k (d_{1,k} - \frac{n_{1,k}}{n_1}) \]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;with variance&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\text{var}({U}) = \sum_kn_{k}^2 \times\text{var}\left(d_{1,k} - \frac{n_{1,k}}{n_1}\right)\]&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;And from these formulas I can reconstruct the estimate of the variance for our example.&lt;/p&gt;
+&lt;p&gt;The terms &lt;span class=&#34;math inline&#34;&gt;\(\{2r_i(t_i) - 1\}\)&lt;/span&gt; are guaranteed to be between &lt;span class=&#34;math inline&#34;&gt;\(-1\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(1\)&lt;/span&gt;, and they are provided in the &lt;code&gt;rank&lt;/code&gt; column by &lt;code&gt;survival::concordance&lt;/code&gt;, if we explicitly ask for it:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;con_inf &amp;lt;- concordance(cph_inf, ranks = TRUE)
+head(con_inf$ranks)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##           time       rank timewt casewt  variance
+## 98  0.01382162  0.5012531    399      1 0.2500000
+## 313 0.06709051 -0.5000000    398      1 0.2499984
+## 257 0.09001529 -0.5012594    397      1 0.2500000
+## 40  0.12598446  0.5000000    396      1 0.2499984
+## 395 0.14877580 -0.5012658    395      1 0.2500000
+## 262 0.18041986 -0.5025381    394      1 0.2499984&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tail(con_inf$ranks)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##          time       rank timewt casewt  variance
+## 332  98.80991 -0.1666667      6      1 0.1224490
+## 348  99.66819 -0.2000000      5      1 0.1388889
+## 164 108.75980  1.0000000      4      1 0.1600000
+## 368 109.71749  0.0000000      3      1 0.0000000
+## 205 111.79013  0.0000000      2      1 0.0000000
+## 396 113.71013  0.0000000      1      1 0.0000000&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Next I print out the concordance again…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;con_inf&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Call:
+## concordance.coxph(object = cph_inf, ranks = TRUE)
+## 
+## n= 400 
+## Concordance= 0.5331 se= 0.01436
+## concordant discordant     tied.x     tied.y    tied.xy 
+##      22640      17360      39800          0          0&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;…and show I can reproduce it from the formula above for &lt;span class=&#34;math inline&#34;&gt;\(U\)&lt;/span&gt; based on &lt;span class=&#34;math inline&#34;&gt;\(r\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(n\)&lt;/span&gt; (79800 is the total number of pairs)…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;(sum(con_inf$ranks[,&amp;quot;rank&amp;quot;] * con_inf$ranks[,&amp;quot;timewt&amp;quot;]) / 79800 + 1) / 2&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.5330827&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;…and I can reproduce the variance for the specific case of just two groups&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;con_inf$cvar&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.0002092043&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;(sum((con_inf$ranks[&amp;quot;timewt&amp;quot;] + 1) ^2 * con_inf$ranks[&amp;quot;variance&amp;quot;])) / (79800^2) / 4&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.0002092043&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;still-to-do&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Still to do&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;jacknife estimate of variance&lt;/li&gt;
+&lt;li&gt;weighted version of concordance&lt;/li&gt;
+&lt;li&gt;non-proportional hazards&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I don’t think I’ll get round to this now. Refer to &lt;a href=&#34;https://www.mayo.edu/research/documents/bsi-techreport-85/doc-20433003&#34; class=&#34;uri&#34;&gt;https://www.mayo.edu/research/documents/bsi-techreport-85/doc-20433003&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
 &lt;div id=&#34;references&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;References&lt;/h2&gt;
 &lt;p&gt;De Neve, Jan, and Thomas A. Gerds. “On the interpretation of the hazard ratio in Cox regression.” Biometrical Journal 62.3 (2020): 742-750.&lt;/p&gt;
