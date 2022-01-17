@@ -568,7 +568,7 @@ surv_cox$std.err[,1]</code></pre>
 <p>To get the standard error when <code>trt=="B"</code>, note that the cumulative hazard on treatment B is equal to the baseline cumulative hazard multiplied by <span class="math inline">\(\exp(\beta)\)</span>. So we have to use the delta method, taking into account the variance of the breslow estimator, the variance of <code>beta_hat</code>, and their covariance.</p>
 <p>This is messy.</p>
 <p>To find their covariance, we use the formulas from <a href="https://www.uio.no/studier/emner/matnat/math/STK4080/h16/undervisningsmateriell/lecture8_16.pdf" class="uri">https://www.uio.no/studier/emner/matnat/math/STK4080/h16/undervisningsmateriell/lecture8_16.pdf</a> again, where they use the notation <span class="math inline">\(A\)</span> for the cumulative hazard:</p>
-<p><img src="var_breslow.PNG" /></p>
+<p><img src="/img/var_breslow.PNG" /></p>
 <p>One can see from this that the covariance between <span class="math inline">\(\hat{\beta}\)</span> and the Breslow estimator is going to be…</p>
 <pre class="r"><code>cov_breslow_beta &lt;- -var_beta * cumsum(s_1 / s_0 ^ 2) </code></pre>
 <p>Now we are ready to use the delta method (where <span class="math inline">\(\Sigma\)</span> is the covariance matrix between the Breslow estimator and <span class="math inline">\(\hat{\beta}\)</span>):</p>
@@ -673,15 +673,15 @@ cbind(mean = marginal_mean,
       lower = marginal_lower,
       upper = marginal_upper)</code></pre>
 <pre><code>##            mean       lower     upper
-##  [1,] 0.8880505 0.692513817 1.0000000
-##  [2,] 0.7970043 0.551296612 1.0000000
-##  [3,] 0.7066561 0.438237451 1.0000000
-##  [4,] 0.6154169 0.341506545 1.0000000
-##  [5,] 0.5257052 0.254454157 1.0000000
-##  [6,] 0.4350415 0.178591830 1.0000000
-##  [7,] 0.3367741 0.104568246 1.0000000
-##  [8,] 0.2524093 0.049199521 1.0000000
-##  [9,] 0.1436856 0.006847723 0.9076728</code></pre>
+##  [1,] 0.8885047 0.685613541 1.0000000
+##  [2,] 0.7989028 0.559350580 1.0000000
+##  [3,] 0.7066484 0.437844161 1.0000000
+##  [4,] 0.6154889 0.343173266 1.0000000
+##  [5,] 0.5237261 0.253947402 1.0000000
+##  [6,] 0.4339794 0.173801676 1.0000000
+##  [7,] 0.3385072 0.105273664 1.0000000
+##  [8,] 0.2491458 0.048395631 1.0000000
+##  [9,] 0.1443845 0.007122735 0.9366364</code></pre>
 <p>Obviously, this toy data set is too small to rely on the normal approximations here. But in principle I think this method is reasonable. Of course, it assumes the Cox model is correct.</p>
 </div>
 
