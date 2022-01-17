@@ -5,7 +5,7 @@
     <link>/</link>
       <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <description>Dominic Magirr</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Tue, 14 Dec 2021 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Mon, 17 Jan 2022 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>Dominic Magirr</title>
@@ -51,6 +51,244 @@
 &lt;p&gt;Cras aliquam rhoncus ipsum, in hendrerit nunc mattis vitae. Duis vitae efficitur metus, ac tempus leo. Cras nec fringilla lacus. Quisque sit amet risus at ipsum pharetra commodo. Sed aliquam mauris at consequat eleifend. Praesent porta, augue sed viverra bibendum, neque ante euismod ante, in vehicula justo lorem ac eros. Suspendisse augue libero, venenatis eget tincidunt ut, malesuada at lorem. Donec vitae bibendum arcu. Aenean maximus nulla non pretium iaculis. Quisque imperdiet, nulla in pulvinar aliquet, velit quam ultrices quam, sit amet fringilla leo sem vel nunc. Mauris in lacinia lacus.&lt;/p&gt;
 &lt;p&gt;Suspendisse a tincidunt lacus. Curabitur at urna sagittis, dictum ante sit amet, euismod magna. Sed rutrum massa id tortor commodo, vitae elementum turpis tempus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean purus turpis, venenatis a ullamcorper nec, tincidunt et massa. Integer posuere quam rutrum arcu vehicula imperdiet. Mauris ullamcorper quam vitae purus congue, quis euismod magna eleifend. Vestibulum semper vel augue eget tincidunt. Fusce eget justo sodales, dapibus odio eu, ultrices lorem. Duis condimentum lorem id eros commodo, in facilisis mauris scelerisque. Morbi sed auctor leo. Nullam volutpat a lacus quis pharetra. Nulla congue rutrum magna a ornare.&lt;/p&gt;
 &lt;p&gt;Aliquam in turpis accumsan, malesuada nibh ut, hendrerit justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque sed erat nec justo posuere suscipit. Donec ut efficitur arcu, in malesuada neque. Nunc dignissim nisl massa, id vulputate nunc pretium nec. Quisque eget urna in risus suscipit ultricies. Pellentesque odio odio, tincidunt in eleifend sed, posuere a diam. Nam gravida nisl convallis semper elementum. Morbi vitae felis faucibus, vulputate orci placerat, aliquet nisi. Aliquam erat volutpat. Maecenas sagittis pulvinar purus, sed porta quam laoreet at.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Confidence interval for a survival curve based on a Cox model</title>
+      <link>/post/2022-01-17-confidence-interval-for-a-survival-curve-based-on-a-cox-model/</link>
+      <pubDate>Mon, 17 Jan 2022 00:00:00 +0000</pubDate>
+      <guid>/post/2022-01-17-confidence-interval-for-a-survival-curve-based-on-a-cox-model/</guid>
+      <description>
+&lt;script src=&#34;/rmarkdown-libs/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;p&gt;A colleague caught me out recently when they asked about a confidence interval for survival curve based on a Cox model. This can be done in R using &lt;code&gt;survival::survfit&lt;/code&gt; after &lt;code&gt;survival::coxph&lt;/code&gt;. But the question was: does this take into account the uncertainty in the baseline hazard. I had to admit that I wasn’t 100% sure. So here is an example to clear it up…&lt;/p&gt;
+&lt;div id=&#34;understanding-survfit.coxph-standard-errors&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;1. Understanding survfit.coxph standard errors&lt;/h1&gt;
+&lt;div id=&#34;create-a-toy-data-set-and-apply-survfit.coxph&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Create a toy data set and apply &lt;code&gt;survfit.coxph&lt;/code&gt;&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(survival)
+### create a toy data set
+df &amp;lt;- data.frame(time = c(3,5,7,12,17,19,25,26,30),
+                 event = rep(1,9),
+                 trt = factor(c(&amp;quot;A&amp;quot;,&amp;quot;B&amp;quot;,&amp;quot;A&amp;quot;,&amp;quot;B&amp;quot;,&amp;quot;A&amp;quot;,&amp;quot;B&amp;quot;,&amp;quot;A&amp;quot;,&amp;quot;B&amp;quot;,&amp;quot;A&amp;quot;)))
+
+
+fit_cox &amp;lt;- coxph(Surv(time, event) ~ trt, data = df)
+surv_cox &amp;lt;- survfit(fit_cox, newdata = data.frame(trt = c(&amp;quot;A&amp;quot;, &amp;quot;B&amp;quot;)))&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;can-i-reproduce-the-estimates-and-standard-errors&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Can I reproduce the estimates and standard errors?&lt;/h2&gt;
+&lt;p&gt;Here are the estimates of survival and &lt;code&gt;std.err&lt;/code&gt; (of something) I would like to reproduce in order to understand how they were calculated. The first column corresponds to &lt;code&gt;trt==&#34;A&#34;&lt;/code&gt; and the second column to &lt;code&gt;trt==&#34;B&#34;&lt;/code&gt;…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;surv_cox$surv&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##                1          2
+##  [1,] 0.90379995 0.88376336
+##  [2,] 0.80760960 0.77025266
+##  [3,] 0.70882912 0.65677247
+##  [4,] 0.61007108 0.54677825
+##  [5,] 0.50768592 0.43685968
+##  [6,] 0.40537172 0.33184585
+##  [7,] 0.29719960 0.22711842
+##  [8,] 0.18948065 0.13105127
+##  [9,] 0.06970604 0.03862672&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;surv_cox$std.err&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##            [,1]      [,2]
+##  [1,] 0.1072286 0.1313337
+##  [2,] 0.1709941 0.2049614
+##  [3,] 0.2351795 0.2853216
+##  [4,] 0.3095973 0.3685374
+##  [5,] 0.3930877 0.4799235
+##  [6,] 0.5054737 0.6046534
+##  [7,] 0.6435328 0.8159658
+##  [8,] 0.8908094 1.0923455
+##  [9,] 1.3392316 2.1694201&lt;/code&gt;&lt;/pre&gt;
+&lt;div id=&#34;step-1-estimate-the-baseline-cumulative-hazard&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Step 1: Estimate the baseline cumulative hazard&lt;/h3&gt;
+&lt;p&gt;This uses Breslow’s estimator (see slide 39 of &lt;a href=&#34;https://www.uio.no/studier/emner/matnat/math/STK4080/h16/undervisningsmateriell/lecture8_16.pdf&#34; class=&#34;uri&#34;&gt;https://www.uio.no/studier/emner/matnat/math/STK4080/h16/undervisningsmateriell/lecture8_16.pdf&lt;/a&gt;)&lt;/p&gt;
+&lt;p&gt;The Cox model &lt;span class=&#34;math inline&#34;&gt;\(h_0(t)\exp(x\beta)\)&lt;/span&gt; has been parameterized in such a way that &lt;span class=&#34;math inline&#34;&gt;\(x=0\)&lt;/span&gt; corresponds to &lt;code&gt;trt==&#34;A&#34;&lt;/code&gt; and &lt;span class=&#34;math inline&#34;&gt;\(x=1\)&lt;/span&gt; corresponds to &lt;code&gt;trt==&#34;B&#34;&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;beta_hat &amp;lt;- fit_cox$coef
+df$x &amp;lt;- ifelse(df$trt == &amp;quot;B&amp;quot;,  1, 0)
+df$exp_b &amp;lt;- exp(df$x * beta_hat)
+## See formula for Breslow estimator:
+H_0 &amp;lt;- cumsum(1 / rev(cumsum(rev(df$exp_b))))
+H_0&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.1011472 0.2136765 0.3441408 0.4941798 0.6778923 0.9029508 1.2133513
+## [8] 1.6634684 2.6634684&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Note I could instead have used the &lt;code&gt;basehaz&lt;/code&gt; function:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;basehaz(fit_cox)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##      hazard time
+## 1 0.1011472    3
+## 2 0.2136765    5
+## 3 0.3441408    7
+## 4 0.4941798   12
+## 5 0.6778923   17
+## 6 0.9029508   19
+## 7 1.2133513   25
+## 8 1.6634684   26
+## 9 2.6634684   30&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;step-2-transform-to-estimated-survival-curve&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Step 2: Transform to estimated survival curve&lt;/h3&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;### For trt == &amp;quot;A&amp;quot;
+exp(-H_0)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.90379995 0.80760960 0.70882912 0.61007108 0.50768592 0.40537172 0.29719960
+## [8] 0.18948065 0.06970604&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## this matches
+surv_cox$surv[,1]&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.90379995 0.80760960 0.70882912 0.61007108 0.50768592 0.40537172 0.29719960
+## [8] 0.18948065 0.06970604&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;### For trt == &amp;quot;B&amp;quot;
+### the cumulative hazard is equal to the baseline
+### cumulative hazard muliplied by exp(beta)
+exp(-H_0 * exp(beta_hat))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.88376336 0.77025266 0.65677247 0.54677825 0.43685968 0.33184585 0.22711842
+## [8] 0.13105127 0.03862672&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## this matches:
+surv_cox$surv[,2]&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.88376336 0.77025266 0.65677247 0.54677825 0.43685968 0.33184585 0.22711842
+## [8] 0.13105127 0.03862672&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;step-3-variance-of-breslows-estimator&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Step 3: Variance of Breslow’s estimator&lt;/h3&gt;
+&lt;p&gt;The variance of Breslow’s estimator is somewhat complicated. It is given on slide 47 of &lt;a href=&#34;https://www.uio.no/studier/emner/matnat/math/STK4080/h16/undervisningsmateriell/lecture8_16.pdf&#34; class=&#34;uri&#34;&gt;https://www.uio.no/studier/emner/matnat/math/STK4080/h16/undervisningsmateriell/lecture8_16.pdf&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;And here I just implement their result:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## see definition of s_0 and s_1 in slides:
+s_0 = rev(cumsum(rev(df$exp_b)))
+s_1 = rev(cumsum(rev(df$exp_b) * rev(df$x)))
+
+var_beta &amp;lt;- c(fit_cox$var)
+
+var_breslow &amp;lt;- var_beta * cumsum(s_1 / s_0 ^ 2) ^ 2 + cumsum(1 / s_0 ^ 2)
+
+## Note that... 
+sqrt(var_breslow)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.1072286 0.1709941 0.2351795 0.3095973 0.3930877 0.5054737 0.6435328
+## [8] 0.8908094 1.3392316&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## ... already matches
+surv_cox$std.err[,1]&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.1072286 0.1709941 0.2351795 0.3095973 0.3930877 0.5054737 0.6435328
+## [8] 0.8908094 1.3392316&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;So the &lt;code&gt;$.std.err&lt;/code&gt; given in &lt;code&gt;survfit.coxph&lt;/code&gt; is reporting the standard error of the cumulative hazard. When &lt;code&gt;trt==&#34;A&#34;&lt;/code&gt; this is the same as the standard error of the baseline cumulative hazard.&lt;/p&gt;
+&lt;p&gt;To get the standard error when &lt;code&gt;trt==&#34;B&#34;&lt;/code&gt;, note that the cumulative hazard on treatment B is equal to the baseline cumulative hazard multiplied by &lt;span class=&#34;math inline&#34;&gt;\(\exp(\beta)\)&lt;/span&gt;. So we have to use the delta method, taking into account the variance of the breslow estimator, the variance of &lt;code&gt;beta_hat&lt;/code&gt;, and their covariance.&lt;/p&gt;
+&lt;p&gt;This is messy.&lt;/p&gt;
+&lt;p&gt;To find their covariance, we use the formulas from &lt;a href=&#34;https://www.uio.no/studier/emner/matnat/math/STK4080/h16/undervisningsmateriell/lecture8_16.pdf&#34; class=&#34;uri&#34;&gt;https://www.uio.no/studier/emner/matnat/math/STK4080/h16/undervisningsmateriell/lecture8_16.pdf&lt;/a&gt; again, where they use the notation &lt;span class=&#34;math inline&#34;&gt;\(A\)&lt;/span&gt; for the cumulative hazard:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;var_breslow.PNG&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;One can see from this that the covariance between &lt;span class=&#34;math inline&#34;&gt;\(\hat{\beta}\)&lt;/span&gt; and the Breslow estimator is going to be…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cov_breslow_beta &amp;lt;- -var_beta * cumsum(s_1 / s_0 ^ 2) &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now we are ready to use the delta method (where &lt;span class=&#34;math inline&#34;&gt;\(\Sigma\)&lt;/span&gt; is the covariance matrix between the Breslow estimator and &lt;span class=&#34;math inline&#34;&gt;\(\hat{\beta}\)&lt;/span&gt;):&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\text{var} \left\lbrace \hat{A}_0 \exp(x\hat{\beta}) \right\rbrace = (\exp(x\hat{\beta}), x\hat{A}_0 \exp(x\hat{\beta}))\hat{\Sigma} (\exp(x\hat{\beta}), x\hat{A}_0 \exp(x\hat{\beta}))^T\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Applying this to our example:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;var_chaz_B &amp;lt;- numeric(length(H_0))
+for (i in seq_along(H_0)){
+  
+  Sigma_hat_i &amp;lt;- matrix(c(var_breslow[i], cov_breslow_beta[i],
+                          cov_breslow_beta[i], var_beta), 2, 2)
+  
+  var_chaz_B[i] &amp;lt;- c(exp(beta_hat), H_0[i] * exp(beta_hat)) %*%
+                   Sigma_hat_i %*% 
+                   c(exp(beta_hat), H_0[i] * exp(beta_hat))
+}
+
+sqrt(var_chaz_B)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.1313337 0.2049614 0.2853216 0.3685374 0.4799235 0.6046534 0.8159658
+## [8] 1.0923455 2.1694201&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;surv_cox$std.err[,2]&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.1313337 0.2049614 0.2853216 0.3685374 0.4799235 0.6046534 0.8159658
+## [8] 1.0923455 2.1694201&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;step-4-bonus.-confidence-interval-for-survival-curve&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Step 4 (bonus). Confidence interval for survival curve&lt;/h3&gt;
+&lt;p&gt;I’ll just focus on the lower confidence bounds:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;surv_cox$lower&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##                 1            2
+##  [1,] 0.732485749 0.6831947370
+##  [2,] 0.577631682 0.5154300933
+##  [3,] 0.447050313 0.3754471028
+##  [4,] 0.332545266 0.2655287902
+##  [5,] 0.234962333 0.1705416091
+##  [6,] 0.150519749 0.1014505772
+##  [7,] 0.084192245 0.0458881994
+##  [8,] 0.033060280 0.0154040543
+##  [9,] 0.005050267 0.0005498878&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Having found the standard error for the cumulative hazard, it’s easy to convert this into a confidence interval for the survival curve:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cbind(exp(-(H_0 + sqrt(var_breslow) * qnorm(.975))),
+      exp(-(H_0 * exp(beta_hat) + sqrt(var_chaz_B) * qnorm(.975))))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##              [,1]         [,2]
+##  [1,] 0.732485749 0.6831947370
+##  [2,] 0.577631682 0.5154300933
+##  [3,] 0.447050313 0.3754471028
+##  [4,] 0.332545266 0.2655287902
+##  [5,] 0.234962333 0.1705416091
+##  [6,] 0.150519749 0.1014505772
+##  [7,] 0.084192245 0.0458881994
+##  [8,] 0.033060280 0.0154040543
+##  [9,] 0.005050267 0.0005498878&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;confidence-interval-for-marginal-survival-curve&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Confidence interval for marginal survival curve&lt;/h1&gt;
+&lt;p&gt;Having established how &lt;code&gt;surfit.coxph&lt;/code&gt; calculates standard errors and confidence intervals for a particular fixed covariate &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt;, the next question is: can one produce a confidence interval for the marginal survival curve, standardized over a distribution on &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt;, for example the distribution from the original data set?&lt;/p&gt;
+&lt;p&gt;I don’t know an “official” answer for this, but based on the above, one option that occurs to me is to simulate from the normal approximation to the joint distribution of &lt;span class=&#34;math inline&#34;&gt;\((\hat{A}_0, \hat{\beta})\)&lt;/span&gt;, then, for each realization, calculate the marginal survival probability, then take quantiles.&lt;/p&gt;
+&lt;p&gt;We can try it, anyway.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(mvtnorm)
+
+## set up dummy vector to store results
+marginal_mean &amp;lt;- numeric(length(H_0))
+marginal_lower &amp;lt;- numeric(length(H_0))
+marginal_upper &amp;lt;- numeric(length(H_0))
+
+## function to calculate the mean survival curve
+## averaged across the covariates in the original
+## data frame.
+## Note that the normal approximation to the cumulative
+## hazard may stray below 0 (meaning survival above 1),
+## so I have to use pmin here:
+get_mean_surv &amp;lt;- function(sims){
+  mean(pmin(1, exp(-sims[1] * exp(sims[2] * df$x))))
+}
+
+
+## For each time point t_i...
+for (i in seq_along(H_0)){
+  
+  ## ...extract mean...
+  Mu_hat_i &amp;lt;- c(H_0[i], beta_hat)
+  
+  ## ...and covariance of (Breslow, beta_hat)
+  Sigma_hat_i &amp;lt;- matrix(c(var_breslow[i], cov_breslow_beta[i],
+                          cov_breslow_beta[i], var_beta), 2, 2)
+  
+  ## simulate from this distribution
+  sims_i &amp;lt;- rmvnorm(10000, mean = Mu_hat_i, sigma = Sigma_hat_i)
+  
+  ## find the marginal survival curve for each realization
+  mean_surv_i &amp;lt;- apply(sims_i, 1, get_mean_surv)
+  
+  ## store mean and quantiles to use as estimate and CI
+  marginal_mean[i] &amp;lt;- mean(mean_surv_i)
+  marginal_lower[i] &amp;lt;- quantile(mean_surv_i, c(0.025))
+  marginal_upper[i] &amp;lt;- quantile(mean_surv_i, c(0.975))
+  
+}
+
+## Print result for our example
+cbind(mean = marginal_mean,
+      lower = marginal_lower,
+      upper = marginal_upper)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##            mean       lower     upper
+##  [1,] 0.8880505 0.692513817 1.0000000
+##  [2,] 0.7970043 0.551296612 1.0000000
+##  [3,] 0.7066561 0.438237451 1.0000000
+##  [4,] 0.6154169 0.341506545 1.0000000
+##  [5,] 0.5257052 0.254454157 1.0000000
+##  [6,] 0.4350415 0.178591830 1.0000000
+##  [7,] 0.3367741 0.104568246 1.0000000
+##  [8,] 0.2524093 0.049199521 1.0000000
+##  [9,] 0.1436856 0.006847723 0.9076728&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Obviously, this toy data set is too small to rely on the normal approximations here. But in principle I think this method is reasonable. Of course, it assumes the Cox model is correct.&lt;/p&gt;
+&lt;/div&gt;
 </description>
     </item>
     
