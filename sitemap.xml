@@ -11,26 +11,29 @@
     <loc>/courses/example/example2/</loc>
     <lastmod>2019-05-05T00:00:00+01:00</lastmod>
   </url><url>
+    <loc>/post/2022-01-18-be-careful-with-standard-errors-in-survival-survfit/</loc>
+    <lastmod>2022-01-18T10:14:13+00:00</lastmod>
+  </url><url>
     <loc>/categories/</loc>
-    <lastmod>2022-01-17T11:09:47+00:00</lastmod>
+    <lastmod>2022-01-18T10:14:13+00:00</lastmod>
+  </url><url>
+    <loc>/categories/clinical-trials/</loc>
+    <lastmod>2022-01-18T10:14:13+00:00</lastmod>
+  </url><url>
+    <loc>/</loc>
+    <lastmod>2022-01-18T10:14:13+00:00</lastmod>
+  </url><url>
+    <loc>/post/</loc>
+    <lastmod>2022-01-18T10:14:13+00:00</lastmod>
+  </url><url>
+    <loc>/categories/survival-analysis/</loc>
+    <lastmod>2022-01-18T10:14:13+00:00</lastmod>
   </url><url>
     <loc>/post/2022-01-17-confidence-interval-for-a-survival-curve-based-on-a-cox-model/</loc>
     <lastmod>2022-01-17T11:09:47+00:00</lastmod>
   </url><url>
-    <loc>/</loc>
-    <lastmod>2022-01-17T11:09:47+00:00</lastmod>
-  </url><url>
-    <loc>/post/</loc>
-    <lastmod>2022-01-17T11:09:47+00:00</lastmod>
-  </url><url>
-    <loc>/categories/survival-analysis/</loc>
-    <lastmod>2022-01-17T11:09:47+00:00</lastmod>
-  </url><url>
     <loc>/post/2021-12-14-notes-on-concordance/</loc>
     <lastmod>2021-12-14T15:03:20+00:00</lastmod>
-  </url><url>
-    <loc>/categories/clinical-trials/</loc>
-    <lastmod>2021-10-15T14:45:15+02:00</lastmod>
   </url><url>
     <loc>/post/trouble-with-tau/</loc>
     <lastmod>2021-10-15T14:45:15+02:00</lastmod>

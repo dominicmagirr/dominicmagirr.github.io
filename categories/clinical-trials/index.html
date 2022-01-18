@@ -120,7 +120,7 @@
   <meta property="og:description" content="Medical Statistician"><meta property="og:image" content="/img/icon-192.png">
   <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
   
-    <meta property="og:updated_time" content="2021-10-15T00:00:00&#43;00:00">
+    <meta property="og:updated_time" content="2022-01-18T00:00:00&#43;00:00">
   
 
   
@@ -347,6 +347,15 @@
   
 
   
+  
+  <div>
+    <h2><a href="/post/2022-01-18-be-careful-with-standard-errors-in-survival-survfit/">Be careful with standard errors in `survival::survfit`</a></h2>
+    <div class="article-style">
+      
+      (Mild) panic In my previous post I looked into how survival::survfit produces standard errors and confidence intervals for a survival curve based on a Cox proportional hazards model. I discovered (I could also have just read it from the documentation) that when you ask for the standard error fit_1$std.err after fit_1 &lt;- survfit(...), it provides you not with the standard error of the estimator of the survival probability, but instead with the standard error of the estimator of the cumulative hazard.
+      
+    </div>
+  </div>
   
   <div>
     <h2><a href="/post/trouble-with-tau/">Trouble with tau</a></h2>

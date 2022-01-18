@@ -5,7 +5,7 @@
     <link>/</link>
       <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <description>Dominic Magirr</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Mon, 17 Jan 2022 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Tue, 18 Jan 2022 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>Dominic Magirr</title>
@@ -55,6 +55,165 @@
     </item>
     
     <item>
+      <title>Be careful with standard errors in `survival::survfit`</title>
+      <link>/post/2022-01-18-be-careful-with-standard-errors-in-survival-survfit/</link>
+      <pubDate>Tue, 18 Jan 2022 00:00:00 +0000</pubDate>
+      <guid>/post/2022-01-18-be-careful-with-standard-errors-in-survival-survfit/</guid>
+      <description>
+&lt;script src=&#34;/rmarkdown-libs/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;div id=&#34;mild-panic&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;(Mild) panic&lt;/h2&gt;
+&lt;p&gt;In my &lt;a href=&#34;/post/confidence-interval-for-a-survival-curve-based-on-a-cox-model&#34;&gt;previous post&lt;/a&gt; I looked into how &lt;code&gt;survival::survfit&lt;/code&gt; produces standard errors and confidence intervals for a survival curve based on a Cox proportional hazards model. I discovered (I could also have just read it from the documentation) that when you ask for the standard error &lt;code&gt;fit_1$std.err&lt;/code&gt; after &lt;code&gt;fit_1 &amp;lt;- survfit(...)&lt;/code&gt;, it provides you not with the standard error of the estimator of the survival probability, but instead with the standard error of the estimator of the cumulative hazard.&lt;/p&gt;
+&lt;p&gt;It then occurred to me that I had been using &lt;code&gt;survival::survfit&lt;/code&gt; in two of my recent papers. And I had been extracting the standard errors in order to calculate a test statistic for the difference between milestone survival probabilities on the two treatment arms of a clinical trial.&lt;/p&gt;
+&lt;p&gt;“Oh s***…have I included standard errors for the wrong thing?…are my results wrong?…am I going to have to submit corrections to the articles?”&lt;/p&gt;
+&lt;p&gt;This motivated me to look more closely again at what &lt;code&gt;survival::survfit&lt;/code&gt; is doing. Something I obviously should have done as I was writing the papers!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;kaplan-meier-estimation&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Kaplan-Meier estimation&lt;/h2&gt;
+&lt;p&gt;My examples just involved Kaplan-Meier estimation and not a Cox model, so I’ll quickly fit a KM for a toy example.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;### create a toy data set
+df &amp;lt;- data.frame(time = c(3,5,7,12,17,19,25,26,30),
+                 event = rep(1,9))
+
+### Kaplan-Meier estimate
+library(survival)
+fit &amp;lt;- survfit(Surv(time, event) ~ 1, data = df)
+fit$std.err&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.1178511 0.1781742 0.2357023 0.2981424 0.3726780 0.4714045 0.6236096
+## [8] 0.9428090       Inf&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;As mentioned, this is the standard error for the cumulative hazard. I could have derived it “manually” based on the formulas in slide 22 of this presentation &lt;a href=&#34;https://mathweb.ucsd.edu/~rxu/math284/slect2.pdf&#34; class=&#34;uri&#34;&gt;https://mathweb.ucsd.edu/~rxu/math284/slect2.pdf&lt;/a&gt;, noting that &lt;span class=&#34;math inline&#34;&gt;\(\log(S)=-H\)&lt;/span&gt;,&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/greenwoods_formula.PNG&#34; /&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;n_at_risk &amp;lt;- 9:1
+event &amp;lt;- rep(1, 9)
+var_H &amp;lt;- cumsum(event / (n_at_risk - event) / n_at_risk)
+sqrt(var_H) &lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.1178511 0.1781742 0.2357023 0.2981424 0.3726780 0.4714045 0.6236096
+## [8] 0.9428090       Inf&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;### this matches
+fit$std.err&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.1178511 0.1781742 0.2357023 0.2981424 0.3726780 0.4714045 0.6236096
+## [8] 0.9428090       Inf&lt;/code&gt;&lt;/pre&gt;
+&lt;div id=&#34;what-happens-when-you-apply-summary.survfit&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;What happens when you apply &lt;code&gt;summary.survfit&lt;/code&gt;?&lt;/h3&gt;
+&lt;p&gt;The &lt;code&gt;summary.survfit&lt;/code&gt; method is useful for getting some more detailed information about your model.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;summary(fit)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Call: survfit(formula = Surv(time, event) ~ 1, data = df)
+## 
+##  time n.risk n.event survival std.err lower 95% CI upper 95% CI
+##     3      9       1    0.889   0.105       0.7056        1.000
+##     5      8       1    0.778   0.139       0.5485        1.000
+##     7      7       1    0.667   0.157       0.4200        1.000
+##    12      6       1    0.556   0.166       0.3097        0.997
+##    17      5       1    0.444   0.166       0.2141        0.923
+##    19      4       1    0.333   0.157       0.1323        0.840
+##    25      3       1    0.222   0.139       0.0655        0.754
+##    26      2       1    0.111   0.105       0.0175        0.705
+##    30      1       1    0.000     NaN           NA           NA&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Notice here that the &lt;code&gt;std.err&lt;/code&gt; looks different to before, and indeed…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;summary(fit)$std.err&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.1047566 0.1385799 0.1571348 0.1656347 0.1656347 0.1571348 0.1385799
+## [8] 0.1047566       NaN&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;### is not the same as
+fit$std.err&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.1178511 0.1781742 0.2357023 0.2981424 0.3726780 0.4714045 0.6236096
+## [8] 0.9428090       Inf&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;It turns out &lt;code&gt;summary(fit)$std.err&lt;/code&gt; is giving the standard error of the estimator of the survival probability. From the formula at the bottom of the slide (printed above), we see that this is just equal to the estimate of the survival probability multiplied by the standard error of the cumulative hazard:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sqrt(var_H) * fit$surv&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.1047566 0.1385799 0.1571348 0.1656347 0.1656347 0.1571348 0.1385799
+## [8] 0.1047566       NaN&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;### this matches
+summary(fit)$std.err&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.1047566 0.1385799 0.1571348 0.1656347 0.1656347 0.1571348 0.1385799
+## [8] 0.1047566       NaN&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Fortunately, I’d been using &lt;code&gt;summary(fit)$std.err&lt;/code&gt; and not &lt;code&gt;fit$std.err&lt;/code&gt; in my code, so I could breathe a sigh of relief.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;confidence-intervals&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Confidence intervals&lt;/h2&gt;
+&lt;p&gt;Although it turned out I hadn’t made an error in my papers, I’m still a bit disappointed I didn’t think more carefully about this issue. A standard error for &lt;span class=&#34;math inline&#34;&gt;\(S\)&lt;/span&gt; suffers from the obvious limitation that &lt;span class=&#34;math inline&#34;&gt;\(S\)&lt;/span&gt; is restricted to &lt;span class=&#34;math inline&#34;&gt;\((0,1)\)&lt;/span&gt;. A standard error for &lt;span class=&#34;math inline&#34;&gt;\(\log(S)\)&lt;/span&gt; is probably better, but &lt;span class=&#34;math inline&#34;&gt;\(\log(S)\)&lt;/span&gt; is still restricted to &lt;span class=&#34;math inline&#34;&gt;\((-\infty, 0)\)&lt;/span&gt;. A standard error for &lt;span class=&#34;math inline&#34;&gt;\(\log(-\log(S))\)&lt;/span&gt; might be the best option. &lt;code&gt;survfit&lt;/code&gt; allows you to use these transformations when constructing confidence intervals.&lt;/p&gt;
+&lt;div id=&#34;confidence-intervals-for-s-based-on-s.e.s&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Confidence intervals for S based on s.e.(S)&lt;/h3&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;### task: can I reproduce confidence intervals?
+fit_plain &amp;lt;- survfit(Surv(time, event) ~ 1, data = df, conf.type = &amp;quot;plain&amp;quot;)
+
+## reported lower CI for S
+fit_plain$lower&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.68356980 0.50616616 0.35868804 0.23091758 0.11980647 0.02535471 0.00000000
+## [8] 0.00000000        NaN&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## standard error of cumulative hazard
+se_H &amp;lt;- fit_plain$std.err
+
+## standard error of S
+se_S &amp;lt;- se_H * fit_plain$surv
+
+## lower CI (forced to be between 0 and 1)
+pmax(0, pmin(1, fit_plain$surv - se_S * qnorm(.975)))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.68356980 0.50616616 0.35868804 0.23091758 0.11980647 0.02535471 0.00000000
+## [8] 0.00000000        NaN&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## this matches
+fit_plain$lower&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.68356980 0.50616616 0.35868804 0.23091758 0.11980647 0.02535471 0.00000000
+## [8] 0.00000000        NaN&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;confidence-intervals-for-s-based-on-s.e.logs&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Confidence intervals for S based on s.e.(log(S))&lt;/h3&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;### task: can I reproduce confidence intervals?
+fit_log &amp;lt;- survfit(Surv(time, event) ~ 1, data = df, conf.type = &amp;quot;log&amp;quot;)
+
+## reported lower CI for S
+fit_log$lower&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.70555750 0.54852119 0.42002836 0.30970501 0.21408853 0.13231787 0.06545910
+## [8] 0.01750802         NA&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## standard error of cumulative hazard
+se_H &amp;lt;- fit_log$std.err
+
+## standard error of log(S)
+se_log_S &amp;lt;- se_H
+
+## lower CI (forced to be less than 1)
+pmin(1, exp(log(fit_log$surv) - se_log_S * qnorm(.975)))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.70555750 0.54852119 0.42002836 0.30970501 0.21408853 0.13231787 0.06545910
+## [8] 0.01750802 0.00000000&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## this matches
+fit_log$lower&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.70555750 0.54852119 0.42002836 0.30970501 0.21408853 0.13231787 0.06545910
+## [8] 0.01750802         NA&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;confidence-intervals-for-s-based-on-s.e.log-logs&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Confidence intervals for S based on s.e.(log(-log(S)))&lt;/h3&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;### task: can I reproduce confidence intervals?
+fit_log_log &amp;lt;- survfit(Surv(time, event) ~ 1, data = df, conf.type = &amp;quot;log-log&amp;quot;)
+
+## reported lower CI for S
+fit_log_log$lower&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.432965090 0.364751231 0.281682242 0.204241776 0.135872478 0.078289473
+## [7] 0.033711455 0.006129242          NA&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## standard error of cumulative hazard
+se_H &amp;lt;- fit_log_log$std.err
+
+## standard error of log(-log((S)) [by delta method -- see slide deck]
+se_log_log_S &amp;lt;- se_H / log(fit_log_log$surv)
+
+## lower CI 
+exp(-exp(log(-log(fit_log_log$surv)) - se_log_log_S * qnorm(.975)))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.432965090 0.364751231 0.281682242 0.204241776 0.135872478 0.078289473
+## [7] 0.033711455 0.006129242         NaN&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## this matches
+fit_log_log$lower&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.432965090 0.364751231 0.281682242 0.204241776 0.135872478 0.078289473
+## [7] 0.033711455 0.006129242          NA&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;references&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;References&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://mathweb.ucsd.edu/~rxu/math284/slect2.pdf&#34; class=&#34;uri&#34;&gt;https://mathweb.ucsd.edu/~rxu/math284/slect2.pdf&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Confidence interval for a survival curve based on a Cox model</title>
       <link>/post/2022-01-17-confidence-interval-for-a-survival-curve-based-on-a-cox-model/</link>
       <pubDate>Mon, 17 Jan 2022 00:00:00 +0000</pubDate>
@@ -63,7 +222,7 @@
 &lt;script src=&#34;/rmarkdown-libs/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
 
 
-&lt;p&gt;A colleague caught me out recently when they asked about a confidence interval for survival curve based on a Cox model. This can be done in R using &lt;code&gt;survival::survfit&lt;/code&gt; after &lt;code&gt;survival::coxph&lt;/code&gt;. But the question was: does this take into account the uncertainty in the baseline hazard. I had to admit that I wasn’t 100% sure. So here is an example to clear it up…&lt;/p&gt;
+&lt;p&gt;A colleague caught me out recently when they asked about a confidence interval for a survival curve based on a Cox model. This can be done in R using &lt;code&gt;survival::survfit&lt;/code&gt; after &lt;code&gt;survival::coxph&lt;/code&gt;. But the question was: does this take into account the uncertainty in the baseline hazard. I had to admit that I wasn’t 100% sure. So here is an example to clear it up…&lt;/p&gt;
 &lt;div id=&#34;understanding-survfit.coxph-standard-errors&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;1. Understanding survfit.coxph standard errors&lt;/h1&gt;
 &lt;div id=&#34;create-a-toy-data-set-and-apply-survfit.coxph&#34; class=&#34;section level2&#34;&gt;
@@ -278,15 +437,15 @@ cbind(mean = marginal_mean,
       lower = marginal_lower,
       upper = marginal_upper)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;##            mean       lower     upper
-##  [1,] 0.8885047 0.685613541 1.0000000
-##  [2,] 0.7989028 0.559350580 1.0000000
-##  [3,] 0.7066484 0.437844161 1.0000000
-##  [4,] 0.6154889 0.343173266 1.0000000
-##  [5,] 0.5237261 0.253947402 1.0000000
-##  [6,] 0.4339794 0.173801676 1.0000000
-##  [7,] 0.3385072 0.105273664 1.0000000
-##  [8,] 0.2491458 0.048395631 1.0000000
-##  [9,] 0.1443845 0.007122735 0.9366364&lt;/code&gt;&lt;/pre&gt;
+##  [1,] 0.8880155 0.696913234 1.0000000
+##  [2,] 0.7972256 0.554475707 1.0000000
+##  [3,] 0.7049566 0.436028562 1.0000000
+##  [4,] 0.6157913 0.341393835 1.0000000
+##  [5,] 0.5244201 0.253445004 1.0000000
+##  [6,] 0.4343175 0.175397268 1.0000000
+##  [7,] 0.3425416 0.107482202 1.0000000
+##  [8,] 0.2483972 0.049395838 1.0000000
+##  [9,] 0.1469971 0.006160858 0.9667786&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Obviously, this toy data set is too small to rely on the normal approximations here. But in principle I think this method is reasonable. Of course, it assumes the Cox model is correct.&lt;/p&gt;
 &lt;/div&gt;
 </description>
