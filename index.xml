@@ -5,7 +5,7 @@
     <link>/</link>
       <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <description>Dominic Magirr</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Wed, 19 Jan 2022 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Tue, 24 May 2022 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>Dominic Magirr</title>
@@ -51,6 +51,205 @@
 &lt;p&gt;Cras aliquam rhoncus ipsum, in hendrerit nunc mattis vitae. Duis vitae efficitur metus, ac tempus leo. Cras nec fringilla lacus. Quisque sit amet risus at ipsum pharetra commodo. Sed aliquam mauris at consequat eleifend. Praesent porta, augue sed viverra bibendum, neque ante euismod ante, in vehicula justo lorem ac eros. Suspendisse augue libero, venenatis eget tincidunt ut, malesuada at lorem. Donec vitae bibendum arcu. Aenean maximus nulla non pretium iaculis. Quisque imperdiet, nulla in pulvinar aliquet, velit quam ultrices quam, sit amet fringilla leo sem vel nunc. Mauris in lacinia lacus.&lt;/p&gt;
 &lt;p&gt;Suspendisse a tincidunt lacus. Curabitur at urna sagittis, dictum ante sit amet, euismod magna. Sed rutrum massa id tortor commodo, vitae elementum turpis tempus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean purus turpis, venenatis a ullamcorper nec, tincidunt et massa. Integer posuere quam rutrum arcu vehicula imperdiet. Mauris ullamcorper quam vitae purus congue, quis euismod magna eleifend. Vestibulum semper vel augue eget tincidunt. Fusce eget justo sodales, dapibus odio eu, ultrices lorem. Duis condimentum lorem id eros commodo, in facilisis mauris scelerisque. Morbi sed auctor leo. Nullam volutpat a lacus quis pharetra. Nulla congue rutrum magna a ornare.&lt;/p&gt;
 &lt;p&gt;Aliquam in turpis accumsan, malesuada nibh ut, hendrerit justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque sed erat nec justo posuere suscipit. Donec ut efficitur arcu, in malesuada neque. Nunc dignissim nisl massa, id vulputate nunc pretium nec. Quisque eget urna in risus suscipit ultricies. Pellentesque odio odio, tincidunt in eleifend sed, posuere a diam. Nam gravida nisl convallis semper elementum. Morbi vitae felis faucibus, vulputate orci placerat, aliquet nisi. Aliquam erat volutpat. Maecenas sagittis pulvinar purus, sed porta quam laoreet at.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Conditional and unconditional treatment effects in RCTs</title>
+      <link>/post/2022-05-24-conditional-and-unconditional-treatment-effects-in-rcts/</link>
+      <pubDate>Tue, 24 May 2022 00:00:00 +0000</pubDate>
+      <guid>/post/2022-05-24-conditional-and-unconditional-treatment-effects-in-rcts/</guid>
+      <description>
+&lt;script src=&#34;/post/2022-05-24-conditional-and-unconditional-treatment-effects-in-rcts/index.en_files/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;p&gt;&lt;em&gt;[Disclaimer: there is nothing new in this post. This topic has been discussed extensively. In a better way. In a more interesting way. Here I’m expressing my personal view fwiw. There may be errors, possibly on more than one level.]&lt;/em&gt;&lt;/p&gt;
+&lt;div id=&#34;small-simulation-study&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Small simulation study&lt;/h2&gt;
+&lt;p&gt;Quick function to simulate data from an RCT with equal allocation to treatments 0 and 1, a single covariate, and a binary endpoint:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sim_data &amp;lt;- function(n){
+  
+  z &amp;lt;- rep(0:1, each = n / 2) ## trt assignment
+ 
+  x &amp;lt;- rnorm(n) ## covariate
+  
+  eta &amp;lt;- -1 +  2 * x  - log(0.55) * z ## linear predictor
+    
+  pi &amp;lt;- exp(eta) / (1 + exp(eta)) ## prob(outcome = 1)
+  
+  y &amp;lt;- rbinom(n, 1, pi) ## outcome
+  
+  data.frame(z, x, y)
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The data generating mechansim is a logistic model (but also see later). I’ll draw it&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;x &amp;lt;- seq(-2, 2, length.out = 100)
+plot(x, plogis(-1 + 2 * x), ylim = c(0,1), type = &amp;quot;l&amp;quot;, ylab = &amp;quot;P(Y=1)&amp;quot;)
+points(x, plogis(-1 +  2 * x - log(0.55)), col = 2, type = &amp;quot;l&amp;quot;)
+legend(&amp;quot;topleft&amp;quot;, c(&amp;quot;Z=0&amp;quot;, &amp;quot;Z=1&amp;quot;), lty = c(1,1), col = c(1,2))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2022-05-24-conditional-and-unconditional-treatment-effects-in-rcts/index.en_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Now I’ll write a function to give me:&lt;/p&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;Direct adjustment via logistic regression including terms for treatment and the covariate. Giving conditional log-odds ratio.&lt;/li&gt;
+&lt;li&gt;Standardization of (1) to give the unconditional log-odds ratio (using the &lt;code&gt;stdReg&lt;/code&gt; &lt;a href=&#34;https://cran.r-project.org/web/packages/stdReg/index.html&#34;&gt;package&lt;/a&gt;).&lt;/li&gt;
+&lt;li&gt;Unadjusted analysis: logistic regression with just a term for treatment. Giving unconditional log-odds ratio.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(&amp;quot;stdReg&amp;quot;)
+######################################
+sim_one_trial_with_analysis &amp;lt;- function(n){
+  
+  ### simulate data
+  dat &amp;lt;- sim_data(n)
+  
+  ### fit a direct adjustment model...
+  fit_dir_adj &amp;lt;- glm(y ~ x + z, family = &amp;quot;binomial&amp;quot;, data = dat)
+  
+  ### ...extract point estimate and z statistic
+  dir_adj_est &amp;lt;- summary(fit_dir_adj)$coef[&amp;quot;z&amp;quot;, &amp;quot;Estimate&amp;quot;]
+  dir_adj_z   &amp;lt;- summary(fit_dir_adj)$coef[&amp;quot;z&amp;quot;, &amp;quot;z value&amp;quot;]
+  
+  ### apply standardization / g-formula...
+  std_fit &amp;lt;- stdReg::stdGlm(fit_dir_adj, data = dat, X = &amp;quot;z&amp;quot;)
+  sum_std_fit &amp;lt;- summary(std_fit, 
+                         transform = &amp;quot;logit&amp;quot;, 
+                         contrast = &amp;quot;difference&amp;quot;, 
+                         reference = 0)
+  
+  ### ...extract point estimate and z statistic
+  g_est &amp;lt;- sum_std_fit$est.table[&amp;quot;1&amp;quot;, &amp;quot;Estimate&amp;quot;]
+  g_z   &amp;lt;- g_est / sum_std_fit$est.table[&amp;quot;1&amp;quot;, &amp;quot;Std. Error&amp;quot;]
+  
+  
+  ### fit unadjusted model...
+  fit_unadj &amp;lt;- glm(y ~  z, family = &amp;quot;binomial&amp;quot;, data = dat)
+  
+  
+  ### ...extract point estimate and z statistic
+  unadj_est &amp;lt;- summary(fit_unadj)$coef[&amp;quot;z&amp;quot;, &amp;quot;Estimate&amp;quot;]
+  unadj_z   &amp;lt;- summary(fit_unadj)$coef[&amp;quot;z&amp;quot;, &amp;quot;z value&amp;quot;]
+  
+  
+  
+  data.frame(dir_adj_est = dir_adj_est, 
+             dir_adj_z = dir_adj_z,
+             g_est = g_est,
+             g_z = g_z,
+             unadj_est = unadj_est,
+             unadj_z = unadj_z)
+  
+  
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;I’ll use this to simulate 1000 trials each with sample size 300…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;res &amp;lt;- purrr::map_df(rep(300, 1000), sim_one_trial_with_analysis)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;and plot the results, firstly in terms of the point estimates…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;par(mfrow = c(1,2))
+
+plot(res$g_est, res$unadj_est,
+     xlim = c(-0.5, 2),
+     ylim = c(-0.5, 2),
+     xlab = &amp;quot;log(OR) &amp;#39;standardization&amp;#39;&amp;quot;,
+     ylab = &amp;quot;log(OR) &amp;#39;unadjusted&amp;#39;&amp;quot;)
+abline(a=0,b = 1,col = 2,lwd = 3)
+
+plot(res$g_est, res$dir_adj_est,
+     xlim = c(-0.5, 2),
+     ylim = c(-0.5, 2),
+     xlab = &amp;quot;log(OR) &amp;#39;standardization&amp;#39;&amp;quot;,
+     ylab = &amp;quot;log(OR) &amp;#39;direct adjusted&amp;#39;&amp;quot;)
+abline(a=0,b = 1,col = 2,lwd = 3)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2022-05-24-conditional-and-unconditional-treatment-effects-in-rcts/index.en_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;The standardized and unadjusted estimates do not appear systematically different. The directly adjusted point estimates are systematically larger (because they are estimates of a different parameter - the condidional log-odds ratio).&lt;/p&gt;
+&lt;p&gt;Next though, look at the standardized Z-statistics, where I split up the graph according to whether or not the z-statistic exceeds some critical value…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;par(mfrow = c(1,2))
+plot(res$g_z, res$unadj_z,
+     xlab = &amp;quot;Z &amp;#39;standardization&amp;#39;&amp;quot;,
+     ylab = &amp;quot;Z &amp;#39;unadjusted&amp;#39;&amp;quot;)
+abline(a=0,b = 1,col = 2,lwd = 3)
+abline(h = 2.33, col = 2, lty = 2)
+abline(v = 2.33, col = 2, lty = 2)
+
+plot(res$g_z, res$dir_adj_z,
+     xlab = &amp;quot;Z &amp;#39;standardization&amp;#39;&amp;quot;,
+     ylab = &amp;quot;Z &amp;#39;direct adjusted&amp;#39;&amp;quot;)
+abline(a=0,b = 1,col = 2,lwd = 3)
+abline(h = 2.33, col = 2, lty = 2)
+abline(v = 2.33, col = 2, lty = 2)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2022-05-24-conditional-and-unconditional-treatment-effects-in-rcts/index.en_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Comparing unadjusted and standardized analyses, we see that the lower right quadrant has more points than the upper left quadrant, indicating the greater power of the standardized analysis. But looking at standardized vs direct adjustment we see these are essentially the same on the z-statistic scale.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;discussion&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Discussion&lt;/h2&gt;
+&lt;p&gt;Consider two analysis teams (A and B). Team A pre-specifies something like the following:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Design the trial around a primary analysis concerning direct-adusted conditional log-odds ratio&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Also report marginal treatment effect, e.g. standard unadjusted analysis point estimate, as well as other relevant aspects such as point estimates of marginal probability of the event of interest on each arm, etc.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Informally assess treatment effect heterogeneity. Forest plots, etc., etc.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Team B pre-specifies:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Design the trial around primary analysis concerning marginal log-odds ratio (or risk difference or relative risk).&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Informally assess treatment effect heterogeneity. Forest plots, etc., etc.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Does Team B do better than team A? Technically, I suppose, they have a better point estimate of the marginal treatment effect. But overall I don’t think they do that much better.&lt;/p&gt;
+&lt;p&gt;Am I leaning too heavily on null hypothesis testing here? Could be. I do have in mind situations where the trial is only just big enough to ‘rule out’ zero (or negative) effect. But I’m not suggesting decision making at the end of the trial comes down to a single hypothesis test.&lt;/p&gt;
+&lt;p&gt;Main things to say are that conditional and unconditional effects are of interest. They require different levels of assumptions that shouldn’t go unchallenged. At the same time we shouldn’t be intimidated away from making any assumptions.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;appendix-misspecified-model&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Appendix: misspecified model&lt;/h2&gt;
+&lt;p&gt;I’ll repeat the exercise for a misspecified model example. Here I’ll draw it the data generating mechanism…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;x &amp;lt;- seq(-2, 2, length.out = 100)
+plot(x, exp(-exp(-1 +  2 * (x ^ 2 - 3))), ylim = c(0,1), type = &amp;quot;l&amp;quot;, ylab = &amp;quot;P(Y=1)&amp;quot;)
+points(x, exp(-exp(-1 +  2 * (x ^ 2 - 3) + log(0.3) * 1 * (x &amp;gt; 0))), col = 2, type = &amp;quot;l&amp;quot;)
+legend(&amp;quot;topleft&amp;quot;, c(&amp;quot;Z=0&amp;quot;, &amp;quot;Z=1&amp;quot;), lty = c(1,1), col = c(1,2))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2022-05-24-conditional-and-unconditional-treatment-effects-in-rcts/index.en_files/figure-html/unnamed-chunk-7-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;…and here are the results showing similar things…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sim_data &amp;lt;- function(n){
+  
+  z &amp;lt;- rep(0:1, each = n / 2)
+ 
+  x &amp;lt;- rnorm(n)
+  
+  eta &amp;lt;- -1 +  2 * (x ^ 2 - 3) - log(0.55) * z * (x &amp;gt; 0) 
+  
+  pi &amp;lt;- exp(-exp(eta))
+  
+  y &amp;lt;- rbinom(n, 1, pi)
+  
+  data.frame(z, x, y)
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;res &amp;lt;- purrr::map_df(rep(300, 1000), sim_one_trial_with_analysis)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;par(mfrow = c(1,2))
+
+plot(res$g_est, res$unadj_est,
+     xlim = c(-0.5, 2),
+     ylim = c(-0.5, 2),
+     xlab = &amp;quot;log(OR) &amp;#39;standardization&amp;#39;&amp;quot;,
+     ylab = &amp;quot;log(OR) &amp;#39;unadjusted&amp;#39;&amp;quot;)
+abline(a=0,b = 1,col = 2,lwd = 3)
+
+plot(res$g_est, res$dir_adj_est,
+     xlim = c(-0.5, 2),
+     ylim = c(-0.5, 2),
+     xlab = &amp;quot;log(OR) &amp;#39;standardization&amp;#39;&amp;quot;,
+     ylab = &amp;quot;log(OR) &amp;#39;direct adjusted&amp;#39;&amp;quot;)
+abline(a=0,b = 1,col = 2,lwd = 3)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2022-05-24-conditional-and-unconditional-treatment-effects-in-rcts/index.en_files/figure-html/unnamed-chunk-10-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;par(mfrow = c(1,2))
+plot(res$g_z, res$unadj_z,
+     xlab = &amp;quot;Z &amp;#39;standardization&amp;#39;&amp;quot;,
+     ylab = &amp;quot;Z &amp;#39;unadjusted&amp;#39;&amp;quot;)
+abline(a=0,b = 1,col = 2,lwd = 3)
+abline(h = 2.33, col = 2, lty = 2)
+abline(v = 2.33, col = 2, lty = 2)
+
+
+plot(res$g_z, res$dir_adj_z,
+     xlab = &amp;quot;Z &amp;#39;standardization&amp;#39;&amp;quot;,
+     ylab = &amp;quot;Z &amp;#39;direct adjusted&amp;#39;&amp;quot;)
+abline(a=0,b = 1,col = 2,lwd = 3)
+abline(h = 2.33, col = 2, lty = 2)
+abline(v = 2.33, col = 2, lty = 2)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2022-05-24-conditional-and-unconditional-treatment-effects-in-rcts/index.en_files/figure-html/unnamed-chunk-11-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
 </description>
     </item>
     
