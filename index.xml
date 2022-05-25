@@ -184,10 +184,10 @@ abline(v = 2.33, col = 2, lty = 2)&lt;/code&gt;&lt;/pre&gt;
 &lt;/ul&gt;
 &lt;p&gt;Team B pre-specifies:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Design the trial around primary analysis concerning marginal log-odds ratio (or risk difference or relative risk).&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Design the trial around primary analysis concerning marginal log-odds ratio (or risk difference or relative risk), analyzed via standardization based on same logistic regression as Team A are using..&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Informally assess treatment effect heterogeneity. Forest plots, etc., etc.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;Does Team B do better than team A? Technically, I suppose, they have a better point estimate of the marginal treatment effect. But overall I don’t think they do that much better.&lt;/p&gt;
+&lt;p&gt;Does Team B do better than team A? Yes, they have a better point estimate of the marginal treatment effect. But overall I don’t think they do &lt;em&gt;that&lt;/em&gt; much better. It’s great if Team B want to use an improved point estimate, but I don’t think what Team A is doing is so bad.&lt;/p&gt;
 &lt;p&gt;Am I leaning too heavily on null hypothesis testing here? Could be. I do have in mind situations where the trial is only just big enough to demonstrate incompatability with zero (or negative) effect. But I’m not suggesting decision making at the end of the trial comes down to a single hypothesis test.&lt;/p&gt;
 &lt;p&gt;Main things to say are that conditional and unconditional effects are of interest. They require different levels of assumptions that shouldn’t go unchallenged. At the same time we shouldn’t be intimidated away from making any assumptions.&lt;/p&gt;
 &lt;/div&gt;
@@ -195,8 +195,8 @@ abline(v = 2.33, col = 2, lty = 2)&lt;/code&gt;&lt;/pre&gt;
 &lt;h2&gt;Appendix: misspecified model&lt;/h2&gt;
 &lt;p&gt;I’ll repeat the exercise for a misspecified model example. Here I’ll draw it the data generating mechanism…&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;x &amp;lt;- seq(-2, 2, length.out = 100)
-plot(x, exp(-exp(-1 +  2 * (x ^ 2 - 3))), ylim = c(0,1), type = &amp;quot;l&amp;quot;, ylab = &amp;quot;P(Y=1)&amp;quot;)
-points(x, exp(-exp(-1 +  2 * (x ^ 2 - 3) + log(0.3) * 1 * (x &amp;gt; 0))), col = 2, type = &amp;quot;l&amp;quot;)
+plot(x, exp(-exp(2 -  2 * x)), ylim = c(0,1), type = &amp;quot;l&amp;quot;, ylab = &amp;quot;P(Y=1)&amp;quot;)
+points(x, exp(-exp(2 -  2 * x  + log(0.4) * x)), col = 2, type = &amp;quot;l&amp;quot;)
 legend(&amp;quot;topleft&amp;quot;, c(&amp;quot;Z=0&amp;quot;, &amp;quot;Z=1&amp;quot;), lty = c(1,1), col = c(1,2))&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/post/2022-05-25-conditional-and-unconditional-treatment-effects-in-rcts_files/figure-html/unnamed-chunk-7-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;…and here are the results showing similar things…&lt;/p&gt;
@@ -206,7 +206,7 @@ legend(&amp;quot;topleft&amp;quot;, c(&amp;quot;Z=0&amp;quot;, &amp;quot;Z=1&amp
  
   x &amp;lt;- rnorm(n)
   
-  eta &amp;lt;- -1 +  2 * (x ^ 2 - 3) - log(0.55) * z * (x &amp;gt; 0) 
+  eta &amp;lt;- 2 -  2 * x  - log(0.4) * z * x  
   
   pi &amp;lt;- exp(-exp(eta))
   
@@ -215,6 +215,11 @@ legend(&amp;quot;topleft&amp;quot;, c(&amp;quot;Z=0&amp;quot;, &amp;quot;Z=1&amp
   data.frame(z, x, y)
 }&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;res &amp;lt;- purrr::map_df(rep(300, 1000), sim_one_trial_with_analysis)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;par(mfrow = c(1,2))
 
 plot(res$g_est, res$unadj_est,
