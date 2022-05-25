@@ -572,13 +572,13 @@ abline(v = 2.33, col = 2, lty = 2)</code></pre>
 <p>Consider two analysis teams (A and B). Team A pre-specifies something like the following:</p>
 <ul>
 <li><p>Design the trial around a primary analysis concerning direct-adusted conditional log-odds ratio</p></li>
-<li><p>Also report marginal treatment effect, e.g. standard unadjusted analysis point estimate, as well as other relevant aspects such as point estimates of marginal probability of the event of interest on each arm, etc.</p></li>
+<li><p>Also report marginal treatment effect, e.g. unadjusted analysis point estimate, as well as other relevant aspects such as point estimates of marginal / conditional probabilities of the event of interest on each arm, etc.</p></li>
 <li><p>Informally assess treatment effect heterogeneity. Forest plots, etc., etc.</p></li>
 </ul>
 <p>Team B pre-specifies:</p>
 <ul>
 <li><p>Design the trial around primary analysis concerning marginal log-odds ratio (or risk difference or relative risk), analyzed via standardization based on same logistic regression as Team A are using..</p></li>
-<li><p>Informally assess treatment effect heterogeneity. Forest plots, etc., etc.</p></li>
+<li><p>Additional, more informal work, similar to Team A.</p></li>
 </ul>
 <p>Does Team B do better than team A? Yes, they have a better point estimate of the marginal treatment effect. But overall I don’t think they do <em>that</em> much better. It’s great if Team B want to use an improved point estimate, but I don’t think what Team A is doing is so bad.</p>
 <p>Am I leaning too heavily on null hypothesis testing here? Could be. I do have in mind situations where the trial is only just big enough to demonstrate incompatability with zero (or negative) effect. But I’m not suggesting decision making at the end of the trial comes down to a single hypothesis test.</p>
@@ -610,6 +610,14 @@ legend(&quot;topleft&quot;, c(&quot;Z=0&quot;, &quot;Z=1&quot;), lty = c(1,1), c
 }</code></pre>
 <pre class="r"><code>res &lt;- purrr::map_df(rep(300, 1000), sim_one_trial_with_analysis)</code></pre>
 <pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
 <pre class="r"><code>par(mfrow = c(1,2))

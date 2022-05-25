@@ -137,13 +137,13 @@ abline(v = 2.33, col = 2, lty = 2)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Consider two analysis teams (A and B). Team A pre-specifies something like the following:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;p&gt;Design the trial around a primary analysis concerning direct-adusted conditional log-odds ratio&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Also report marginal treatment effect, e.g. standard unadjusted analysis point estimate, as well as other relevant aspects such as point estimates of marginal probability of the event of interest on each arm, etc.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Also report marginal treatment effect, e.g. unadjusted analysis point estimate, as well as other relevant aspects such as point estimates of marginal / conditional probabilities of the event of interest on each arm, etc.&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Informally assess treatment effect heterogeneity. Forest plots, etc., etc.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Team B pre-specifies:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;p&gt;Design the trial around primary analysis concerning marginal log-odds ratio (or risk difference or relative risk), analyzed via standardization based on same logistic regression as Team A are using..&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Informally assess treatment effect heterogeneity. Forest plots, etc., etc.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Additional, more informal work, similar to Team A.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Does Team B do better than team A? Yes, they have a better point estimate of the marginal treatment effect. But overall I don’t think they do &lt;em&gt;that&lt;/em&gt; much better. It’s great if Team B want to use an improved point estimate, but I don’t think what Team A is doing is so bad.&lt;/p&gt;
 &lt;p&gt;Am I leaning too heavily on null hypothesis testing here? Could be. I do have in mind situations where the trial is only just big enough to demonstrate incompatability with zero (or negative) effect. But I’m not suggesting decision making at the end of the trial comes down to a single hypothesis test.&lt;/p&gt;
@@ -175,6 +175,14 @@ legend(&amp;quot;topleft&amp;quot;, c(&amp;quot;Z=0&amp;quot;, &amp;quot;Z=1&amp
 }&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;res &amp;lt;- purrr::map_df(rep(300, 1000), sim_one_trial_with_analysis)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;par(mfrow = c(1,2))
