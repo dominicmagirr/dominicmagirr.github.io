@@ -599,7 +599,7 @@ legend(&quot;topleft&quot;, c(&quot;Z=0&quot;, &quot;Z=1&quot;), lty = c(1,1), c
  
   x &lt;- rnorm(n)
   
-  eta &lt;- 2 -  2 * x  - log(0.4) * z * x  
+  eta &lt;- 2 -  2 * x  + log(0.4) * z * x  
   
   pi &lt;- exp(-exp(eta))
   
@@ -609,8 +609,6 @@ legend(&quot;topleft&quot;, c(&quot;Z=0&quot;, &quot;Z=1&quot;), lty = c(1,1), c
 }</code></pre>
 <pre class="r"><code>res &lt;- purrr::map_df(rep(300, 1000), sim_one_trial_with_analysis)</code></pre>
 <pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
 <pre class="r"><code>par(mfrow = c(1,2))

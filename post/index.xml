@@ -164,7 +164,7 @@ legend(&amp;quot;topleft&amp;quot;, c(&amp;quot;Z=0&amp;quot;, &amp;quot;Z=1&amp
  
   x &amp;lt;- rnorm(n)
   
-  eta &amp;lt;- 2 -  2 * x  - log(0.4) * z * x  
+  eta &amp;lt;- 2 -  2 * x  + log(0.4) * z * x  
   
   pi &amp;lt;- exp(-exp(eta))
   
@@ -174,8 +174,6 @@ legend(&amp;quot;topleft&amp;quot;, c(&amp;quot;Z=0&amp;quot;, &amp;quot;Z=1&amp
 }&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;res &amp;lt;- purrr::map_df(rep(300, 1000), sim_one_trial_with_analysis)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;par(mfrow = c(1,2))
