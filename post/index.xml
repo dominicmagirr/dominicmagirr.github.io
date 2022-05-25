@@ -5,7 +5,7 @@
     <link>/post/</link>
       <atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     <description>Posts</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Tue, 24 May 2022 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Wed, 25 May 2022 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>Posts</title>
@@ -14,11 +14,11 @@
     
     <item>
       <title>Conditional and unconditional treatment effects in RCTs</title>
-      <link>/post/2022-05-24-conditional-and-unconditional-treatment-effects-in-rcts/</link>
-      <pubDate>Tue, 24 May 2022 00:00:00 +0000</pubDate>
-      <guid>/post/2022-05-24-conditional-and-unconditional-treatment-effects-in-rcts/</guid>
+      <link>/post/2022-05-25-conditional-and-unconditional-treatment-effects-in-rcts/</link>
+      <pubDate>Wed, 25 May 2022 00:00:00 +0000</pubDate>
+      <guid>/post/2022-05-25-conditional-and-unconditional-treatment-effects-in-rcts/</guid>
       <description>
-&lt;script src=&#34;/post/2022-05-24-conditional-and-unconditional-treatment-effects-in-rcts/index.en_files/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;/rmarkdown-libs/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
 
 
 &lt;p&gt;&lt;em&gt;[Disclaimer: there is nothing new in this post. This topic has been discussed extensively. In a better way. In a more interesting way. Here I’m expressing my personal view fwiw. There may be errors, possibly on more than one level.]&lt;/em&gt;&lt;/p&gt;
@@ -44,7 +44,7 @@
 plot(x, plogis(-1 + 2 * x), ylim = c(0,1), type = &amp;quot;l&amp;quot;, ylab = &amp;quot;P(Y=1)&amp;quot;)
 points(x, plogis(-1 +  2 * x - log(0.55)), col = 2, type = &amp;quot;l&amp;quot;)
 legend(&amp;quot;topleft&amp;quot;, c(&amp;quot;Z=0&amp;quot;, &amp;quot;Z=1&amp;quot;), lty = c(1,1), col = c(1,2))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2022-05-24-conditional-and-unconditional-treatment-effects-in-rcts/index.en_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2022-05-25-conditional-and-unconditional-treatment-effects-in-rcts_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Now I’ll write a function to give me:&lt;/p&gt;
 &lt;ol style=&#34;list-style-type: decimal&#34;&gt;
 &lt;li&gt;Direct adjustment via logistic regression including terms for treatment and the covariate. Giving conditional log-odds ratio.&lt;/li&gt;
@@ -100,21 +100,19 @@ sim_one_trial_with_analysis &amp;lt;- function(n){
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;res &amp;lt;- purrr::map_df(rep(300, 1000), sim_one_trial_with_analysis)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;and plot the results, firstly in terms of the point estimates…&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;par(mfrow = c(1,2))
-
 plot(res$g_est, res$unadj_est,
      xlim = c(-0.5, 2),
      ylim = c(-0.5, 2),
      xlab = &amp;quot;log(OR) &amp;#39;standardization&amp;#39;&amp;quot;,
      ylab = &amp;quot;log(OR) &amp;#39;unadjusted&amp;#39;&amp;quot;)
 abline(a=0,b = 1,col = 2,lwd = 3)
-
 plot(res$g_est, res$dir_adj_est,
      xlim = c(-0.5, 2),
      ylim = c(-0.5, 2),
      xlab = &amp;quot;log(OR) &amp;#39;standardization&amp;#39;&amp;quot;,
      ylab = &amp;quot;log(OR) &amp;#39;direct adjusted&amp;#39;&amp;quot;)
 abline(a=0,b = 1,col = 2,lwd = 3)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2022-05-24-conditional-and-unconditional-treatment-effects-in-rcts/index.en_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2022-05-25-conditional-and-unconditional-treatment-effects-in-rcts_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;The standardized and unadjusted estimates do not appear systematically different. The directly adjusted point estimates are systematically larger (because they are estimates of a different parameter - the condidional log-odds ratio).&lt;/p&gt;
 &lt;p&gt;Next though, look at the standardized Z-statistics, where I split up the graph according to whether or not the z-statistic exceeds some critical value…&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;par(mfrow = c(1,2))
@@ -131,7 +129,7 @@ plot(res$g_z, res$dir_adj_z,
 abline(a=0,b = 1,col = 2,lwd = 3)
 abline(h = 2.33, col = 2, lty = 2)
 abline(v = 2.33, col = 2, lty = 2)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2022-05-24-conditional-and-unconditional-treatment-effects-in-rcts/index.en_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2022-05-25-conditional-and-unconditional-treatment-effects-in-rcts_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Comparing unadjusted and standardized analyses, we see that the lower right quadrant has more points than the upper left quadrant, indicating the greater power of the standardized analysis. But looking at standardized vs direct adjustment we see these are essentially the same on the z-statistic scale.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;discussion&#34; class=&#34;section level2&#34;&gt;
@@ -148,7 +146,7 @@ abline(v = 2.33, col = 2, lty = 2)&lt;/code&gt;&lt;/pre&gt;
 &lt;li&gt;&lt;p&gt;Informally assess treatment effect heterogeneity. Forest plots, etc., etc.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Does Team B do better than team A? Technically, I suppose, they have a better point estimate of the marginal treatment effect. But overall I don’t think they do that much better.&lt;/p&gt;
-&lt;p&gt;Am I leaning too heavily on null hypothesis testing here? Could be. I do have in mind situations where the trial is only just big enough to ‘rule out’ zero (or negative) effect. But I’m not suggesting decision making at the end of the trial comes down to a single hypothesis test.&lt;/p&gt;
+&lt;p&gt;Am I leaning too heavily on null hypothesis testing here? Could be. I do have in mind situations where the trial is only just big enough to demonstrate incompatability with zero (or negative) effect. But I’m not suggesting decision making at the end of the trial comes down to a single hypothesis test.&lt;/p&gt;
 &lt;p&gt;Main things to say are that conditional and unconditional effects are of interest. They require different levels of assumptions that shouldn’t go unchallenged. At the same time we shouldn’t be intimidated away from making any assumptions.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;appendix-misspecified-model&#34; class=&#34;section level2&#34;&gt;
@@ -158,7 +156,7 @@ abline(v = 2.33, col = 2, lty = 2)&lt;/code&gt;&lt;/pre&gt;
 plot(x, exp(-exp(-1 +  2 * (x ^ 2 - 3))), ylim = c(0,1), type = &amp;quot;l&amp;quot;, ylab = &amp;quot;P(Y=1)&amp;quot;)
 points(x, exp(-exp(-1 +  2 * (x ^ 2 - 3) + log(0.3) * 1 * (x &amp;gt; 0))), col = 2, type = &amp;quot;l&amp;quot;)
 legend(&amp;quot;topleft&amp;quot;, c(&amp;quot;Z=0&amp;quot;, &amp;quot;Z=1&amp;quot;), lty = c(1,1), col = c(1,2))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2022-05-24-conditional-and-unconditional-treatment-effects-in-rcts/index.en_files/figure-html/unnamed-chunk-7-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2022-05-25-conditional-and-unconditional-treatment-effects-in-rcts_files/figure-html/unnamed-chunk-7-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;…and here are the results showing similar things…&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sim_data &amp;lt;- function(n){
   
@@ -190,7 +188,7 @@ plot(res$g_est, res$dir_adj_est,
      xlab = &amp;quot;log(OR) &amp;#39;standardization&amp;#39;&amp;quot;,
      ylab = &amp;quot;log(OR) &amp;#39;direct adjusted&amp;#39;&amp;quot;)
 abline(a=0,b = 1,col = 2,lwd = 3)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2022-05-24-conditional-and-unconditional-treatment-effects-in-rcts/index.en_files/figure-html/unnamed-chunk-10-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2022-05-25-conditional-and-unconditional-treatment-effects-in-rcts_files/figure-html/unnamed-chunk-10-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;par(mfrow = c(1,2))
 plot(res$g_z, res$unadj_z,
      xlab = &amp;quot;Z &amp;#39;standardization&amp;#39;&amp;quot;,
@@ -206,7 +204,7 @@ plot(res$g_z, res$dir_adj_z,
 abline(a=0,b = 1,col = 2,lwd = 3)
 abline(h = 2.33, col = 2, lty = 2)
 abline(v = 2.33, col = 2, lty = 2)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2022-05-24-conditional-and-unconditional-treatment-effects-in-rcts/index.en_files/figure-html/unnamed-chunk-11-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2022-05-25-conditional-and-unconditional-treatment-effects-in-rcts_files/figure-html/unnamed-chunk-11-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 </description>
     </item>

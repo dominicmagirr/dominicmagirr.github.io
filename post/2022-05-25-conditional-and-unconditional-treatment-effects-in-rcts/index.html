@@ -33,7 +33,7 @@ Small simulation study Quick function to simulate data from an RCT with equal al
 sim_data &lt;- function(n){ z &lt;- rep(0:1, each = n / 2) ## trt assignment x &lt;- rnorm(n) ## covariate eta &lt;- -1 &#43; 2 * x - log(0.">
 
   
-  <link rel="alternate" hreflang="en-us" href="/post/2022-05-24-conditional-and-unconditional-treatment-effects-in-rcts/">
+  <link rel="alternate" hreflang="en-us" href="/post/2022-05-25-conditional-and-unconditional-treatment-effects-in-rcts/">
 
   
 
@@ -102,7 +102,7 @@ sim_data &lt;- function(n){ z &lt;- rep(0:1, each = n / 2) ## trt assignment x &
   <link rel="icon" type="image/png" href="/img/icon-32.png">
   <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
 
-  <link rel="canonical" href="/post/2022-05-24-conditional-and-unconditional-treatment-effects-in-rcts/">
+  <link rel="canonical" href="/post/2022-05-25-conditional-and-unconditional-treatment-effects-in-rcts/">
 
   
   
@@ -115,7 +115,7 @@ sim_data &lt;- function(n){ z &lt;- rep(0:1, each = n / 2) ## trt assignment x &
   <meta property="twitter:card" content="summary">
   
   <meta property="og:site_name" content="Dominic Magirr">
-  <meta property="og:url" content="/post/2022-05-24-conditional-and-unconditional-treatment-effects-in-rcts/">
+  <meta property="og:url" content="/post/2022-05-25-conditional-and-unconditional-treatment-effects-in-rcts/">
   <meta property="og:title" content="Conditional and unconditional treatment effects in RCTs | Dominic Magirr">
   <meta property="og:description" content="[Disclaimer: there is nothing new in this post. This topic has been discussed extensively. In a better way. In a more interesting way. Here I’m expressing my personal view fwiw. There may be errors, possibly on more than one level.]
 Small simulation study Quick function to simulate data from an RCT with equal allocation to treatments 0 and 1, a single covariate, and a binary endpoint:
@@ -123,9 +123,9 @@ sim_data &lt;- function(n){ z &lt;- rep(0:1, each = n / 2) ## trt assignment x &
   <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
   
     
-      <meta property="article:published_time" content="2022-05-24T00:00:00&#43;00:00">
+      <meta property="article:published_time" content="2022-05-25T00:00:00&#43;00:00">
     
-    <meta property="article:modified_time" content="2022-05-24T20:01:20&#43;00:00">
+    <meta property="article:modified_time" content="2022-05-25T07:10:05&#43;00:00">
   
 
   
@@ -151,12 +151,12 @@ sim_data &lt;- function(n){ z &lt;- rep(0:1, each = n / 2) ## trt assignment x &
   "@type": "BlogPosting",
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "/post/2022-05-24-conditional-and-unconditional-treatment-effects-in-rcts/"
+    "@id": "/post/2022-05-25-conditional-and-unconditional-treatment-effects-in-rcts/"
   },
   "headline": "Conditional and unconditional treatment effects in RCTs",
   
-  "datePublished": "2022-05-24T00:00:00Z",
-  "dateModified": "2022-05-24T20:01:20Z",
+  "datePublished": "2022-05-25T00:00:00Z",
+  "dateModified": "2022-05-25T07:10:05Z",
   
   "author": {
     "@type": "Person",
@@ -407,7 +407,7 @@ sim_data &lt;- function(n){ z &lt;- rep(0:1, each = n / 2) ## trt assignment x &
           Last updated on
       
     
-    May 24, 2022
+    May 25, 2022
   </span>
   
 
@@ -453,7 +453,7 @@ sim_data &lt;- function(n){ z &lt;- rep(0:1, each = n / 2) ## trt assignment x &
 
     <div class="article-style">
       
-<script src="/post/2022-05-24-conditional-and-unconditional-treatment-effects-in-rcts/index.en_files/header-attrs/header-attrs.js"></script>
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
 <p><em>[Disclaimer: there is nothing new in this post. This topic has been discussed extensively. In a better way. In a more interesting way. Here I’m expressing my personal view fwiw. There may be errors, possibly on more than one level.]</em></p>
@@ -479,7 +479,7 @@ sim_data &lt;- function(n){ z &lt;- rep(0:1, each = n / 2) ## trt assignment x &
 plot(x, plogis(-1 + 2 * x), ylim = c(0,1), type = &quot;l&quot;, ylab = &quot;P(Y=1)&quot;)
 points(x, plogis(-1 +  2 * x - log(0.55)), col = 2, type = &quot;l&quot;)
 legend(&quot;topleft&quot;, c(&quot;Z=0&quot;, &quot;Z=1&quot;), lty = c(1,1), col = c(1,2))</code></pre>
-<p><img src="/post/2022-05-24-conditional-and-unconditional-treatment-effects-in-rcts/index.en_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><img src="/post/2022-05-25-conditional-and-unconditional-treatment-effects-in-rcts_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <p>Now I’ll write a function to give me:</p>
 <ol style="list-style-type: decimal">
 <li>Direct adjustment via logistic regression including terms for treatment and the covariate. Giving conditional log-odds ratio.</li>
@@ -535,21 +535,19 @@ sim_one_trial_with_analysis &lt;- function(n){
 <pre class="r"><code>res &lt;- purrr::map_df(rep(300, 1000), sim_one_trial_with_analysis)</code></pre>
 <p>and plot the results, firstly in terms of the point estimates…</p>
 <pre class="r"><code>par(mfrow = c(1,2))
-
 plot(res$g_est, res$unadj_est,
      xlim = c(-0.5, 2),
      ylim = c(-0.5, 2),
      xlab = &quot;log(OR) &#39;standardization&#39;&quot;,
      ylab = &quot;log(OR) &#39;unadjusted&#39;&quot;)
 abline(a=0,b = 1,col = 2,lwd = 3)
-
 plot(res$g_est, res$dir_adj_est,
      xlim = c(-0.5, 2),
      ylim = c(-0.5, 2),
      xlab = &quot;log(OR) &#39;standardization&#39;&quot;,
      ylab = &quot;log(OR) &#39;direct adjusted&#39;&quot;)
 abline(a=0,b = 1,col = 2,lwd = 3)</code></pre>
-<p><img src="/post/2022-05-24-conditional-and-unconditional-treatment-effects-in-rcts/index.en_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="/post/2022-05-25-conditional-and-unconditional-treatment-effects-in-rcts_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <p>The standardized and unadjusted estimates do not appear systematically different. The directly adjusted point estimates are systematically larger (because they are estimates of a different parameter - the condidional log-odds ratio).</p>
 <p>Next though, look at the standardized Z-statistics, where I split up the graph according to whether or not the z-statistic exceeds some critical value…</p>
 <pre class="r"><code>par(mfrow = c(1,2))
@@ -566,7 +564,7 @@ plot(res$g_z, res$dir_adj_z,
 abline(a=0,b = 1,col = 2,lwd = 3)
 abline(h = 2.33, col = 2, lty = 2)
 abline(v = 2.33, col = 2, lty = 2)</code></pre>
-<p><img src="/post/2022-05-24-conditional-and-unconditional-treatment-effects-in-rcts/index.en_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="/post/2022-05-25-conditional-and-unconditional-treatment-effects-in-rcts_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>Comparing unadjusted and standardized analyses, we see that the lower right quadrant has more points than the upper left quadrant, indicating the greater power of the standardized analysis. But looking at standardized vs direct adjustment we see these are essentially the same on the z-statistic scale.</p>
 </div>
 <div id="discussion" class="section level2">
@@ -593,7 +591,7 @@ abline(v = 2.33, col = 2, lty = 2)</code></pre>
 plot(x, exp(-exp(-1 +  2 * (x ^ 2 - 3))), ylim = c(0,1), type = &quot;l&quot;, ylab = &quot;P(Y=1)&quot;)
 points(x, exp(-exp(-1 +  2 * (x ^ 2 - 3) + log(0.3) * 1 * (x &gt; 0))), col = 2, type = &quot;l&quot;)
 legend(&quot;topleft&quot;, c(&quot;Z=0&quot;, &quot;Z=1&quot;), lty = c(1,1), col = c(1,2))</code></pre>
-<p><img src="/post/2022-05-24-conditional-and-unconditional-treatment-effects-in-rcts/index.en_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="/post/2022-05-25-conditional-and-unconditional-treatment-effects-in-rcts_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>…and here are the results showing similar things…</p>
 <pre class="r"><code>sim_data &lt;- function(n){
   
@@ -625,7 +623,7 @@ plot(res$g_est, res$dir_adj_est,
      xlab = &quot;log(OR) &#39;standardization&#39;&quot;,
      ylab = &quot;log(OR) &#39;direct adjusted&#39;&quot;)
 abline(a=0,b = 1,col = 2,lwd = 3)</code></pre>
-<p><img src="/post/2022-05-24-conditional-and-unconditional-treatment-effects-in-rcts/index.en_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="/post/2022-05-25-conditional-and-unconditional-treatment-effects-in-rcts_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <pre class="r"><code>par(mfrow = c(1,2))
 plot(res$g_z, res$unadj_z,
      xlab = &quot;Z &#39;standardization&#39;&quot;,
@@ -641,7 +639,7 @@ plot(res$g_z, res$dir_adj_z,
 abline(a=0,b = 1,col = 2,lwd = 3)
 abline(h = 2.33, col = 2, lty = 2)
 abline(v = 2.33, col = 2, lty = 2)</code></pre>
-<p><img src="/post/2022-05-24-conditional-and-unconditional-treatment-effects-in-rcts/index.en_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><img src="/post/2022-05-25-conditional-and-unconditional-treatment-effects-in-rcts_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 </div>
 
     </div>
