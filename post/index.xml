@@ -148,6 +148,7 @@ abline(v = 2.33, col = 2, lty = 2)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Does Team B do better than team A? Yes, they have a better point estimate of the marginal treatment effect. But overall I don’t think they do &lt;em&gt;that&lt;/em&gt; much better. It’s great if Team B want to use an improved point estimate, but I don’t think what Team A is doing is so bad.&lt;/p&gt;
 &lt;p&gt;Am I leaning too heavily on null hypothesis testing here? Could be. I do have in mind situations where the trial is only just big enough to demonstrate incompatability with zero (or negative) effect. But I’m not suggesting decision making at the end of the trial comes down to a single hypothesis test.&lt;/p&gt;
 &lt;p&gt;Main things to say are that conditional and unconditional effects are of interest. They require different levels of assumptions that shouldn’t go unchallenged. At the same time we shouldn’t be intimidated away from making any assumptions.&lt;/p&gt;
+&lt;p&gt;Another thing to say, perhaps, is that if we have massively prognostic covariates (like in this artificial example), then we would probably stratify by them, in which case the unadjusted and standardized point estimates would become very similar.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;appendix-misspecified-model&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Appendix: misspecified model&lt;/h2&gt;
