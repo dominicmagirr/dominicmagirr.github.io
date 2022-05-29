@@ -28,9 +28,8 @@
   
     
   
-  <meta name="description" content="[Disclaimer: there is nothing new in this post. This topic has been discussed extensively. In a better way. In a more interesting way. Here I’m expressing my personal view fwiw. There may be errors, possibly on more than one level.]
-Small simulation study Quick function to simulate data from an RCT with equal allocation to treatments 0 and 1, a single covariate, and a binary endpoint:
-sim_data &lt;- function(n){ z &lt;- rep(0:1, each = n / 2) ## trt assignment x &lt;- rnorm(n) ## covariate eta &lt;- -1 &#43; 2 * x - log(0.">
+  <meta name="description" content="Small simulation study Quick function to simulate data from an RCT with equal allocation to treatments 0 and 1, a single covariate, and a binary endpoint:
+sim_data &lt;- function(n){ z &lt;- rep(0:1, each = n / 2) ## trt assignment x &lt;- rnorm(n) ## covariate eta &lt;- -1 &#43; 2 * x - log(0.55) * z ## linear predictor pi &lt;- exp(eta) / (1 &#43; exp(eta)) ## prob(outcome = 1) y &lt;- rbinom(n, 1, pi) ## outcome data.">
 
   
   <link rel="alternate" hreflang="en-us" href="/post/2022-05-25-conditional-and-unconditional-treatment-effects-in-rcts/">
@@ -117,9 +116,8 @@ sim_data &lt;- function(n){ z &lt;- rep(0:1, each = n / 2) ## trt assignment x &
   <meta property="og:site_name" content="Dominic Magirr">
   <meta property="og:url" content="/post/2022-05-25-conditional-and-unconditional-treatment-effects-in-rcts/">
   <meta property="og:title" content="Conditional and unconditional treatment effects in RCTs | Dominic Magirr">
-  <meta property="og:description" content="[Disclaimer: there is nothing new in this post. This topic has been discussed extensively. In a better way. In a more interesting way. Here I’m expressing my personal view fwiw. There may be errors, possibly on more than one level.]
-Small simulation study Quick function to simulate data from an RCT with equal allocation to treatments 0 and 1, a single covariate, and a binary endpoint:
-sim_data &lt;- function(n){ z &lt;- rep(0:1, each = n / 2) ## trt assignment x &lt;- rnorm(n) ## covariate eta &lt;- -1 &#43; 2 * x - log(0."><meta property="og:image" content="/img/icon-192.png">
+  <meta property="og:description" content="Small simulation study Quick function to simulate data from an RCT with equal allocation to treatments 0 and 1, a single covariate, and a binary endpoint:
+sim_data &lt;- function(n){ z &lt;- rep(0:1, each = n / 2) ## trt assignment x &lt;- rnorm(n) ## covariate eta &lt;- -1 &#43; 2 * x - log(0.55) * z ## linear predictor pi &lt;- exp(eta) / (1 &#43; exp(eta)) ## prob(outcome = 1) y &lt;- rbinom(n, 1, pi) ## outcome data."><meta property="og:image" content="/img/icon-192.png">
   <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
   
     
@@ -171,7 +169,7 @@ sim_data &lt;- function(n){ z &lt;- rep(0:1, each = n / 2) ## trt assignment x &
       "url": "/img/icon-512.png"
     }
   },
-  "description": "[Disclaimer: there is nothing new in this post. This topic has been discussed extensively. In a better way. In a more interesting way. Here I’m expressing my personal view fwiw. There may be errors, possibly on more than one level.]\nSmall simulation study Quick function to simulate data from an RCT with equal allocation to treatments 0 and 1, a single covariate, and a binary endpoint:\nsim_data \u0026lt;- function(n){ z \u0026lt;- rep(0:1, each = n / 2) ## trt assignment x \u0026lt;- rnorm(n) ## covariate eta \u0026lt;- -1 + 2 * x - log(0."
+  "description": "Small simulation study Quick function to simulate data from an RCT with equal allocation to treatments 0 and 1, a single covariate, and a binary endpoint:\nsim_data \u0026lt;- function(n){ z \u0026lt;- rep(0:1, each = n / 2) ## trt assignment x \u0026lt;- rnorm(n) ## covariate eta \u0026lt;- -1 + 2 * x - log(0.55) * z ## linear predictor pi \u0026lt;- exp(eta) / (1 + exp(eta)) ## prob(outcome = 1) y \u0026lt;- rbinom(n, 1, pi) ## outcome data."
 }
 </script>
 
@@ -456,7 +454,6 @@ sim_data &lt;- function(n){ z &lt;- rep(0:1, each = n / 2) ## trt assignment x &
 <script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
-<p><em>[Disclaimer: there is nothing new in this post. This topic has been discussed extensively. In a better way. In a more interesting way. Here I’m expressing my personal view fwiw. There may be errors, possibly on more than one level.]</em></p>
 <div id="small-simulation-study" class="section level2">
 <h2>Small simulation study</h2>
 <p>Quick function to simulate data from an RCT with equal allocation to treatments 0 and 1, a single covariate, and a binary endpoint:</p>
@@ -549,7 +546,7 @@ plot(res$g_est, res$dir_adj_est,
 abline(a=0,b = 1,col = 2,lwd = 3)</code></pre>
 <p><img src="/post/2022-05-25-conditional-and-unconditional-treatment-effects-in-rcts_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <p>The standardized and unadjusted estimates do not appear systematically different. The directly adjusted point estimates are systematically larger (because they are estimates of a different parameter - the condidional log-odds ratio).</p>
-<p>Next though, look at the standardized Z-statistics, where I split up the graph according to whether or not the z-statistic exceeds some critical value…</p>
+<p>Now the standardized Z-statistics…</p>
 <pre class="r"><code>par(mfrow = c(1,2))
 plot(res$g_z, res$unadj_z,
      xlab = &quot;Z &#39;standardization&#39;&quot;,
@@ -565,25 +562,29 @@ abline(a=0,b = 1,col = 2,lwd = 3)
 abline(h = 2.33, col = 2, lty = 2)
 abline(v = 2.33, col = 2, lty = 2)</code></pre>
 <p><img src="/post/2022-05-25-conditional-and-unconditional-treatment-effects-in-rcts_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
-<p>Comparing unadjusted and standardized analyses, we see that the lower right quadrant has more points than the upper left quadrant, indicating the greater power of the standardized analysis. But looking at standardized vs direct adjustment we see these are essentially the same on the z-statistic scale.</p>
-</div>
-<div id="discussion" class="section level2">
-<h2>Discussion</h2>
-<p>Consider two analysis teams (A and B). Team A pre-specifies something like the following:</p>
-<ul>
-<li><p>Design the trial around a primary analysis concerning direct-adusted conditional log-odds ratio</p></li>
-<li><p>Also report marginal treatment effect, e.g. unadjusted analysis point estimate, as well as other relevant aspects such as point estimates of marginal / conditional probabilities of the event of interest on each arm, etc.</p></li>
-<li><p>Informally assess treatment effect heterogeneity. Forest plots, etc., etc.</p></li>
-</ul>
-<p>Team B pre-specifies:</p>
-<ul>
-<li><p>Design the trial around primary analysis concerning marginal log-odds ratio (or risk difference or relative risk), analyzed via standardization based on same logistic regression as Team A are using..</p></li>
-<li><p>Additional, more informal work, similar to Team A.</p></li>
-</ul>
-<p>Does Team B do better than team A? Yes, they have a better point estimate of the marginal treatment effect. But overall I don’t think they do <em>that</em> much better. It’s great if Team B want to use an improved point estimate, but I don’t think what Team A is doing is so bad.</p>
-<p>Am I leaning too heavily on null hypothesis testing here? Could be. I do have in mind situations where the trial is only just big enough to demonstrate incompatability with zero (or negative) effect. But I’m not suggesting decision making at the end of the trial comes down to a single hypothesis test.</p>
-<p>Main things to say are that conditional and unconditional effects are of interest. They require different levels of assumptions that shouldn’t go unchallenged. At the same time we shouldn’t be intimidated away from making any assumptions.</p>
-<p>Another thing to say, perhaps, is that if we have massively prognostic covariates (like in this artificial example), then we would probably stratify by them, in which case the unadjusted and standardized point estimates would become very similar.</p>
+<pre class="r"><code>## Discussion
+
+#Consider two analysis teams (A and B). Team A pre-specifies something like the following:
+
+#- Design the trial around a primary analysis concerning direct-adusted conditional log-odds ratio
+
+#- Also report marginal treatment effect, e.g. unadjusted analysis point estimate, as well as other relevant aspects such as point estimates of marginal / conditional probabilities of the event of interest on each arm, etc.
+
+#- Informally assess treatment effect heterogeneity. Forest plots, etc., etc.
+
+#Team B pre-specifies:
+
+#- Design the trial around primary analysis concerning marginal log-odds ratio (or risk difference or relative risk), analyzed via standardization based on same logistic regression as Team A are using..
+
+#- Additional, more informal work, similar to Team A.
+
+#Does Team B do better than team A? Yes, they have a better point estimate of the marginal treatment effect. But overall I don&#39;t think they do *that* much better. It&#39;s great if Team B want to use an improved point estimate, but I don&#39;t think what Team A is doing is so bad. 
+
+#Am I leaning too heavily on null hypothesis testing here? Could be. I do have in mind situations where the trial is only just big enough to demonstrate incompatability with zero (or negative) effect. But I&#39;m not suggesting decision making at the end of the trial comes down to a single hypothesis test.
+
+#Main things to say are that conditional and unconditional effects are of interest. They require different levels of assumptions that shouldn&#39;t go unchallenged. At the same time we shouldn&#39;t be intimidated away from making any assumptions. 
+
+#Another thing to say, perhaps, is that if we have massively prognostic covariates (like in this artificial example), then we would probably stratify by them, in which case the unadjusted and standardized point estimates would become very similar.</code></pre>
 </div>
 <div id="appendix-misspecified-model" class="section level2">
 <h2>Appendix: misspecified model</h2>
@@ -592,7 +593,7 @@ abline(v = 2.33, col = 2, lty = 2)</code></pre>
 plot(x, exp(-exp(2 -  2 * x)), ylim = c(0,1), type = &quot;l&quot;, ylab = &quot;P(Y=1)&quot;)
 points(x, exp(-exp(2 -  2 * x  + log(0.4) * x)), col = 2, type = &quot;l&quot;)
 legend(&quot;topleft&quot;, c(&quot;Z=0&quot;, &quot;Z=1&quot;), lty = c(1,1), col = c(1,2))</code></pre>
-<p><img src="/post/2022-05-25-conditional-and-unconditional-treatment-effects-in-rcts_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="/post/2022-05-25-conditional-and-unconditional-treatment-effects-in-rcts_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <p>…and here are the results showing similar things…</p>
 <pre class="r"><code>sim_data &lt;- function(n){
   
@@ -615,10 +616,6 @@ legend(&quot;topleft&quot;, c(&quot;Z=0&quot;, &quot;Z=1&quot;), lty = c(1,1), c
 
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
 <pre class="r"><code>par(mfrow = c(1,2))
 
@@ -635,7 +632,7 @@ plot(res$g_est, res$dir_adj_est,
      xlab = &quot;log(OR) &#39;standardization&#39;&quot;,
      ylab = &quot;log(OR) &#39;direct adjusted&#39;&quot;)
 abline(a=0,b = 1,col = 2,lwd = 3)</code></pre>
-<p><img src="/post/2022-05-25-conditional-and-unconditional-treatment-effects-in-rcts_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="/post/2022-05-25-conditional-and-unconditional-treatment-effects-in-rcts_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 <pre class="r"><code>par(mfrow = c(1,2))
 plot(res$g_z, res$unadj_z,
      xlab = &quot;Z &#39;standardization&#39;&quot;,
@@ -645,13 +642,14 @@ abline(h = 2.33, col = 2, lty = 2)
 abline(v = 2.33, col = 2, lty = 2)
 
 
+
 plot(res$g_z, res$dir_adj_z,
      xlab = &quot;Z &#39;standardization&#39;&quot;,
      ylab = &quot;Z &#39;direct adjusted&#39;&quot;)
 abline(a=0,b = 1,col = 2,lwd = 3)
 abline(h = 2.33, col = 2, lty = 2)
 abline(v = 2.33, col = 2, lty = 2)</code></pre>
-<p><img src="/post/2022-05-25-conditional-and-unconditional-treatment-effects-in-rcts_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><img src="/post/2022-05-25-conditional-and-unconditional-treatment-effects-in-rcts_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 </div>
 
     </div>
