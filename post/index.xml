@@ -129,29 +129,6 @@ abline(a=0,b = 1,col = 2,lwd = 3)
 abline(h = 2.33, col = 2, lty = 2)
 abline(v = 2.33, col = 2, lty = 2)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/post/2022-05-25-conditional-and-unconditional-treatment-effects-in-rcts_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## Discussion
-
-#Consider two analysis teams (A and B). Team A pre-specifies something like the following:
-
-#- Design the trial around a primary analysis concerning direct-adusted conditional log-odds ratio
-
-#- Also report marginal treatment effect, e.g. unadjusted analysis point estimate, as well as other relevant aspects such as point estimates of marginal / conditional probabilities of the event of interest on each arm, etc.
-
-#- Informally assess treatment effect heterogeneity. Forest plots, etc., etc.
-
-#Team B pre-specifies:
-
-#- Design the trial around primary analysis concerning marginal log-odds ratio (or risk difference or relative risk), analyzed via standardization based on same logistic regression as Team A are using..
-
-#- Additional, more informal work, similar to Team A.
-
-#Does Team B do better than team A? Yes, they have a better point estimate of the marginal treatment effect. But overall I don&amp;#39;t think they do *that* much better. It&amp;#39;s great if Team B want to use an improved point estimate, but I don&amp;#39;t think what Team A is doing is so bad. 
-
-#Am I leaning too heavily on null hypothesis testing here? Could be. I do have in mind situations where the trial is only just big enough to demonstrate incompatability with zero (or negative) effect. But I&amp;#39;m not suggesting decision making at the end of the trial comes down to a single hypothesis test.
-
-#Main things to say are that conditional and unconditional effects are of interest. They require different levels of assumptions that shouldn&amp;#39;t go unchallenged. At the same time we shouldn&amp;#39;t be intimidated away from making any assumptions. 
-
-#Another thing to say, perhaps, is that if we have massively prognostic covariates (like in this artificial example), then we would probably stratify by them, in which case the unadjusted and standardized point estimates would become very similar.&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div id=&#34;appendix-misspecified-model&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Appendix: misspecified model&lt;/h2&gt;
@@ -178,10 +155,6 @@ legend(&amp;quot;topleft&amp;quot;, c(&amp;quot;Z=0&amp;quot;, &amp;quot;Z=1&amp
 }&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;res &amp;lt;- purrr::map_df(rep(300, 1000), sim_one_trial_with_analysis)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
-
-## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 
 ## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;par(mfrow = c(1,2))
