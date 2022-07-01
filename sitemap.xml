@@ -11,13 +11,16 @@
     <loc>/courses/example/example2/</loc>
     <lastmod>2019-05-05T00:00:00+01:00</lastmod>
   </url><url>
-    <loc>/post/2022-05-25-conditional-and-unconditional-treatment-effects-in-rcts/</loc>
-    <lastmod>2022-05-25T07:10:05+00:00</lastmod>
-  </url><url>
     <loc>/</loc>
-    <lastmod>2022-05-25T07:10:05+00:00</lastmod>
+    <lastmod>2022-07-01T08:19:15+00:00</lastmod>
   </url><url>
     <loc>/post/</loc>
+    <lastmod>2022-07-01T08:19:15+00:00</lastmod>
+  </url><url>
+    <loc>/post/2022-07-01-pseudo-observations-on-pseudo-observations/</loc>
+    <lastmod>2022-07-01T08:19:15+00:00</lastmod>
+  </url><url>
+    <loc>/post/2022-05-25-conditional-and-unconditional-treatment-effects-in-rcts/</loc>
     <lastmod>2022-05-25T07:10:05+00:00</lastmod>
   </url><url>
     <loc>/post/2022-01-19-difference-between-fixed-random-independent-type-i-type-ii-non-prognostic-non-ignorable-and-non-informative-censoring/</loc>

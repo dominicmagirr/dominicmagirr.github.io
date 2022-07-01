@@ -5,7 +5,7 @@
     <link>/</link>
       <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <description>Dominic Magirr</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Wed, 25 May 2022 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Fri, 01 Jul 2022 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>Dominic Magirr</title>
@@ -51,6 +51,275 @@
 &lt;p&gt;Cras aliquam rhoncus ipsum, in hendrerit nunc mattis vitae. Duis vitae efficitur metus, ac tempus leo. Cras nec fringilla lacus. Quisque sit amet risus at ipsum pharetra commodo. Sed aliquam mauris at consequat eleifend. Praesent porta, augue sed viverra bibendum, neque ante euismod ante, in vehicula justo lorem ac eros. Suspendisse augue libero, venenatis eget tincidunt ut, malesuada at lorem. Donec vitae bibendum arcu. Aenean maximus nulla non pretium iaculis. Quisque imperdiet, nulla in pulvinar aliquet, velit quam ultrices quam, sit amet fringilla leo sem vel nunc. Mauris in lacinia lacus.&lt;/p&gt;
 &lt;p&gt;Suspendisse a tincidunt lacus. Curabitur at urna sagittis, dictum ante sit amet, euismod magna. Sed rutrum massa id tortor commodo, vitae elementum turpis tempus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean purus turpis, venenatis a ullamcorper nec, tincidunt et massa. Integer posuere quam rutrum arcu vehicula imperdiet. Mauris ullamcorper quam vitae purus congue, quis euismod magna eleifend. Vestibulum semper vel augue eget tincidunt. Fusce eget justo sodales, dapibus odio eu, ultrices lorem. Duis condimentum lorem id eros commodo, in facilisis mauris scelerisque. Morbi sed auctor leo. Nullam volutpat a lacus quis pharetra. Nulla congue rutrum magna a ornare.&lt;/p&gt;
 &lt;p&gt;Aliquam in turpis accumsan, malesuada nibh ut, hendrerit justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque sed erat nec justo posuere suscipit. Donec ut efficitur arcu, in malesuada neque. Nunc dignissim nisl massa, id vulputate nunc pretium nec. Quisque eget urna in risus suscipit ultricies. Pellentesque odio odio, tincidunt in eleifend sed, posuere a diam. Nam gravida nisl convallis semper elementum. Morbi vitae felis faucibus, vulputate orci placerat, aliquet nisi. Aliquam erat volutpat. Maecenas sagittis pulvinar purus, sed porta quam laoreet at.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Pseudo observations on pseudo-observations</title>
+      <link>/post/2022-07-01-pseudo-observations-on-pseudo-observations/</link>
+      <pubDate>Fri, 01 Jul 2022 00:00:00 +0000</pubDate>
+      <guid>/post/2022-07-01-pseudo-observations-on-pseudo-observations/</guid>
+      <description>
+&lt;script src=&#34;/rmarkdown-libs/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;div id=&#34;idea-motivation&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Idea / motivation&lt;/h2&gt;
+&lt;p&gt;I’ve set myself the challenge of reproducing the results in Table I of &lt;a href=&#34;https://onlinelibrary.wiley.com/doi/full/10.1002/sim.7297&#34;&gt;“Causal inference in survival analysis
+using pseudo-observations”&lt;/a&gt; by Per K. Andersen, Elisavet Syriopouloua, and Erik T. Parner.&lt;/p&gt;
+&lt;p&gt;I’m doing this because I’ve seen a lot about pseudo-observations recently, and while I kind of get the gist of it, I would like to deepen my understanding by getting hands on with some examples.&lt;/p&gt;
+&lt;p&gt;For more general motivation, i.e., &lt;em&gt;what’s the big deal about pseudo-observations?&lt;/em&gt;, I think this sentence from the introduction sums it up nicely&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;This approach has the advantage that when focus is on a single time point t0, an assumption like the proportional hazards assumption for all values t of time that is imposed when using a Cox model can be avoided.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;The idea is that we would like to estimate the &lt;em&gt;average causal effect&lt;/em&gt; (ACE) defined as&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[E(\mathbb{1}\{ Y^1 &amp;lt; t_0\}) - E(\mathbb{1}\{ Y^0 &amp;lt; t_0\})\]&lt;/span&gt;
+where &lt;span class=&#34;math inline&#34;&gt;\(Y^1\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(Y^0\)&lt;/span&gt; denote the &lt;em&gt;potential outcomes&lt;/em&gt; when exposed to two possible treatments &lt;span class=&#34;math inline&#34;&gt;\(A=0\)&lt;/span&gt; or &lt;span class=&#34;math inline&#34;&gt;\(A=1\)&lt;/span&gt;. We also have available some prognostic information in the form of baseline covariates &lt;span class=&#34;math inline&#34;&gt;\(L\)&lt;/span&gt; that we would like to make use of to improve the efficiency of our inference.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;g-formula-applied-to-the-cox-model&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;G-formula applied to the Cox model&lt;/h2&gt;
+&lt;p&gt;One approach to estimating the ACE is to first fit a Cox model,&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[h(t)=h_0(t)\exp(\beta^T L + \gamma A),\]&lt;/span&gt;
+then, for each subject &lt;span class=&#34;math inline&#34;&gt;\(i=1,\ldots,n\)&lt;/span&gt;, use the model to predict survival to &lt;span class=&#34;math inline&#34;&gt;\(t_0\)&lt;/span&gt; if exposed to &lt;span class=&#34;math inline&#34;&gt;\(A = 1\)&lt;/span&gt;,&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{S}(t_0 \mid L_i, A_i = 1) = \exp(-\hat{\Lambda}_0\exp(\hat{\beta}^T L_i + \hat{\gamma})),\]&lt;/span&gt;
+and if exposed to &lt;span class=&#34;math inline&#34;&gt;\(A = 0\)&lt;/span&gt;,&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{S}(t_0 \mid L_i, A_i = 0) = \exp(-\hat{\Lambda}_0\exp(\hat{\beta}^T L_i)),\]&lt;/span&gt;
+and, finally, (point) estimate the ACE as&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\frac{1}{n}\sum_{i=1}^n \hat{S}(t_0 \mid L_i, A_i = 0) - \frac{1}{n}\sum_{i=1}^n \hat{S}(t_0 \mid L_i, A_i = 1).\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;There is probably some nice theory for constructing a confidence interval for the ACE, but the easiest thing to say is that we could use non-parametric bootstrap.&lt;/p&gt;
+&lt;p&gt;Overall, this is a nice procedure if the Cox model is correctly specified. If the model is misspecified then we may have a biased point estimate and confidence intervals with incorrect coverage. Depending on one’s perspective, this might be a really bad thing.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;g-formula-applied-to-pseudo-observations&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;G-formula applied to pseudo-observations&lt;/h2&gt;
+&lt;p&gt;A potentially more robust (less bias under model misspecification) way to estimate ACE is to use pseudo-observations.&lt;/p&gt;
+&lt;div id=&#34;whats-a-pseudo-observation&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;What’s a pseudo-observation?&lt;/h3&gt;
+&lt;p&gt;Suppose we are interested in the parameter &lt;span class=&#34;math inline&#34;&gt;\(\theta = E(\mathbb{1}\{ Y &amp;gt; t_0\})\)&lt;/span&gt; and a consistent estimator, &lt;span class=&#34;math inline&#34;&gt;\(\hat{\theta}\)&lt;/span&gt;, exists, based on the observations from the full sample &lt;span class=&#34;math inline&#34;&gt;\(i=1,\ldots,n\)&lt;/span&gt;, e.g., based on the Kaplan-Meier estimator (with suitable assumptions about censoring). A pseudo-observation (or pseudo-value) for subject &lt;span class=&#34;math inline&#34;&gt;\(i\)&lt;/span&gt; is defined as&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\theta_i = n \hat{\theta} - (n-1)\hat{\theta}^{-i},\]&lt;/span&gt;
+where &lt;span class=&#34;math inline&#34;&gt;\(\hat{\theta}^{-i}\)&lt;/span&gt; is the estimator applied to the sample of size n−1 obtained by eliminating subject i from the whole sample.&lt;/p&gt;
+&lt;p&gt;Somewhat miraculously (to me at least…the maths is way above my level – see, e.g., &lt;a href=&#34;https://link.springer.com/article/10.1007/s10985-008-9107-z&#34;&gt;this paper&lt;/a&gt;), these pseudo-observations have (approximately) the same conditional expectation as the thing we were originally interested in&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[E(\theta_i \mid L_i, A_i) \approx E(\mathbb{1}\{ Y_i &amp;gt; t_0\} \mid L_i, A_i).\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;This means that we can express the average causal effect as&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+\begin{align}
+\text{ACE} &amp;amp; =  E(\mathbb{1}\{ Y^0 &amp;gt; t_0\}) - E(\mathbb{1}\{ Y^1 &amp;gt; t_0\})\\
+&amp;amp; = E_L(E(\mathbb{1}\{ Y_i &amp;gt; t_0\} \mid L_i, A_i = 0)) -  E_L(E(\mathbb{1}\{ Y_i &amp;gt; t_0\} \mid L_i, A_i = 1)) \\
+&amp;amp; \approx E_L(E(\theta_i \mid L_i, A_i = 0)) -  E_L(E(\theta_i \mid L_i, A_i = 1))
+\end{align}
+\]&lt;/span&gt;
+and (point) estimate this by, e.g., fitting a linear model to the pseudo-observations and then applying the G-formula. Again, a confidence interval could be based on non-parametric bootstrap. This doesn’t rely on e.g. the proportional hazards assumption to be valid. &lt;em&gt;(Do we still have to correctly model the conditional expectation of the pseudo-observations in the linear model? There’s a comment in the discussion section that we do, but given that ANCOVA is robust to this kind of miss-specification, can we hope for the same here?…I don’t know.)&lt;/em&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;reproducing-table-i&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Reproducing Table I&lt;/h2&gt;
+&lt;p&gt;Here are the first couple of rows of Table I from &lt;a href=&#34;https://onlinelibrary.wiley.com/doi/full/10.1002/sim.7297&#34;&gt;“Causal inference in survival analysis
+using pseudo-observations”&lt;/a&gt; by Per K. Andersen, Elisavet Syriopouloua, and Erik T. Parner.&lt;/p&gt;
+&lt;table&gt;
+&lt;caption&gt;&lt;span id=&#34;tab:unnamed-chunk-1&#34;&gt;Table 1: &lt;/span&gt;Table I from Andersen et al. (2017)&lt;/caption&gt;
+&lt;colgroup&gt;
+&lt;col width=&#34;5%&#34; /&gt;
+&lt;col width=&#34;18%&#34; /&gt;
+&lt;col width=&#34;12%&#34; /&gt;
+&lt;col width=&#34;9%&#34; /&gt;
+&lt;col width=&#34;22%&#34; /&gt;
+&lt;col width=&#34;16%&#34; /&gt;
+&lt;col width=&#34;14%&#34; /&gt;
+&lt;/colgroup&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;n&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;Cox_Coverage&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;Cox_Bias&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;Cox_SD&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;Pseudo_Coverage&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;Pseudo_Bias&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;Pseudo_SD&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;200&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.946&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.074&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.945&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.078&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;400&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.940&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;-0.001&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.053&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.945&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.000&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.054&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;The simulation scenario was described as follows.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;The baseline hazard was constant =0.511 for the unexposed (A=0), and the hazard ratio for exposure was HR=1.37. The exposure distribution was binomial with probability 0.50. Two further Gaussian variables L1 and L2 with a standard deviation of 0.2 were included with a hazard ratio of 1.1 per unit. This corresponds to a true ACE of 0.104=0.504−0.400 at time t0=1 (computed using 5,000,000 replications).&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Let’s start by checking whether I can reproduce that…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;########################################
+## check I have the correct scenario
+n &amp;lt;- 5000000
+a &amp;lt;- rbinom(n, 1, 0.5)
+l_1 &amp;lt;- rnorm(n, sd = 0.2)
+l_2 &amp;lt;- rnorm(n, sd = 0.2)
+
+rate &amp;lt;- 0.511 * (1.37 * a + 1 * (1 -a)) * exp(log(1.1) * l_1 + log(1.1) * l_2)
+
+t_star &amp;lt;- rexp(n, rate = rate) 
+true_ace &amp;lt;- mean(t_star[a == 1] &amp;lt; 1) - mean(t_star[a == 0] &amp;lt; 1)
+true_ace&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.1038744&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Looks good! Next, the censoring distribution was described.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;The censoring time has a constant rate of 0.31, corresponding to an observed censoring frequency of 20.3% before time t0=1(computed using 5,000,000 replications). Subjects still at risk at t0=1 were (administratively) censored at that time.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Let’s check that as well…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cens &amp;lt;- rexp(n, 0.31)
+mean(cens &amp;lt; pmin(1, t_star))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.2031564&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Good stuff!&lt;/p&gt;
+&lt;p&gt;Next, I’ll check whether I can reproduce the bias and SD results in Table I. I’ll focus on the pseudo-observations approach. This will require several steps. Firstly, I write a function to simulate one dataset according to the scenario described.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#######################################
+## function to simulate one data set
+sim_dat &amp;lt;- function(n){
+  
+  a &amp;lt;- rbinom(n, 1, 0.5)
+  l_1 &amp;lt;- rnorm(n, sd = 0.2)
+  l_2 &amp;lt;- rnorm(n, sd = 0.2)
+  rate &amp;lt;- 0.511 * (1.37 * a + 1 * (1 -a)) * exp(log(1.1) * l_1 + log(1.1) * l_2)
+  t_star &amp;lt;- rexp(n, rate = rate) 
+  cens &amp;lt;- rexp(n, 0.31)
+  times &amp;lt;- pmin(1, pmin(t_star, cens))
+  event &amp;lt;- as.numeric(t_star &amp;lt; pmin(cens, 1))
+  
+  df &amp;lt;- data.frame(times = times,
+                   event = event,
+                   a = a,
+                   l_1 = l_1,
+                   l_2 = l_2)
+  
+  df
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Then I write a function to calculate the pseudo-observations (via the R package &lt;a href=&#34;https://cran.r-project.org/web/packages/prodlim/index.html&#34;&gt;{prodlim}&lt;/a&gt;):&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(prodlim)
+#########################
+## function to find pseudo values.
+## df must have following columns
+## &amp;quot;times&amp;quot; (numeric)
+## &amp;quot;event&amp;quot; (numeric 0/1)
+## &amp;quot;a&amp;quot; (numeric 0/1)
+## &amp;quot;l_1&amp;quot; (numeric)
+## &amp;quot;l_2&amp;quot; (numeric)
+pseudo_surv &amp;lt;- function(df, tau = 1){
+  f = prodlim(Hist(times, event) ~ 1, data = df)
+  df$pseudo_obs &amp;lt;- unname(jackknife(f, times = tau))
+  df
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;And finally a function to apply the G-formula to the psuedo-values:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;###############################
+## what do we do with the pseudovalues?
+## fit a linear model and use g-formula to find
+## average causal effect (ACE)
+## df must have following columns
+## &amp;quot;times&amp;quot; (numeric)
+## &amp;quot;event&amp;quot; (numeric 0/1)
+## &amp;quot;a&amp;quot; (numeric 0/1)
+## &amp;quot;l_1&amp;quot; (numeric)
+## &amp;quot;l_2&amp;quot; (numeric)
+## &amp;quot;pseudo_obs&amp;quot; (numeric)
+find_ace &amp;lt;- function(df){
+  
+  ## how many patients in data set
+  n &amp;lt;- dim(df)[1]
+  
+  ## fit linear model to pseudovalues
+  fit &amp;lt;- lm(pseudo_obs ~ a + l_1 + l_2, data = df)
+
+  ## predict pseudovalue for each patient under A = 0
+  predict_0 = predict(fit, 
+                      newdata = data.frame(a = rep(0, n),
+                                           l_1 = df$l_1,
+                                           l_2 = df$l_2))
+  
+  ## predict pseudovalue for each patient under A = 1
+  predict_1 = predict(fit, 
+                      newdata = data.frame(a = rep(1, n),
+                                           l_1 = df$l_1,
+                                           l_2 = df$l_2))
+
+  ## average causal effect is p(T&amp;gt;1 | A=0) - p(T &amp;gt; 1 | A=1)
+  ace &amp;lt;- mean(predict_0) - mean(predict_1)
+  ace
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;I could then link these three functions together to estimate the average causal effect for a single simulated data set&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sim_ace &amp;lt;- function(n){find_ace(pseudo_surv(sim_dat(n)))}
+sim_ace(n = 200)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.1387292&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;and I could do this 1,000 times (the paper used 10,000 but I’ll take my chances) and compare with Table I&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## n = 200
+res_200 &amp;lt;- purrr::map_dbl(rep(200, 1000), sim_ace)
+mean(res_200) - true_ace #bias&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] -0.002274479&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sd(res_200)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.07649481&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## n = 400
+res_400 &amp;lt;- purrr::map_dbl(rep(400, 1000), sim_ace)
+mean(res_400) - true_ace #bias&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] -0.0001083186&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sd(res_400)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.05380005&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;That’s good enough for me!&lt;/p&gt;
+&lt;div id=&#34;reproducing-the-coverage&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Reproducing the coverage&lt;/h3&gt;
+&lt;p&gt;Reproducing the coverage results is considerably more difficult (or, at least, more computationally intensive) than the bias / SD, because the confidence intervals are based on non-parametric bootstrap.&lt;/p&gt;
+&lt;p&gt;The following code &lt;em&gt;would&lt;/em&gt; do it (via the R package &lt;a href=&#34;https://cran.r-project.org/web/packages/boot/boot.pdf&#34;&gt;{boot}&lt;/a&gt;) but it takes over an hour on my machine so I won’t run it now…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;###################################
+## function allowing random sampling of rows of dataset
+boot_ace &amp;lt;- function(data, indices) {
+  d &amp;lt;- data[indices,] # allows boot to select sample
+  find_ace(pseudo_surv(d))
+}
+
+#####################################
+## simulate a dataset of size n
+## find bootstrap CI for ACE
+## and check whether this covers 
+## the true ACE
+is_covered &amp;lt;- function(n, true_ace){
+  
+  dat_orig &amp;lt;- sim_dat(n)
+  
+  ### based on 1000 bootstrap samples
+  results &amp;lt;- boot::boot(data = dat_orig, 
+                        statistic = boot_ace,
+                        R = 1000)
+  
+  boot_ci &amp;lt;- boot::boot.ci(results, type = &amp;quot;perc&amp;quot;)
+  true_ace &amp;gt; boot_ci$percent[1,4] &amp;amp;&amp;amp; true_ace &amp;lt; boot_ci$percent[1,5]
+}
+
+## find coverage for n = 200 based on 1000 simulated trials
+cov_200 &amp;lt;- purrr::map_dbl(rep(200, 1000), is_covered, true_ace = true_ace)
+mean(cov_200)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;…but you can trust me that it gave a result of 0.945 which matches close enough to Table I.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;comments&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Comments&lt;/h2&gt;
+&lt;p&gt;The scenario considered in Table I was a correctly specified Cox model, so this example doesn’t show off the robustness properties of the pseudo-observation approach. I might revisit this in a future post if I get time.&lt;/p&gt;
+&lt;p&gt;I feel a bit more confident using pseudo-observations now. But I still have some questions:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;just how robust is the method? It looks good in this example and the other examples from the paper, but does it breakdown?&lt;/li&gt;
+&lt;li&gt;what about efficiency? It’s based on the Kaplan-Meier estimate, which involves essentially a dichotomization of the survival time at &lt;span class=&#34;math inline&#34;&gt;\(t_0\)&lt;/span&gt;. This must lead to some inefficiency compared to a model. Not really apparent in these examples looking at the SDs, but here all observations were censored at &lt;span class=&#34;math inline&#34;&gt;\(t_0\)&lt;/span&gt; which is not reflective of projects I work on.&lt;/li&gt;
+&lt;li&gt;how much is gained compared to simple Kaplan-Meier estimation? This will depend on the strength of the prognostic covariates. In this simulation example the prognostic covariates were pretty pathetic, so doubt much was gained.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Overall, I’m impressed with pseudo-observations. They are a quite a difficult concept, but don’t seem so far out of reach compared to other methods I’ve seen that provide unbiased estimation under model-misspecification. I’ll keep trying to learn more about this.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;references&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;References&lt;/h2&gt;
+&lt;p&gt;Andersen, Per K., Elisavet Syriopoulou, and Erik T. Parner. “Causal inference in survival analysis using pseudo‐observations.” Statistics in medicine 36.17 (2017): 2669-2681&lt;/p&gt;
+&lt;p&gt;Graw, Frederik, Thomas A. Gerds, and Martin Schumacher. “On pseudo-values for regression analysis in competing risks models.” Lifetime Data Analysis 15.2 (2009): 241-255.&lt;/p&gt;
+&lt;/div&gt;
 </description>
     </item>
     
