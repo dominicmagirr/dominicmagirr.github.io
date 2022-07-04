@@ -5,12 +5,200 @@
     <link>/post/</link>
       <atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     <description>Posts</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Fri, 01 Jul 2022 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Mon, 04 Jul 2022 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>Posts</title>
       <link>/post/</link>
     </image>
+    
+    <item>
+      <title>Pseudo-observations 2</title>
+      <link>/post/2022-07-04-psuedo-observations-2/</link>
+      <pubDate>Mon, 04 Jul 2022 00:00:00 +0000</pubDate>
+      <guid>/post/2022-07-04-psuedo-observations-2/</guid>
+      <description>
+&lt;script src=&#34;/rmarkdown-libs/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;p&gt;This is a quick follow up to my &lt;a href=&#34;/post/2022-07-01-pseudo-observations-on-pseudo-observations&#34;&gt;previous&lt;/a&gt; post on pseudo-observations where I reproduced Table 1 from &lt;a href=&#34;https://onlinelibrary.wiley.com/doi/full/10.1002/sim.7297&#34;&gt;“Causal inference in survival analysis
+using pseudo-observations”&lt;/a&gt; by Per K. Andersen, Elisavet Syriopouloua, and Erik T. Parner. The simulation scenario for Table 1 was a correctly specified Cox model that didn’t show off the robustness property of the pseudo-observations method. In this post I’ll aim to reproduce Table 2, which does demonstrate this point.&lt;/p&gt;
+&lt;table&gt;
+&lt;caption&gt;&lt;span id=&#34;tab:unnamed-chunk-1&#34;&gt;Table 1: &lt;/span&gt;Table 2 (last row) from Andersen et al. (2017)&lt;/caption&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;HR_1&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;ACE&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;Cens_Prob&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;Cox_Bias&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;Psuedo_Bias&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;5&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.384&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.684&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;-0.107&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0.001&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;The simulation scenario in Table 2 is described in the paper as follows&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;The baseline hazard was constant =0.511 for the unexposed (A=0) and the hazard ratio for the exposed (A=1) increased linearly over time from HR(0)=1 at time 0 to a hazard ratio of HR(1)=1,1.5,2,5 at time 1. The exposure distribution was binomial with probability 0.50.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Ok, I’m already struggling a bit. How do I simulate from a model with a linearly increasing hazard ratio? That’s not something I do every day.&lt;/p&gt;
+&lt;p&gt;I’ll focus on the situation when the hazard ratio is 5 at time 1. I can write the survival distribution as
+&lt;span class=&#34;math display&#34;&gt;\[S(t) = \exp(-\int_{0}^t h(s)ds)\]&lt;/span&gt;
+where in this case
+&lt;span class=&#34;math display&#34;&gt;\[h(s)=0.511\times(1 + 4s),~s \in (0,1)\]&lt;/span&gt;
+so that
+&lt;span class=&#34;math display&#34;&gt;\[S(t) = \exp(-0.511(t + 2t^2))\]&lt;/span&gt;
+This means that I can simulate the time-to-event &lt;span class=&#34;math inline&#34;&gt;\(T_i^*\)&lt;/span&gt; by first simulating &lt;span class=&#34;math inline&#34;&gt;\(U_i \sim U(0,1)\)&lt;/span&gt; and then solving
+&lt;span class=&#34;math display&#34;&gt;\[U_i = \exp(-0.511(T_i^* + 2(T_i^*)^2))\]&lt;/span&gt;
+for &lt;span class=&#34;math inline&#34;&gt;\(T_i^*\)&lt;/span&gt;. I can just about remember that
+&lt;span class=&#34;math display&#34;&gt;\[T_i^* = \frac{-0.5 \pm \sqrt{0.25-2\log(U_i)/0.511}}{2}\]&lt;/span&gt;
+(and I know that &lt;span class=&#34;math inline&#34;&gt;\(T_i^*\)&lt;/span&gt; is positive). Let’s check I have the correct scenario according to Table 2, remembering that we’re interested in the difference in survival probabilities at &lt;span class=&#34;math inline&#34;&gt;\(t=1\)&lt;/span&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;n &amp;lt;- 5000000
+u &amp;lt;- runif(n)
+
+t_star_1 &amp;lt;- (-0.5 + sqrt(0.25 - 2 * log(u) / 0.511)) / 2
+t_star_0 &amp;lt;- rexp(n, 0.511)
+
+a &amp;lt;- rbinom(n, 1, 0.5)
+t_star &amp;lt;- a * t_star_1 + (1 - a) * t_star_0
+true_ace &amp;lt;- mean(t_star[a == 1] &amp;lt; 1) - mean(t_star[a == 0] &amp;lt; 1)
+true_ace&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.3840153&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Looks good so far!&lt;/p&gt;
+&lt;p&gt;The censoring distribution was described as follows&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;The censoring had a constant hazard of 0, 0.1, 0.2, 0.5, 1.0, and 2.0.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;And I’m focusing on the last row of Table 2 where the censoring hazard was equal to 2.0&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cens &amp;lt;- rexp(n, 2)
+mean(cens &amp;lt; pmin(1, t_star))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.6841254&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This also matches Table 2.&lt;/p&gt;
+&lt;p&gt;Next I’ll look at the bias. I’ll first need a function that can simulate one data set under this scenario&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#######################################
+## function to simulate one data set
+sim_dat &amp;lt;- function(n){
+  
+  u &amp;lt;- runif(n)
+  t_star_1 &amp;lt;- (-0.5 + sqrt(0.25 - 2 * log(u) / 0.511)) / 2
+  t_star_0 &amp;lt;- rexp(n, 0.511)
+  
+  a &amp;lt;- rbinom(n, 1, 0.5)
+  t_star &amp;lt;- a * t_star_1 + (1 - a) * t_star_0
+  
+  cens &amp;lt;- rexp(n, 2)
+  times &amp;lt;- pmin(1, pmin(t_star, cens))
+  event &amp;lt;- as.numeric(t_star &amp;lt; pmin(cens, 1))
+  
+  df &amp;lt;- data.frame(times = times,
+                   event = event,
+                   a = a)
+  
+  df
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;div id=&#34;bias-pseudo-observations&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Bias (pseudo-observations)&lt;/h3&gt;
+&lt;p&gt;To find the bias of the pseudo-observation approach I can copy and paste my code from my previous post (more or less – I remove baseline covariates &lt;span class=&#34;math inline&#34;&gt;\(L\)&lt;/span&gt; since they are not included in this scenario)…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(prodlim)
+#########################
+## function to find pseudo values.
+## df must have following columns
+## &amp;quot;times&amp;quot; (numeric)
+## &amp;quot;event&amp;quot; (numeric 0/1)
+## &amp;quot;a&amp;quot; (numeric 0/1)
+pseudo_surv &amp;lt;- function(df, tau = 1){
+  f = prodlim(Hist(times, event) ~ 1, data = df)
+  df$pseudo_obs &amp;lt;- unname(jackknife(f, times = tau))
+  df
+}
+###############################
+## what do we do with the pseudovalues?
+## fit a linear model and use g-formula to find
+## average causal effect (ACE)
+## df must have following columns
+## &amp;quot;times&amp;quot; (numeric)
+## &amp;quot;event&amp;quot; (numeric 0/1)
+## &amp;quot;a&amp;quot; (numeric 0/1)
+## &amp;quot;pseudo_obs&amp;quot; (numeric)
+find_ace &amp;lt;- function(df){
+  
+  ## how many patients in data set
+  n &amp;lt;- dim(df)[1]
+  
+  ## fit linear model to pseudovalues
+  fit &amp;lt;- lm(pseudo_obs ~ a, data = df)
+
+  ## predict pseudovalue for each patient under A = 0
+  predict_0 = predict(fit, 
+                      newdata = data.frame(a = rep(0, n)))
+  
+  ## predict pseudovalue for each patient under A = 1
+  predict_1 = predict(fit, 
+                      newdata = data.frame(a = rep(1, n)))
+
+  ## average causal effect is p(T&amp;gt;1 | A=0) - p(T &amp;gt; 1 | A=1)
+  ace &amp;lt;- mean(predict_0) - mean(predict_1)
+  ace
+}
+###################################
+## bring 3 functions together
+sim_ace &amp;lt;- function(n){find_ace(pseudo_surv(sim_dat(n)))}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;In the paper, a sample size of 1,000,000 is used with 10,000 replications. As I don’t want to wait forever, I’ll reduce this to n=200 and 1,000 replications.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## n = 200
+res_pseudo &amp;lt;- purrr::map_dbl(rep(200, 1000), sim_ace)
+mean(res_pseudo) - true_ace #bias&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.001565089&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This looks to be essentially unbiased, in agreement with Table 2.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;bias-cox-model&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Bias (Cox model)&lt;/h3&gt;
+&lt;p&gt;I didn’t do this last time, so need to write a couple more functions…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(survival)
+find_ace_cox &amp;lt;- function(df){
+  
+  ## how many patients in data set
+  n &amp;lt;- dim(df)[1]
+  
+  ## fit cox model
+  fit_cox &amp;lt;- coxph(Surv(times, event) ~ a, data = df)
+
+  ## predict S(1) for each patient under A = 0
+  predict_0 = predict(fit_cox, 
+                      newdata = data.frame(times = rep(1, n),
+                                           event = rep(1, n),
+                                           a = rep(0, n)),
+                      type = &amp;quot;survival&amp;quot;)
+  
+  ## predict S(1) for each patient under A = 1
+  predict_1 = predict(fit_cox, 
+                      newdata = data.frame(times = rep(1, n),
+                                           event = rep(1, n),
+                                           a = rep(1, n)),
+                      type = &amp;quot;survival&amp;quot;)
+
+  ## average causal effect is p(T&amp;gt;1 | A=0) - p(T &amp;gt; 1 | A=1)
+  ace &amp;lt;- mean(predict_0) - mean(predict_1)
+  ace
+}
+###################################
+## bring2 functions together
+sim_ace_cox &amp;lt;- function(n){find_ace_cox(sim_dat(n))}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;and check the bias&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## n = 200
+res_cox &amp;lt;- purrr::map_dbl(rep(200, 1000), sim_ace_cox)
+mean(res_cox) - true_ace #bias&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] -0.1173701&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;which looks close enough to Table 2 to me, considering I’ve reduced the sample size / number of replications.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;comments&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Comments&lt;/h2&gt;
+&lt;p&gt;This example nicely demonstrates the bias in estimating the ACE if using a Cox model when the true data generating model has non-proportional hazards. Using a pseudo-observations approach in this case avoided this bias.&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
     
     <item>
       <title>Pseudo observations on pseudo-observations</title>
