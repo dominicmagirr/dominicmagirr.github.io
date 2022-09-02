@@ -5,7 +5,7 @@
     <link>/</link>
       <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <description>Dominic Magirr</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Mon, 04 Jul 2022 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Thu, 01 Sep 2022 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>Dominic Magirr</title>
@@ -51,6 +51,209 @@
 &lt;p&gt;Cras aliquam rhoncus ipsum, in hendrerit nunc mattis vitae. Duis vitae efficitur metus, ac tempus leo. Cras nec fringilla lacus. Quisque sit amet risus at ipsum pharetra commodo. Sed aliquam mauris at consequat eleifend. Praesent porta, augue sed viverra bibendum, neque ante euismod ante, in vehicula justo lorem ac eros. Suspendisse augue libero, venenatis eget tincidunt ut, malesuada at lorem. Donec vitae bibendum arcu. Aenean maximus nulla non pretium iaculis. Quisque imperdiet, nulla in pulvinar aliquet, velit quam ultrices quam, sit amet fringilla leo sem vel nunc. Mauris in lacinia lacus.&lt;/p&gt;
 &lt;p&gt;Suspendisse a tincidunt lacus. Curabitur at urna sagittis, dictum ante sit amet, euismod magna. Sed rutrum massa id tortor commodo, vitae elementum turpis tempus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean purus turpis, venenatis a ullamcorper nec, tincidunt et massa. Integer posuere quam rutrum arcu vehicula imperdiet. Mauris ullamcorper quam vitae purus congue, quis euismod magna eleifend. Vestibulum semper vel augue eget tincidunt. Fusce eget justo sodales, dapibus odio eu, ultrices lorem. Duis condimentum lorem id eros commodo, in facilisis mauris scelerisque. Morbi sed auctor leo. Nullam volutpat a lacus quis pharetra. Nulla congue rutrum magna a ornare.&lt;/p&gt;
 &lt;p&gt;Aliquam in turpis accumsan, malesuada nibh ut, hendrerit justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque sed erat nec justo posuere suscipit. Donec ut efficitur arcu, in malesuada neque. Nunc dignissim nisl massa, id vulputate nunc pretium nec. Quisque eget urna in risus suscipit ultricies. Pellentesque odio odio, tincidunt in eleifend sed, posuere a diam. Nam gravida nisl convallis semper elementum. Morbi vitae felis faucibus, vulputate orci placerat, aliquet nisi. Aliquam erat volutpat. Maecenas sagittis pulvinar purus, sed porta quam laoreet at.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>{nphRCT} on CRAN</title>
+      <link>/post/2022-09-01-nphrct/</link>
+      <pubDate>Thu, 01 Sep 2022 00:00:00 +0000</pubDate>
+      <guid>/post/2022-09-01-nphrct/</guid>
+      <description>
+
+
+&lt;p&gt;I’m delighted that &lt;a href=&#34;https://cran.r-project.org/package=nphRCT&#34;&gt;our new R package {nphRCT} is available on CRAN&lt;/a&gt;. Special thanks to &lt;a href=&#34;https://github.com/isobelbarrott&#34;&gt;Isobel Barrot&lt;/a&gt;. Her R skills have made this possible. Thanks also to Carl-Fredrik Burman and &lt;a href=&#34;https://jjimenezm1989.github.io/&#34;&gt;José Jiménez&lt;/a&gt;, my collaborators on this topic over the past few years.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(dplyr)
+library(ggplot2)
+library(survival)
+#devtools::install_github(&amp;quot;https://github.com/cran/nphRCT.git&amp;quot;)
+library(nphRCT)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The idea for the package was to make it easy to perform a weighted log-rank test, and in particular the &lt;a href=&#34;https://doi.org/10.1002/sim.8186&#34;&gt;modestly-weighted logrank test&lt;/a&gt;, in the context of an Randomized Controlled Trial (RCT) where one expects a delayed separation of survival curves.&lt;/p&gt;
+&lt;div id=&#34;example-data-set&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Example data set&lt;/h1&gt;
+&lt;p&gt;A dataset I often use as an example in this context is the &lt;a href=&#34;https://www.nature.com/articles/s41591-018-0134-3&#34;&gt;POPLAR trial data&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Let’s find the data from the web, and plot the Kaplan-Meier curves…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;template &amp;lt;- tempfile(fileext = &amp;quot;.xlsx&amp;quot;)
+
+httr::GET(url = &amp;quot;https://static-content.springer.com/esm/art%3A10.1038%2Fs41591-018-0134-3/MediaObjects/41591_2018_134_MOESM3_ESM.xlsx&amp;quot;, 
+          httr::write_disk(template))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dat &amp;lt;- readxl::read_excel(template,sheet = 2) %&amp;gt;% 
+  select(PtID, ECOGGR, OS, OS.CNSR, TRT01P) %&amp;gt;%
+  mutate(event = -1 * (OS.CNSR - 1),
+         time = OS,
+         arm = ifelse(TRT01P == &amp;quot;Docetaxel&amp;quot;, &amp;quot;control&amp;quot;, &amp;quot;experimental&amp;quot;)) %&amp;gt;% 
+  select(time, event, arm) %&amp;gt;%
+  as.data.frame()
+
+km &amp;lt;- survfit(Surv(time, event) ~ arm, data = dat)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;survminer::ggsurvplot(km, 
+                      data = dat, 
+                      risk.table = TRUE, 
+                      break.x.by = 6,
+                      legend.title = &amp;quot;&amp;quot;,
+                      xlab = &amp;quot;Time (months)&amp;quot;,
+                      ylab = &amp;quot;Overall survival&amp;quot;,
+                      risk.table.fontsize = 4,
+                      legend = c(0.8,0.8))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2022-09-01-nphrct_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;at-risk-table&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;At-risk table&lt;/h1&gt;
+&lt;p&gt;The at-risk table (per arm) may be a good place to start. If we want, we can look at this via &lt;code&gt;find_at_risk&lt;/code&gt;. The syntax should be familiar from the &lt;code&gt;{survival}&lt;/code&gt; package.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;at_risk &amp;lt;- nphRCT::find_at_risk(Surv(time, event) ~ arm, 
+                                data = dat,
+                                include_cens = FALSE)
+
+head(at_risk)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##         t_j n_event_control n_event_experimental n_event n_risk_control
+## 1 0.1971253               1                    0       1            138
+## 2 0.2299795               0                    1       1            137
+## 3 0.2956879               1                    0       1            137
+## 4 0.3613963               1                    1       2            136
+## 5 0.4599589               1                    2       3            135
+## 6 0.5585216               0                    1       1            134
+##   n_risk_experimental n_risk
+## 1                 144    282
+## 2                 144    281
+## 3                 143    280
+## 4                 143    279
+## 5                 142    277
+## 6                 140    274&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The weighted log-rank test statistic is&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[
+U^W = \sum_{j=1}^k w_j \left\lbrace \text{n_event_control}(t_{j}) - \text{n_event}(t_{j}) \times \frac{\text{n_risk_control}(t_{j})}{\text{n_risk}(t_{j})}\right\rbrace
+\]&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;weights&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Weights&lt;/h1&gt;
+&lt;div id=&#34;modestly-weighted&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Modestly-weighted&lt;/h2&gt;
+&lt;p&gt;The modestly weighted log-rank test uses weights &lt;span class=&#34;math inline&#34;&gt;\(w_j = 1 / \max\{\hat{S}(t_j-), s^*\}\)&lt;/span&gt;, where &lt;span class=&#34;math inline&#34;&gt;\(\hat{S}(t_j-)\)&lt;/span&gt; is the Kaplan-Meier estimate at &lt;span class=&#34;math inline&#34;&gt;\(t_j-\)&lt;/span&gt; (just prior to event time &lt;span class=&#34;math inline&#34;&gt;\(t_j\)&lt;/span&gt;) based on the pooled (both arms) data, and &lt;span class=&#34;math inline&#34;&gt;\(s^* \in (0,1]\)&lt;/span&gt; is pre-specified. For example, taking &lt;span class=&#34;math inline&#34;&gt;\(s^*=0.5\)&lt;/span&gt;…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;weights_mw_s &amp;lt;- nphRCT::find_weights(Surv(time, event) ~ arm, 
+                                     data = dat,
+                                     method = &amp;quot;mw&amp;quot;,
+                                     s_star = 0.5)
+
+
+plot(at_risk$t_j, weights_mw_s, ylim = c(0,2),
+     xlab = &amp;quot;Event time&amp;quot;,
+     ylab = &amp;quot;Weight&amp;quot;,
+     main = &amp;quot;Modestly weighted, s*=0.5&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2022-09-01-nphrct_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;In this case, the weight for the first event time is 1, and weights are increasing but capped at 2 at the time the KM curve drops to 0.5 (at around 12 months).&lt;/p&gt;
+&lt;p&gt;Alternatively, one could choose &lt;span class=&#34;math inline&#34;&gt;\(w_j = 1 / \max\{\hat{S}(t_j-), \hat{S}(t^*)\}\)&lt;/span&gt;, where &lt;span class=&#34;math inline&#34;&gt;\(t^*\)&lt;/span&gt; is a pre-specified timepoint beyond which the weights no longer increase. The weights are then capped at &lt;span class=&#34;math inline&#34;&gt;\(1 / \hat{S}(t^*)\)&lt;/span&gt;. For example, taking &lt;span class=&#34;math inline&#34;&gt;\(t^* = 6\)&lt;/span&gt;,&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;weights_mw_t &amp;lt;- nphRCT::find_weights(Surv(time, event) ~ arm, 
+                                     data = dat,
+                                     method = &amp;quot;mw&amp;quot;,
+                                     t_star = 6)
+
+
+plot(at_risk$t_j, weights_mw_t, ylim = c(0,2),
+     xlab = &amp;quot;Event time&amp;quot;,
+     ylab = &amp;quot;Weight&amp;quot;,
+     main = &amp;quot;Modestly weighted, t*=6&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2022-09-01-nphrct_files/figure-html/unnamed-chunk-7-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;div id=&#34;special-case-s1-or-t0&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Special case: &lt;span class=&#34;math inline&#34;&gt;\(s^*=1\)&lt;/span&gt; (or &lt;span class=&#34;math inline&#34;&gt;\(t^*=0\)&lt;/span&gt;)&lt;/h3&gt;
+&lt;p&gt;The special case &lt;span class=&#34;math inline&#34;&gt;\(s^*=1\)&lt;/span&gt; (or &lt;span class=&#34;math inline&#34;&gt;\(t^*=0\)&lt;/span&gt;) is the same as the standard log-rank test.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;fleming-harrington-rho-gamma-test&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Fleming-Harrington &lt;span class=&#34;math inline&#34;&gt;\((\rho, \gamma)\)&lt;/span&gt; test&lt;/h2&gt;
+&lt;p&gt;The Fleming-Harrington &lt;span class=&#34;math inline&#34;&gt;\((\rho, \gamma)\)&lt;/span&gt; weights are &lt;span class=&#34;math inline&#34;&gt;\(\hat{S}(t_j-)^{\rho}\{1 - \hat{S}(t_j-) \}^{\gamma}\)&lt;/span&gt;. Often, in delayed effect scenarios, &lt;span class=&#34;math inline&#34;&gt;\(\rho=0\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(\gamma=1\)&lt;/span&gt; is chosen.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;weights_fh_0_1 &amp;lt;- nphRCT::find_weights(Surv(time, event) ~ arm, 
+                                       data = dat,
+                                       method = &amp;quot;fh&amp;quot;,
+                                       rho = 0,
+                                       gamma = 1)
+
+
+plot(at_risk$t_j, weights_fh_0_1, ylim = c(0,1),
+     xlab = &amp;quot;Event time&amp;quot;,
+     ylab = &amp;quot;Weight&amp;quot;,
+     main = &amp;quot;Fleming-Harrington (0,1)&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2022-09-01-nphrct_files/figure-html/unnamed-chunk-8-1.png&#34; width=&#34;672&#34; /&gt;
+The main difference between F-H(0,1) weights and the modest weights is that the F-H(0,1) weights start at zero. The early events are therefore much more heavily down-weighted compared to the modest test.&lt;/p&gt;
+&lt;div id=&#34;special-case-rho-gamma-0&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Special case: &lt;span class=&#34;math inline&#34;&gt;\(\rho = \gamma = 0\)&lt;/span&gt;&lt;/h3&gt;
+&lt;p&gt;The special case &lt;span class=&#34;math inline&#34;&gt;\(\rho = \gamma = 0\)&lt;/span&gt; is the same as the standard log-rank test.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;performing-the-weighted-log-rank-test&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Performing the weighted log-rank test&lt;/h1&gt;
+&lt;p&gt;To perform the weighed log-rank test use the &lt;code&gt;wlrt&lt;/code&gt; function.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Modestly-weighted (t*=6)
+nphRCT::wlrt(Surv(time, event) ~ arm, 
+             data = dat,
+             method = &amp;quot;mw&amp;quot;,
+             t_star = 6)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##           u      v_u         z    trt_group
+## 1 -26.11708 83.62023 -2.856071 experimental&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Standard log-rank test (t*=0)
+nphRCT::wlrt(Surv(time, event) ~ arm, 
+             data = dat,
+             method = &amp;quot;mw&amp;quot;,
+             t_star = 0)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##           u      v_u         z    trt_group
+## 1 -19.42566 49.15217 -2.770796 experimental&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Fleming-Harrington (0,1)
+nphRCT::wlrt(Surv(time, event) ~ arm, 
+             data = dat,
+             method = &amp;quot;fh&amp;quot;,
+             rho = 0,
+             gamma = 1)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##           u      v_u         z    trt_group
+## 1 -9.942946 8.522577 -3.405882 experimental&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;visualization-of-test-statistic-difference-in-mean-score&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Visualization of test statistic: difference in mean score&lt;/h1&gt;
+&lt;p&gt;It’s possible to visualize a weighted log-rank test as a difference in mean “score” on the two treatment arms, where the scores are a transformation of the 2-dimensional outcomes (time, event status) to the real line. This is explained in more detail &lt;a href=&#34;https://doi.org/10.1002/pst.2091&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;We’ll try it now for our examples. In these plots, each dot corresponds to a patient in the trial. On the x-axis is their time-to-event/censoring, and on the y-axis is their score. For the log-rank test, we see two almost parallel lines, with the top line corresponding to the observed events, and the bottom line corresponding to censored observations. So someone who dies at month 1 gets a score close to 1 (the worst score), and someone who is censored at month 24 gets a score close to -1 (the best score). Note that the scaling is arbitrary. The dashed horizontal lines represent the mean score on the two treatment arms. The difference between these to lines &lt;em&gt;is&lt;/em&gt; the log-rank test statistic (a re-scaled version of it).&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Standard log-rank test (t*=0)
+nphRCT::find_scores(Surv(time, event) ~ arm, 
+             data = dat,
+             method = &amp;quot;mw&amp;quot;,
+             t_star = 0) %&amp;gt;% plot()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2022-09-01-nphrct_files/figure-html/unnamed-chunk-10-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;For the modestly-weighted test, the scores (for observed events) are essentially fixed at 1 until time &lt;span class=&#34;math inline&#34;&gt;\(t^*\)&lt;/span&gt;. This is by design.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Modestly-weighted (t*=6)
+nphRCT::find_scores(Surv(time, event) ~ arm, 
+             data = dat,
+             method = &amp;quot;mw&amp;quot;,
+             t_star = 6) %&amp;gt;% plot()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2022-09-01-nphrct_files/figure-html/unnamed-chunk-11-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;In contrast, for the Fleming-Harrington-(0,1) test, the scores (for observed events) are increasing with time for early follow-up times. So someone who dies at month 1 gets a lower (better) score than someone who dies at month 12. Basically, one has downweighted the early events to such an extent that the test actually “rewards” the experimental treatment for causing early harm.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Fleming-Harrington (0,1)
+nphRCT::find_scores(Surv(time, event) ~ arm, 
+             data = dat,
+             method = &amp;quot;fh&amp;quot;,
+             rho = 0,
+             gamma = 1) %&amp;gt;% plot()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2022-09-01-nphrct_files/figure-html/unnamed-chunk-12-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Other versions of Fleming-Harrington test e.g., (1,1), (0,0.5), (0.5,0.5), etc. suffer from the same problem.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Fleming-Harrington (1,1)
+nphRCT::find_scores(Surv(time, event) ~ arm, 
+             data = dat,
+             method = &amp;quot;fh&amp;quot;,
+             rho = 1,
+             gamma = 1) %&amp;gt;% plot()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2022-09-01-nphrct_files/figure-html/unnamed-chunk-13-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Fleming-Harrington (0,0.5)
+nphRCT::find_scores(Surv(time, event) ~ arm, 
+             data = dat,
+             method = &amp;quot;fh&amp;quot;,
+             rho = 0,
+             gamma = 0.5) %&amp;gt;% plot()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2022-09-01-nphrct_files/figure-html/unnamed-chunk-13-2.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Fleming-Harrington (0.5,0.5)
+nphRCT::find_scores(Surv(time, event) ~ arm, 
+             data = dat,
+             method = &amp;quot;fh&amp;quot;,
+             rho = 0.5,
+             gamma = 0.5) %&amp;gt;% plot()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2022-09-01-nphrct_files/figure-html/unnamed-chunk-13-3.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
 </description>
     </item>
     
