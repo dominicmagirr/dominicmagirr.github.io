@@ -204,10 +204,6 @@ nphRCT::find_scores(Surv(time, event) ~ arm,
              method = &amp;quot;lr&amp;quot;) %&amp;gt;% 
   plot() +
   ggtitle(&amp;quot;Standard log-rank test&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## Warning in w * (n_event/n_risk): longer object length is not a multiple of
-## shorter object length&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## Warning in score_censored + w: longer object length is not a multiple of shorter
-## object length&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/post/2022-10-17-the-maxcombo-test-severely-inflates-the-type-1-error-rate_files/figure-html/unnamed-chunk-11-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;In contrast, for the Fleming-Harrington-(0,0.5) test, the scores (for observed events) are increasing with time for early follow-up times. So someone who dies at month 1 gets a lower (better) score than someone who dies at month 12. Basically, one has downweighted the early events to such an extent that the test actually “rewards” the experimental treatment for causing early harm.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Fleming-Harrington (0,0.5)
@@ -218,10 +214,6 @@ nphRCT::find_scores(Surv(time, event) ~ arm,
              gamma = 0.5) %&amp;gt;% 
   plot() +
   ggtitle(&amp;quot;Fleming-Harrington (0,0.5)&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## Warning in w * (n_event/n_risk): longer object length is not a multiple of
-## shorter object length&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## Warning in score_censored + w: longer object length is not a multiple of shorter
-## object length&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/post/2022-10-17-the-maxcombo-test-severely-inflates-the-type-1-error-rate_files/figure-html/unnamed-chunk-12-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -247,10 +239,6 @@ nphRCT::find_scores(Surv(time, event) ~ arm,
              s_star = 0.5) %&amp;gt;% 
   plot() +
   ggtitle(&amp;quot;Modestly-weighted (s*=0.5)&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## Warning in w * (n_event/n_risk): longer object length is not a multiple of
-## shorter object length&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## Warning in score_censored + w: longer object length is not a multiple of shorter
-## object length&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/post/2022-10-17-the-maxcombo-test-severely-inflates-the-type-1-error-rate_files/figure-html/unnamed-chunk-14-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;references&#34; class=&#34;section level2&#34;&gt;
