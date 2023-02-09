@@ -5,12 +5,265 @@
     <link>/post/</link>
       <atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     <description>Posts</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Thu, 01 Sep 2022 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Mon, 17 Oct 2022 00:00:00 +0000</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>Posts</title>
       <link>/post/</link>
     </image>
+    
+    <item>
+      <title>The MaxCombo Test severely inflates the type 1 error rate</title>
+      <link>/post/2022-10-17-the-maxcombo-test-severely-inflates-the-type-1-error-rate/</link>
+      <pubDate>Mon, 17 Oct 2022 00:00:00 +0000</pubDate>
+      <guid>/post/2022-10-17-the-maxcombo-test-severely-inflates-the-type-1-error-rate/</guid>
+      <description>
+
+
+&lt;p&gt;&lt;a href=&#34;https://jamanetwork.com/journals/jamaoncology/article-abstract/2801298&#34;&gt;“The MaxCombo Test severely inflates the type 1 error rate”&lt;/a&gt;, by Carl-Fredrik Burman and myself has just been published in JAMA Oncology.&lt;/p&gt;
+&lt;p&gt;It’s our reaction to&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://pubmed.ncbi.nlm.nih.gov/35862037/&#34;&gt;&lt;em&gt;Mukhopadhyay, Pralay, Jiabu Ye, Keaven M. Anderson, Satrajit Roychoudhury, Eric H. Rubin, Susan Halabi, and Richard J. Chappell. “Log-Rank Test vs MaxCombo and Difference in Restricted Mean Survival Time Tests for Comparing Survival Under Nonproportional Hazards in Immuno-oncology Trials: A Systematic Review and Meta-analysis.” JAMA oncology (2022).&lt;/em&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;The central idea in &lt;em&gt;Mukhopadhyay et al&lt;/em&gt; is that in many immuno-oncology trials, for example when a new immunotherapy is compared with chemotherapy, we see a delayed separation of overall survival curves. Sometimes, the results from a standard Cox model or log-rank test are not significant at an alpha level typically required for confirmatory trials. But we see a clear indication of long-term survival benefit. If we used weighted log-rank tests instead that give more weight to later events, then more of theses cases would be statistically significant. Based on a review of 63 studies, the authors found that the results of the log-rank test and a particular type of weighted log-rank test (the MaxCombo test) were concordant in 90% of cases, but in 10% of cases the MaxCombo test was significant while the log-rank test wasn’t.&lt;/p&gt;
+&lt;p&gt;Broadly speaking, we agree with this perspective. But the devil is in the detail. The MaxCombo test gives &lt;em&gt;extremely&lt;/em&gt; low weights to early events. So much so, in fact, that the test statistic ends up “rewarding” the experimental treatment for causing early harm, and “punishing” the experimental treatment for causing early benefit.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Mukhopadhyay et al&lt;/em&gt; make the following statement:&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;“It is critical that a statistical test control for type I (false-positive) error. Based on a previous review [19] the modified MaxCombo, which has been applied here, will control for type I error even in extreme scenarios [30,31] (eg, the hypothetical scenario in Freidlin and Korn [30] where the HR was 3.53 in the first 6 months and 0.75 beyond 6 months).”&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;We completely disagree. Hence the title of our letter. In fact, reference [31] is the &lt;a href=&#34;https://pubmed.ncbi.nlm.nih.gov/31131462/&#34;&gt;first paper we wrote&lt;/a&gt; to show what can go wrong when the weights in a weighted log-rank test are not carefully chosen. Something we have pointed out &lt;a href=&#34;https://doi.org/10.1080/19466315.2021.1917451&#34;&gt;repeatedly&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In the past, we have tried to demonstrate the problem with simulation studies. It is easy to find scenarios where survival is worse on the experimental treatment than control, yet there is a substantial probability of the MaxCombo test concluding the opposite. This message has clearly not worked.&lt;/p&gt;
+&lt;p&gt;So in this letter we try a different approach. We build on the case study in &lt;em&gt;Mukhopadhyay et al.&lt;/em&gt; (their Figure 2), where&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;“there was a modest crossing [of survival curves] during the first 4 months […], there was a clinically meaningful overall treatment benefit with HR of 0.74 (95% CI, 0.54-1.02). However, log-rank test failed to reach nominal significance in this case, while both MaxCombo 2 and MaxCombo 3 did.”&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Having &lt;a href=&#34;https://youtu.be/eHuQlIDRXxs&#34;&gt;(approximately)&lt;/a&gt; recovered the data, let’s reproduce the Kaplan-Meier curves:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(survival)
+library(ggplot2)
+library(dplyr)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## get data set
+dat &amp;lt;- read.csv(&amp;quot;https://github.com/dominicmagirr/max_combo_ex/raw/main/moderate_cross.csv&amp;quot;)
+
+
+## plot data
+km &amp;lt;- survfit(Surv(time, event) ~ arm, data = dat)
+p_dat &amp;lt;- survminer::ggsurvplot(km, 
+                               data = dat, 
+                               risk.table = TRUE, 
+                               break.x.by = 6,
+                               legend.title = &amp;quot;&amp;quot;,
+                               xlab = &amp;quot;Time (months)&amp;quot;,
+                               ylab = &amp;quot;Overall survival&amp;quot;,
+                               risk.table.fontsize = 4,
+                               legend = c(0.8,0.8),
+                               title = &amp;quot;Data Set 1&amp;quot;)
+
+p_dat&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2022-10-17-the-maxcombo-test-severely-inflates-the-type-1-error-rate_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;To make the problems with the MaxCombo test explicit, we modify this dataset such that the survival curves match for the first four months (keeping everything else unchanged)…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## modify data set... 
+dat_1_pre &amp;lt;- dat[dat$time &amp;lt;= 4 &amp;amp; dat$arm == 1,]
+dat_2_pre &amp;lt;- dat_1_pre
+dat_2_pre$arm = 2
+dat_post &amp;lt;- dat[dat$time &amp;gt; 4,]
+dat_new &amp;lt;- rbind(dat_1_pre, dat_2_pre, dat_post)
+
+## plot datasets (orginal vs modified)
+km_new &amp;lt;- survfit(Surv(time, event) ~ arm, data = dat_new)
+p_dat_new &amp;lt;- survminer::ggsurvplot(km_new, 
+                               data = dat_new, 
+                               risk.table = TRUE, 
+                               break.x.by = 6,
+                               legend.title = &amp;quot;&amp;quot;,
+                               xlab = &amp;quot;Time (months)&amp;quot;,
+                               ylab = &amp;quot;Overall survival&amp;quot;,
+                               risk.table.fontsize = 4,
+                               legend = c(0.8,0.8),
+                               title = &amp;quot;Data Set 2&amp;quot;)
+
+survminer::arrange_ggsurvplots(list(p_dat, p_dat_new))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2022-10-17-the-maxcombo-test-severely-inflates-the-type-1-error-rate_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;960&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Looking at these two plots side-by-side it is clear that Data Set 1 does not constitute stronger evidence for the benefit of the experimental treatment (arm 2), compared with the Data Set 2.&lt;/p&gt;
+&lt;p&gt;Let’s now try some hypothesis tests.&lt;/p&gt;
+&lt;div id=&#34;log-rank-test&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Log-rank test&lt;/h3&gt;
+&lt;p&gt;We’ll use the excellent {nph} package by &lt;a href=&#34;https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7818232/&#34;&gt;Ristl et al&lt;/a&gt;. Firstly, the standard log-rank test&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(nph)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Data set 1
+logrank.test(
+  time  = dat$time,
+  event = dat$event,
+  group = dat$arm,
+  rho   = c(0),
+  gamma = c(0)
+)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Call:
+## logrank.test(time = dat$time, event = dat$event, group = dat$arm, 
+##     rho = c(0), gamma = c(0))
+## 
+##     N Observed Expected (O-E)^2/E (O-E)^2/V
+## 1 162       84     72.9      1.68      3.19
+## 2 166       71     82.1      1.49      3.19
+## 
+##  Chisq= 3.2  on 1 degrees of freedom, p= 0.07
+##  rho   =  0 gamma =  0&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;So, for Data Set 1, the observed - expected number of events on arm 1 is &lt;code&gt;84 - 72.9&lt;/code&gt;, with Z-statistic &lt;code&gt;sqrt(3.19)=1.786&lt;/code&gt;, one-sided p-value &lt;code&gt;1 - pnorm(1.786)=0.037&lt;/code&gt;, and two-sided p-value &lt;code&gt;0.07&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Now, for Data Set 2…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Data set 2
+logrank.test(
+  time  = dat_new$time,
+  event = dat_new$event,
+  group = dat_new$arm,
+  rho   = c(0),
+  gamma = c(0)
+)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Call:
+## logrank.test(time = dat_new$time, event = dat_new$event, group = dat_new$arm, 
+##     rho = c(0), gamma = c(0))
+## 
+##     N Observed Expected (O-E)^2/E (O-E)^2/V
+## 1 162       84       72      2.00      3.78
+## 2 167       70       82      1.75      3.78
+## 
+##  Chisq= 3.8  on 1 degrees of freedom, p= 0.05
+##  rho   =  0 gamma =  0&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;the observed - expected number of events is &lt;code&gt;84 - 72&lt;/code&gt;, with Z-statistic &lt;code&gt;sqrt(3.78)=1.944&lt;/code&gt;, one-sided p-value &lt;code&gt;1 - pnorm(1.944)=0.026&lt;/code&gt;, and two-sided p-value &lt;code&gt;0.05&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;This makes complete sense. The results in Data Set 1 are not better than in Data Set 2.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;maxcombo-test&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;MaxCombo test&lt;/h3&gt;
+&lt;p&gt;The version of the MaxCombo test recommended by &lt;em&gt;Mukhopadhyay et al&lt;/em&gt; is the maximum of the standard log-rank test and the Fleming-Harrington-(0, 0.5) test. Let’s try it out…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Data set 1
+logrank.maxtest(
+  time  = dat$time,
+  event = dat$event,
+  group = dat$arm,
+  rho   = c(0, 0),
+  gamma = c(0, 0.5)
+)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Call:
+## logrank.maxtest(time = dat$time, event = dat$event, group = dat$arm, 
+##     rho = c(0, 0), gamma = c(0, 0.5))
+## 
+##  Two sided p-value = 0.0289 (Bonferroni corrected: 0.0418)
+## 
+##  Individual weighted log-rank tests:
+##   Test    z      p
+## 1    1 1.79 0.0741
+## 2    2 2.31 0.0209&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;For Data Set 1 the two-sided p-value is &lt;code&gt;0.0289&lt;/code&gt;. This is a multiplicity corrected p-value (since we are taking the maximum of two statistics), but we can see that it is driven by the large z-value &lt;code&gt;z = 2.31&lt;/code&gt; from the second statistic – the Fleming-Harrington-(0,0.5) statistic.&lt;/p&gt;
+&lt;p&gt;When we try this on Data Set 2…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Data set 2
+logrank.maxtest(
+  time  = dat_new$time,
+  event = dat_new$event,
+  group = dat_new$arm,
+  rho   = c(0, 0),
+  gamma = c(0, 0.5)
+)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Call:
+## logrank.maxtest(time = dat_new$time, event = dat_new$event, group = dat_new$arm, 
+##     rho = c(0, 0), gamma = c(0, 0.5))
+## 
+##  Two sided p-value = 0.0457 (Bonferroni corrected: 0.0669)
+## 
+##  Individual weighted log-rank tests:
+##   Test    z      p
+## 1    1 1.94 0.0519
+## 2    2 2.13 0.0335&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;… the two-sided p-value is &lt;code&gt;0.0457&lt;/code&gt; driven by a Fleming-Harrington-(0,0.5) z-value of &lt;code&gt;2.13&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Hang on a second! We’ve agreed that the results in Data Set 1 are not ‘better’ than the results in Data Set 2. Yet the p-value is lower, 0.03 compared with 0.05.&lt;/p&gt;
+&lt;p&gt;Remember the context. &lt;em&gt;Mukhopadhyay et al&lt;/em&gt; are using this as a case study for when the log-rank statistic is not statistically significant but the MaxCombo test is. However, we now see that this happens (partly) by the test statistic “rewarding” an early detrimental effect on survival.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;whats-going-on&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;What’s going on?&lt;/h2&gt;
+&lt;p&gt;The Fleming-Harrington-(0,0.5) test gives extremely low weights to early events.&lt;/p&gt;
+&lt;p&gt;Remember that the weighted log-rank statistic is&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/wlrt_formula.PNG&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Let’s plot the weights for the original data set, for which I’ll use &lt;a href=&#34;https://dominicmagirr.github.io/post/2022-09-01-nphrct/&#34;&gt;{nphRCT}&lt;/a&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(nphRCT)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;## At-risk table
+at_risk &amp;lt;- nphRCT::find_at_risk(Surv(time, event) ~ arm, 
+                                data = dat,
+                                include_cens = FALSE)
+
+## F-H-(0,0.5) weights
+weights_fh &amp;lt;- nphRCT::find_weights(Surv(time, event) ~ arm, 
+                                   data = dat,
+                                   method = &amp;quot;fh&amp;quot;,
+                                   rho = 0,
+                                   gamma = 0.5)
+
+
+plot(at_risk$t_j, weights_fh, ylim = c(0,1),
+     xlab = &amp;quot;Event time&amp;quot;,
+     ylab = &amp;quot;Weight&amp;quot;,
+     main = &amp;quot;Fleming-Harrington (0,0.5)&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2022-10-17-the-maxcombo-test-severely-inflates-the-type-1-error-rate_files/figure-html/unnamed-chunk-10-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;div id=&#34;alternative-visualization-of-a-weighted-log-rank-test&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Alternative visualization of a weighted log-rank test&lt;/h3&gt;
+&lt;p&gt;It’s possible to visualize a (weighted) log-rank test as a difference in mean “score” on the two treatment arms, where the scores are a transformation of the 2-dimensional outcomes (time, event status) to the real line. This is explained in more detail &lt;a href=&#34;https://doi.org/10.1002/pst.2091&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;We’ll try it now for Data Set 1. In the following plots, each dot corresponds to a patient in the trial. On the x-axis is their time-to-event/censoring, and on the y-axis is their score. For the log-rank test, we see two almost parallel lines, with the top line corresponding to the observed events, and the bottom line corresponding to censored observations. So someone who dies at month 1 gets a score close to 1 (the worst score), and someone who is censored at month 24 gets a score close to -1 (the best score). Note that the scaling is arbitrary. The dashed horizontal lines represent the mean score on the two treatment arms. The difference between these to lines &lt;em&gt;is&lt;/em&gt; the log-rank test statistic (a re-scaled version of it).&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Standard log-rank test 
+nphRCT::find_scores(Surv(time, event) ~ arm, 
+             data = dat,
+             method = &amp;quot;lr&amp;quot;) %&amp;gt;% 
+  plot() +
+  ggtitle(&amp;quot;Standard log-rank test&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Warning in w * (n_event/n_risk): longer object length is not a multiple of
+## shorter object length&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Warning in score_censored + w: longer object length is not a multiple of shorter
+## object length&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2022-10-17-the-maxcombo-test-severely-inflates-the-type-1-error-rate_files/figure-html/unnamed-chunk-11-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;In contrast, for the Fleming-Harrington-(0,0.5) test, the scores (for observed events) are increasing with time for early follow-up times. So someone who dies at month 1 gets a lower (better) score than someone who dies at month 12. Basically, one has downweighted the early events to such an extent that the test actually “rewards” the experimental treatment for causing early harm.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Fleming-Harrington (0,0.5)
+nphRCT::find_scores(Surv(time, event) ~ arm, 
+             data = dat,
+             method = &amp;quot;fh&amp;quot;,
+             rho = 0,
+             gamma = 0.5) %&amp;gt;% 
+  plot() +
+  ggtitle(&amp;quot;Fleming-Harrington (0,0.5)&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Warning in w * (n_event/n_risk): longer object length is not a multiple of
+## shorter object length&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Warning in score_censored + w: longer object length is not a multiple of shorter
+## object length&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2022-10-17-the-maxcombo-test-severely-inflates-the-type-1-error-rate_files/figure-html/unnamed-chunk-12-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;modestly-weighted-tests&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Modestly-weighted tests&lt;/h2&gt;
+&lt;p&gt;One possible approach that we favour is a &lt;a href=&#34;https://pubmed.ncbi.nlm.nih.gov/31131462/&#34;&gt;modestly-weighted test&lt;/a&gt;. We won’t go into the full details again here, but essentially we can give later events higher weight than earlier events (notice that the first weight is 1 rather than 0)…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;weights_mw_s &amp;lt;- nphRCT::find_weights(Surv(time, event) ~ arm, 
+                                     data = dat,
+                                     method = &amp;quot;mw&amp;quot;,
+                                     s_star = 0.5)
+
+
+plot(at_risk$t_j, weights_mw_s, ylim = c(0,2),
+     xlab = &amp;quot;Event time&amp;quot;,
+     ylab = &amp;quot;Weight&amp;quot;,
+     main = &amp;quot;Modestly weighted, s*=0.5&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2022-10-17-the-maxcombo-test-severely-inflates-the-type-1-error-rate_files/figure-html/unnamed-chunk-13-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;while still ensuring that the scores are not increasing for early follow-up times…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Modestly-weighted (s*=0.5)
+nphRCT::find_scores(Surv(time, event) ~ arm, 
+             data = dat,
+             method = &amp;quot;mw&amp;quot;,
+             s_star = 0.5) %&amp;gt;% 
+  plot() +
+  ggtitle(&amp;quot;Modestly-weighted (s*=0.5)&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Warning in w * (n_event/n_risk): longer object length is not a multiple of
+## shorter object length&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Warning in score_censored + w: longer object length is not a multiple of shorter
+## object length&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2022-10-17-the-maxcombo-test-severely-inflates-the-type-1-error-rate_files/figure-html/unnamed-chunk-14-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;references&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;References&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Mukhopadhyay, Pralay, Jiabu Ye, Keaven M. Anderson, Satrajit Roychoudhury, Eric H. Rubin, Susan Halabi, and Richard J. Chappell. “Log-Rank Test vs MaxCombo and Difference in Restricted Mean Survival Time Tests for Comparing Survival Under Nonproportional Hazards in Immuno-oncology Trials: A Systematic Review and Meta-analysis.” JAMA oncology (2022).&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Magirr, Dominic, and Carl‐Fredrik Burman. “Modestly weighted logrank tests.” Statistics in medicine 38, no. 20 (2019): 3782-3790.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Magirr, Dominic, and Carl-Fredrik Burman. “The Strong Null Hypothesis and the MaxCombo Test: Comment on “Robust Design and Analysis of Clinical Trials with Nonproportional Hazards: A Straw Man Guidance form a Cross-Pharma Working Group.”.” Statistics in Biopharmaceutical Research (2021): 1-2.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Ristl, Robin, Nicolás M. Ballarini, Heiko Götte, Armin Schüler, Martin Posch, and Franz König. “Delayed treatment effects, treatment switching and heterogeneous patient populations: How to design and analyze RCTs in oncology.” Pharmaceutical statistics 20, no. 1 (2021): 129-145.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+</description>
+    </item>
     
     <item>
       <title>{nphRCT} on CRAN</title>

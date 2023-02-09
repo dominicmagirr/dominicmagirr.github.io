@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.5.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Dominic Magirr">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="“The MaxCombo Test severely inflates the type 1 error rate”, by Carl-Fredrik Burman and myself has just been published in JAMA Oncology.
+It’s our reaction to
+Mukhopadhyay, Pralay, Jiabu Ye, Keaven M. Anderson, Satrajit Roychoudhury, Eric H. Rubin, Susan Halabi, and Richard J. Chappell. “Log-Rank Test vs MaxCombo and Difference in Restricted Mean Survival Time Tests for Comparing Survival Under Nonproportional Hazards in Immuno-oncology Trials: A Systematic Review and Meta-analysis.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/post/2022-10-17-the-maxcombo-test-severely-inflates-the-type-1-error-rate/">
+
+  
+
+
+  
+  
+  
+  <meta name="theme-color" content="#2962ff">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" integrity="sha256-+N4/V/SbAFiW1MPBCXnfnP9QSN3+Keu+NlB+0ev/YKQ=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" integrity="sha256-SHMGCYmST46SoyGgo4YR/9AlK1vf3ff84Aq9yK4hdqM=" crossorigin="anonymous">
+    
+
+    
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700%7CRoboto:400,400italic,700%7CRoboto+Mono&display=swap">
+  
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.css">
+
+  
+
+
+
+
+  
+
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon-32.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="/post/2022-10-17-the-maxcombo-test-severely-inflates-the-type-1-error-rate/">
+
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="og:site_name" content="Dominic Magirr">
+  <meta property="og:url" content="/post/2022-10-17-the-maxcombo-test-severely-inflates-the-type-1-error-rate/">
+  <meta property="og:title" content="The MaxCombo Test severely inflates the type 1 error rate | Dominic Magirr">
+  <meta property="og:description" content="“The MaxCombo Test severely inflates the type 1 error rate”, by Carl-Fredrik Burman and myself has just been published in JAMA Oncology.
+It’s our reaction to
+Mukhopadhyay, Pralay, Jiabu Ye, Keaven M. Anderson, Satrajit Roychoudhury, Eric H. Rubin, Susan Halabi, and Richard J. Chappell. “Log-Rank Test vs MaxCombo and Difference in Restricted Mean Survival Time Tests for Comparing Survival Under Nonproportional Hazards in Immuno-oncology Trials: A Systematic Review and Meta-analysis."><meta property="og:image" content="/img/icon-192.png">
+  <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
+  
+    
+      <meta property="article:published_time" content="2022-10-17T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2022-10-17T11:40:13&#43;00:00">
+  
+
+  
+
+
+    
+
+
+
+
+
+
+  
+
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "/post/2022-10-17-the-maxcombo-test-severely-inflates-the-type-1-error-rate/"
+  },
+  "headline": "The MaxCombo Test severely inflates the type 1 error rate",
+  
+  "datePublished": "2022-10-17T00:00:00Z",
+  "dateModified": "2022-10-17T11:40:13Z",
+  
+  "author": {
+    "@type": "Person",
+    "name": "Dominic Magirr"
+  },
+  
+  "publisher": {
+    "@type": "Organization",
+    "name": "Dominic Magirr",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "/img/icon-512.png"
+    }
+  },
+  "description": "“The MaxCombo Test severely inflates the type 1 error rate”, by Carl-Fredrik Burman and myself has just been published in JAMA Oncology.\nIt’s our reaction to\nMukhopadhyay, Pralay, Jiabu Ye, Keaven M. Anderson, Satrajit Roychoudhury, Eric H. Rubin, Susan Halabi, and Richard J. Chappell. “Log-Rank Test vs MaxCombo and Difference in Restricted Mean Survival Time Tests for Comparing Survival Under Nonproportional Hazards in Immuno-oncology Trials: A Systematic Review and Meta-analysis."
+}
+</script>
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>The MaxCombo Test severely inflates the type 1 error rate | Dominic Magirr</title>
+
+</head>
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0 compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Dominic Magirr</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav mr-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#posts"><span>Posts</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#publications"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#talks"><span>Talks</span></a>
+        </li>
+
+        
+        
+
+      
+      </ul>
+      <ul class="navbar-nav ml-auto">
+      
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-search" href="#"><i class="fas fa-search" aria-hidden="true"></i></a>
+        </li>
+        
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-dark-toggle" href="#"><i class="fas fa-moon" aria-hidden="true"></i></a>
+        </li>
+        
+
+      </ul>
+
+    </div>
+  </div>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+</nav>
+
+
+  <article class="article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1>The MaxCombo Test severely inflates the type 1 error rate</h1>
+
+  
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+          Last updated on
+      
+    
+    Oct 17, 2022
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    10 min read
+  </span>
+  
+
+  
+  
+  
+
+  
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style">
+      
+
+
+<p><a href="https://jamanetwork.com/journals/jamaoncology/article-abstract/2801298">“The MaxCombo Test severely inflates the type 1 error rate”</a>, by Carl-Fredrik Burman and myself has just been published in JAMA Oncology.</p>
+<p>It’s our reaction to</p>
+<p><a href="https://pubmed.ncbi.nlm.nih.gov/35862037/"><em>Mukhopadhyay, Pralay, Jiabu Ye, Keaven M. Anderson, Satrajit Roychoudhury, Eric H. Rubin, Susan Halabi, and Richard J. Chappell. “Log-Rank Test vs MaxCombo and Difference in Restricted Mean Survival Time Tests for Comparing Survival Under Nonproportional Hazards in Immuno-oncology Trials: A Systematic Review and Meta-analysis.” JAMA oncology (2022).</em></a></p>
+<p>The central idea in <em>Mukhopadhyay et al</em> is that in many immuno-oncology trials, for example when a new immunotherapy is compared with chemotherapy, we see a delayed separation of overall survival curves. Sometimes, the results from a standard Cox model or log-rank test are not significant at an alpha level typically required for confirmatory trials. But we see a clear indication of long-term survival benefit. If we used weighted log-rank tests instead that give more weight to later events, then more of theses cases would be statistically significant. Based on a review of 63 studies, the authors found that the results of the log-rank test and a particular type of weighted log-rank test (the MaxCombo test) were concordant in 90% of cases, but in 10% of cases the MaxCombo test was significant while the log-rank test wasn’t.</p>
+<p>Broadly speaking, we agree with this perspective. But the devil is in the detail. The MaxCombo test gives <em>extremely</em> low weights to early events. So much so, in fact, that the test statistic ends up “rewarding” the experimental treatment for causing early harm, and “punishing” the experimental treatment for causing early benefit.</p>
+<p><em>Mukhopadhyay et al</em> make the following statement:</p>
+<p><em>“It is critical that a statistical test control for type I (false-positive) error. Based on a previous review [19] the modified MaxCombo, which has been applied here, will control for type I error even in extreme scenarios [30,31] (eg, the hypothetical scenario in Freidlin and Korn [30] where the HR was 3.53 in the first 6 months and 0.75 beyond 6 months).”</em></p>
+<p>We completely disagree. Hence the title of our letter. In fact, reference [31] is the <a href="https://pubmed.ncbi.nlm.nih.gov/31131462/">first paper we wrote</a> to show what can go wrong when the weights in a weighted log-rank test are not carefully chosen. Something we have pointed out <a href="https://doi.org/10.1080/19466315.2021.1917451">repeatedly</a>.</p>
+<p>In the past, we have tried to demonstrate the problem with simulation studies. It is easy to find scenarios where survival is worse on the experimental treatment than control, yet there is a substantial probability of the MaxCombo test concluding the opposite. This message has clearly not worked.</p>
+<p>So in this letter we try a different approach. We build on the case study in <em>Mukhopadhyay et al.</em> (their Figure 2), where</p>
+<p><em>“there was a modest crossing [of survival curves] during the first 4 months […], there was a clinically meaningful overall treatment benefit with HR of 0.74 (95% CI, 0.54-1.02). However, log-rank test failed to reach nominal significance in this case, while both MaxCombo 2 and MaxCombo 3 did.”</em></p>
+<p>Having <a href="https://youtu.be/eHuQlIDRXxs">(approximately)</a> recovered the data, let’s reproduce the Kaplan-Meier curves:</p>
+<pre class="r"><code>library(survival)
+library(ggplot2)
+library(dplyr)</code></pre>
+<pre class="r"><code>## get data set
+dat &lt;- read.csv(&quot;https://github.com/dominicmagirr/max_combo_ex/raw/main/moderate_cross.csv&quot;)
+
+
+## plot data
+km &lt;- survfit(Surv(time, event) ~ arm, data = dat)
+p_dat &lt;- survminer::ggsurvplot(km, 
+                               data = dat, 
+                               risk.table = TRUE, 
+                               break.x.by = 6,
+                               legend.title = &quot;&quot;,
+                               xlab = &quot;Time (months)&quot;,
+                               ylab = &quot;Overall survival&quot;,
+                               risk.table.fontsize = 4,
+                               legend = c(0.8,0.8),
+                               title = &quot;Data Set 1&quot;)
+
+p_dat</code></pre>
+<p><img src="/post/2022-10-17-the-maxcombo-test-severely-inflates-the-type-1-error-rate_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>To make the problems with the MaxCombo test explicit, we modify this dataset such that the survival curves match for the first four months (keeping everything else unchanged)…</p>
+<pre class="r"><code>## modify data set... 
+dat_1_pre &lt;- dat[dat$time &lt;= 4 &amp; dat$arm == 1,]
+dat_2_pre &lt;- dat_1_pre
+dat_2_pre$arm = 2
+dat_post &lt;- dat[dat$time &gt; 4,]
+dat_new &lt;- rbind(dat_1_pre, dat_2_pre, dat_post)
+
+## plot datasets (orginal vs modified)
+km_new &lt;- survfit(Surv(time, event) ~ arm, data = dat_new)
+p_dat_new &lt;- survminer::ggsurvplot(km_new, 
+                               data = dat_new, 
+                               risk.table = TRUE, 
+                               break.x.by = 6,
+                               legend.title = &quot;&quot;,
+                               xlab = &quot;Time (months)&quot;,
+                               ylab = &quot;Overall survival&quot;,
+                               risk.table.fontsize = 4,
+                               legend = c(0.8,0.8),
+                               title = &quot;Data Set 2&quot;)
+
+survminer::arrange_ggsurvplots(list(p_dat, p_dat_new))</code></pre>
+<p><img src="/post/2022-10-17-the-maxcombo-test-severely-inflates-the-type-1-error-rate_files/figure-html/unnamed-chunk-3-1.png" width="960" /></p>
+<p>Looking at these two plots side-by-side it is clear that Data Set 1 does not constitute stronger evidence for the benefit of the experimental treatment (arm 2), compared with the Data Set 2.</p>
+<p>Let’s now try some hypothesis tests.</p>
+<div id="log-rank-test" class="section level3">
+<h3>Log-rank test</h3>
+<p>We’ll use the excellent {nph} package by <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7818232/">Ristl et al</a>. Firstly, the standard log-rank test</p>
+<pre class="r"><code>library(nph)</code></pre>
+<pre class="r"><code># Data set 1
+logrank.test(
+  time  = dat$time,
+  event = dat$event,
+  group = dat$arm,
+  rho   = c(0),
+  gamma = c(0)
+)</code></pre>
+<pre><code>## Call:
+## logrank.test(time = dat$time, event = dat$event, group = dat$arm, 
+##     rho = c(0), gamma = c(0))
+## 
+##     N Observed Expected (O-E)^2/E (O-E)^2/V
+## 1 162       84     72.9      1.68      3.19
+## 2 166       71     82.1      1.49      3.19
+## 
+##  Chisq= 3.2  on 1 degrees of freedom, p= 0.07
+##  rho   =  0 gamma =  0</code></pre>
+<p>So, for Data Set 1, the observed - expected number of events on arm 1 is <code>84 - 72.9</code>, with Z-statistic <code>sqrt(3.19)=1.786</code>, one-sided p-value <code>1 - pnorm(1.786)=0.037</code>, and two-sided p-value <code>0.07</code>.</p>
+<p>Now, for Data Set 2…</p>
+<pre class="r"><code># Data set 2
+logrank.test(
+  time  = dat_new$time,
+  event = dat_new$event,
+  group = dat_new$arm,
+  rho   = c(0),
+  gamma = c(0)
+)</code></pre>
+<pre><code>## Call:
+## logrank.test(time = dat_new$time, event = dat_new$event, group = dat_new$arm, 
+##     rho = c(0), gamma = c(0))
+## 
+##     N Observed Expected (O-E)^2/E (O-E)^2/V
+## 1 162       84       72      2.00      3.78
+## 2 167       70       82      1.75      3.78
+## 
+##  Chisq= 3.8  on 1 degrees of freedom, p= 0.05
+##  rho   =  0 gamma =  0</code></pre>
+<p>the observed - expected number of events is <code>84 - 72</code>, with Z-statistic <code>sqrt(3.78)=1.944</code>, one-sided p-value <code>1 - pnorm(1.944)=0.026</code>, and two-sided p-value <code>0.05</code>.</p>
+<p>This makes complete sense. The results in Data Set 1 are not better than in Data Set 2.</p>
+</div>
+<div id="maxcombo-test" class="section level3">
+<h3>MaxCombo test</h3>
+<p>The version of the MaxCombo test recommended by <em>Mukhopadhyay et al</em> is the maximum of the standard log-rank test and the Fleming-Harrington-(0, 0.5) test. Let’s try it out…</p>
+<pre class="r"><code># Data set 1
+logrank.maxtest(
+  time  = dat$time,
+  event = dat$event,
+  group = dat$arm,
+  rho   = c(0, 0),
+  gamma = c(0, 0.5)
+)</code></pre>
+<pre><code>## Call:
+## logrank.maxtest(time = dat$time, event = dat$event, group = dat$arm, 
+##     rho = c(0, 0), gamma = c(0, 0.5))
+## 
+##  Two sided p-value = 0.0289 (Bonferroni corrected: 0.0418)
+## 
+##  Individual weighted log-rank tests:
+##   Test    z      p
+## 1    1 1.79 0.0741
+## 2    2 2.31 0.0209</code></pre>
+<p>For Data Set 1 the two-sided p-value is <code>0.0289</code>. This is a multiplicity corrected p-value (since we are taking the maximum of two statistics), but we can see that it is driven by the large z-value <code>z = 2.31</code> from the second statistic – the Fleming-Harrington-(0,0.5) statistic.</p>
+<p>When we try this on Data Set 2…</p>
+<pre class="r"><code># Data set 2
+logrank.maxtest(
+  time  = dat_new$time,
+  event = dat_new$event,
+  group = dat_new$arm,
+  rho   = c(0, 0),
+  gamma = c(0, 0.5)
+)</code></pre>
+<pre><code>## Call:
+## logrank.maxtest(time = dat_new$time, event = dat_new$event, group = dat_new$arm, 
+##     rho = c(0, 0), gamma = c(0, 0.5))
+## 
+##  Two sided p-value = 0.0457 (Bonferroni corrected: 0.0669)
+## 
+##  Individual weighted log-rank tests:
+##   Test    z      p
+## 1    1 1.94 0.0519
+## 2    2 2.13 0.0335</code></pre>
+<p>… the two-sided p-value is <code>0.0457</code> driven by a Fleming-Harrington-(0,0.5) z-value of <code>2.13</code>.</p>
+<p>Hang on a second! We’ve agreed that the results in Data Set 1 are not ‘better’ than the results in Data Set 2. Yet the p-value is lower, 0.03 compared with 0.05.</p>
+<p>Remember the context. <em>Mukhopadhyay et al</em> are using this as a case study for when the log-rank statistic is not statistically significant but the MaxCombo test is. However, we now see that this happens (partly) by the test statistic “rewarding” an early detrimental effect on survival.</p>
+</div>
+<div id="whats-going-on" class="section level2">
+<h2>What’s going on?</h2>
+<p>The Fleming-Harrington-(0,0.5) test gives extremely low weights to early events.</p>
+<p>Remember that the weighted log-rank statistic is</p>
+<p><img src="/img/wlrt_formula.PNG" /></p>
+<p>Let’s plot the weights for the original data set, for which I’ll use <a href="https://dominicmagirr.github.io/post/2022-09-01-nphrct/">{nphRCT}</a></p>
+<pre class="r"><code>library(nphRCT)</code></pre>
+<pre class="r"><code>## At-risk table
+at_risk &lt;- nphRCT::find_at_risk(Surv(time, event) ~ arm, 
+                                data = dat,
+                                include_cens = FALSE)
+
+## F-H-(0,0.5) weights
+weights_fh &lt;- nphRCT::find_weights(Surv(time, event) ~ arm, 
+                                   data = dat,
+                                   method = &quot;fh&quot;,
+                                   rho = 0,
+                                   gamma = 0.5)
+
+
+plot(at_risk$t_j, weights_fh, ylim = c(0,1),
+     xlab = &quot;Event time&quot;,
+     ylab = &quot;Weight&quot;,
+     main = &quot;Fleming-Harrington (0,0.5)&quot;)</code></pre>
+<p><img src="/post/2022-10-17-the-maxcombo-test-severely-inflates-the-type-1-error-rate_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<div id="alternative-visualization-of-a-weighted-log-rank-test" class="section level3">
+<h3>Alternative visualization of a weighted log-rank test</h3>
+<p>It’s possible to visualize a (weighted) log-rank test as a difference in mean “score” on the two treatment arms, where the scores are a transformation of the 2-dimensional outcomes (time, event status) to the real line. This is explained in more detail <a href="https://doi.org/10.1002/pst.2091">here</a>.</p>
+<p>We’ll try it now for Data Set 1. In the following plots, each dot corresponds to a patient in the trial. On the x-axis is their time-to-event/censoring, and on the y-axis is their score. For the log-rank test, we see two almost parallel lines, with the top line corresponding to the observed events, and the bottom line corresponding to censored observations. So someone who dies at month 1 gets a score close to 1 (the worst score), and someone who is censored at month 24 gets a score close to -1 (the best score). Note that the scaling is arbitrary. The dashed horizontal lines represent the mean score on the two treatment arms. The difference between these to lines <em>is</em> the log-rank test statistic (a re-scaled version of it).</p>
+<pre class="r"><code># Standard log-rank test 
+nphRCT::find_scores(Surv(time, event) ~ arm, 
+             data = dat,
+             method = &quot;lr&quot;) %&gt;% 
+  plot() +
+  ggtitle(&quot;Standard log-rank test&quot;)</code></pre>
+<pre><code>## Warning in w * (n_event/n_risk): longer object length is not a multiple of
+## shorter object length</code></pre>
+<pre><code>## Warning in score_censored + w: longer object length is not a multiple of shorter
+## object length</code></pre>
+<p><img src="/post/2022-10-17-the-maxcombo-test-severely-inflates-the-type-1-error-rate_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>In contrast, for the Fleming-Harrington-(0,0.5) test, the scores (for observed events) are increasing with time for early follow-up times. So someone who dies at month 1 gets a lower (better) score than someone who dies at month 12. Basically, one has downweighted the early events to such an extent that the test actually “rewards” the experimental treatment for causing early harm.</p>
+<pre class="r"><code># Fleming-Harrington (0,0.5)
+nphRCT::find_scores(Surv(time, event) ~ arm, 
+             data = dat,
+             method = &quot;fh&quot;,
+             rho = 0,
+             gamma = 0.5) %&gt;% 
+  plot() +
+  ggtitle(&quot;Fleming-Harrington (0,0.5)&quot;)</code></pre>
+<pre><code>## Warning in w * (n_event/n_risk): longer object length is not a multiple of
+## shorter object length</code></pre>
+<pre><code>## Warning in score_censored + w: longer object length is not a multiple of shorter
+## object length</code></pre>
+<p><img src="/post/2022-10-17-the-maxcombo-test-severely-inflates-the-type-1-error-rate_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+</div>
+</div>
+<div id="modestly-weighted-tests" class="section level2">
+<h2>Modestly-weighted tests</h2>
+<p>One possible approach that we favour is a <a href="https://pubmed.ncbi.nlm.nih.gov/31131462/">modestly-weighted test</a>. We won’t go into the full details again here, but essentially we can give later events higher weight than earlier events (notice that the first weight is 1 rather than 0)…</p>
+<pre class="r"><code>weights_mw_s &lt;- nphRCT::find_weights(Surv(time, event) ~ arm, 
+                                     data = dat,
+                                     method = &quot;mw&quot;,
+                                     s_star = 0.5)
+
+
+plot(at_risk$t_j, weights_mw_s, ylim = c(0,2),
+     xlab = &quot;Event time&quot;,
+     ylab = &quot;Weight&quot;,
+     main = &quot;Modestly weighted, s*=0.5&quot;)</code></pre>
+<p><img src="/post/2022-10-17-the-maxcombo-test-severely-inflates-the-type-1-error-rate_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>while still ensuring that the scores are not increasing for early follow-up times…</p>
+<pre class="r"><code># Modestly-weighted (s*=0.5)
+nphRCT::find_scores(Surv(time, event) ~ arm, 
+             data = dat,
+             method = &quot;mw&quot;,
+             s_star = 0.5) %&gt;% 
+  plot() +
+  ggtitle(&quot;Modestly-weighted (s*=0.5)&quot;)</code></pre>
+<pre><code>## Warning in w * (n_event/n_risk): longer object length is not a multiple of
+## shorter object length</code></pre>
+<pre><code>## Warning in score_censored + w: longer object length is not a multiple of shorter
+## object length</code></pre>
+<p><img src="/post/2022-10-17-the-maxcombo-test-severely-inflates-the-type-1-error-rate_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+<ul>
+<li><p>Mukhopadhyay, Pralay, Jiabu Ye, Keaven M. Anderson, Satrajit Roychoudhury, Eric H. Rubin, Susan Halabi, and Richard J. Chappell. “Log-Rank Test vs MaxCombo and Difference in Restricted Mean Survival Time Tests for Comparing Survival Under Nonproportional Hazards in Immuno-oncology Trials: A Systematic Review and Meta-analysis.” JAMA oncology (2022).</p></li>
+<li><p>Magirr, Dominic, and Carl‐Fredrik Burman. “Modestly weighted logrank tests.” Statistics in medicine 38, no. 20 (2019): 3782-3790.</p></li>
+<li><p>Magirr, Dominic, and Carl-Fredrik Burman. “The Strong Null Hypothesis and the MaxCombo Test: Comment on “Robust Design and Analysis of Clinical Trials with Nonproportional Hazards: A Straw Man Guidance form a Cross-Pharma Working Group.”.” Statistics in Biopharmaceutical Research (2021): 1-2.</p></li>
+<li><p>Ristl, Robin, Nicolás M. Ballarini, Heiko Götte, Armin Schüler, Martin Posch, and Franz König. “Delayed treatment effects, treatment switching and heterogeneous patient populations: How to design and analyze RCTs in oncology.” Pharmaceutical statistics 20, no. 1 (2021): 129-145.</p></li>
+</ul>
+</div>
+
+    </div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+  
+    
+  
+  
+  <div class="media author-card content-widget-hr">
+    
+      
+      <img class="portrait mr-3" src="/authors/admin/avatar_hu3ad799765e91f69a41f3acc2fc665a63_309343_250x250_fill_q90_lanczos_center.jpg" alt="Avatar">
+    
+
+    <div class="media-body">
+      <h5 class="card-title"><a href="/">Dominic Magirr</a></h5>
+      <h6 class="card-subtitle">Medical Statistician</h6>
+      <p class="card-text">Interested in the design, analysis and interpretation of clinical trials.</p>
+      <ul class="network-icon" aria-hidden="true">
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://www.linkedin.com/in/dominic-magirr-87666b12b/" target="_blank" rel="noopener">
+        <i class="fab fa-linkedin"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://scholar.google.co.uk/citations?user=obri2xMAAAAJ&amp;hl=en" target="_blank" rel="noopener">
+        <i class="ai ai-google-scholar"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://github.com/dominicmagirr" target="_blank" rel="noopener">
+        <i class="fab fa-github"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="/files/cv.pdf" >
+        <i class="ai ai-cv"></i>
+      </a>
+    </li>
+  
+</ul>
+
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js" integrity="sha256-1zu+3BnLYV9LdiY85uXMzii3bdrkelyp37e0ZyTAQh0=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/languages/r.min.js"></script>
+        
+      
+
+      
+      
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js" integrity="sha256-EErZamuLefUnbMBQbsEqu1USa+btR2oIlCpBJbyD4/g=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    
+    
+    
+    
+    <script>
+      const search_config = {"indexURI":"/index.json","minLength":1,"threshold":0.3};
+      const i18n = {"no_results":"No results found","placeholder":"Search...","results":"results found"};
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.01f68d44d80310e669a1731b68a35481.js"></script>
+
+    
+
+
+
+
+
+
+  
+  
+  <div class="container">
+    <footer class="site-footer">
+  
+
+  <p class="powered-by">
+    
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" class="back-to-top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+</footer>
+
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

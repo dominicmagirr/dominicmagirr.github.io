@@ -29,7 +29,7 @@
     
   
   <meta name="description" content="Suppose we have the following data.
-df &lt;- dplyr::tibble(patient_id = as.character(1:12), treatment = rep(c(&quot;C&quot;, &quot;E&quot;), each = 6), survival_time = survival::Surv(time = c(2,6,8,11,17,24,7,9,13,22,23,25), event = c(1,1,1,1,1,0,1,1,1,0,0,0))) knitr::kable(df)   patient_id treatment survival_time    1 C 2  2 C 6  3 C 8  4 C 11  5 C 17  6 C 24&#43;  7 E 7  8 E 9  9 E 13  10 E 22&#43;  11 E 23&#43;  12 E 25&#43;    Let’s arrange the data in increasing order of survival time.">
+df &lt;- dplyr::tibble(patient_id = as.character(1:12), treatment = rep(c(&quot;C&quot;, &quot;E&quot;), each = 6), survival_time = survival::Surv(time = c(2,6,8,11,17,24,7,9,13,22,23,25), event = c(1,1,1,1,1,0,1,1,1,0,0,0))) knitr::kable(df) patient_id treatment survival_time 1 C 2 2 C 6 3 C 8 4 C 11 5 C 17 6 C 24&#43; 7 E 7 8 E 9 9 E 13 10 E 22&#43; 11 E 23&#43; 12 E 25&#43; Let’s arrange the data in increasing order of survival time.">
 
   
   <link rel="alternate" hreflang="en-us" href="/post/log-rank-test/">
@@ -117,7 +117,7 @@ df &lt;- dplyr::tibble(patient_id = as.character(1:12), treatment = rep(c(&quot;
   <meta property="og:url" content="/post/log-rank-test/">
   <meta property="og:title" content="How to calculate the log-rank statistic | Dominic Magirr">
   <meta property="og:description" content="Suppose we have the following data.
-df &lt;- dplyr::tibble(patient_id = as.character(1:12), treatment = rep(c(&quot;C&quot;, &quot;E&quot;), each = 6), survival_time = survival::Surv(time = c(2,6,8,11,17,24,7,9,13,22,23,25), event = c(1,1,1,1,1,0,1,1,1,0,0,0))) knitr::kable(df)   patient_id treatment survival_time    1 C 2  2 C 6  3 C 8  4 C 11  5 C 17  6 C 24&#43;  7 E 7  8 E 9  9 E 13  10 E 22&#43;  11 E 23&#43;  12 E 25&#43;    Let’s arrange the data in increasing order of survival time."><meta property="og:image" content="/img/icon-192.png">
+df &lt;- dplyr::tibble(patient_id = as.character(1:12), treatment = rep(c(&quot;C&quot;, &quot;E&quot;), each = 6), survival_time = survival::Surv(time = c(2,6,8,11,17,24,7,9,13,22,23,25), event = c(1,1,1,1,1,0,1,1,1,0,0,0))) knitr::kable(df) patient_id treatment survival_time 1 C 2 2 C 6 3 C 8 4 C 11 5 C 17 6 C 24&#43; 7 E 7 8 E 9 9 E 13 10 E 22&#43; 11 E 23&#43; 12 E 25&#43; Let’s arrange the data in increasing order of survival time."><meta property="og:image" content="/img/icon-192.png">
   <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
   
     
@@ -169,7 +169,7 @@ df &lt;- dplyr::tibble(patient_id = as.character(1:12), treatment = rep(c(&quot;
       "url": "/img/icon-512.png"
     }
   },
-  "description": "Suppose we have the following data.\ndf \u0026lt;- dplyr::tibble(patient_id = as.character(1:12), treatment = rep(c(\u0026quot;C\u0026quot;, \u0026quot;E\u0026quot;), each = 6), survival_time = survival::Surv(time = c(2,6,8,11,17,24,7,9,13,22,23,25), event = c(1,1,1,1,1,0,1,1,1,0,0,0))) knitr::kable(df)   patient_id treatment survival_time    1 C 2  2 C 6  3 C 8  4 C 11  5 C 17  6 C 24+  7 E 7  8 E 9  9 E 13  10 E 22+  11 E 23+  12 E 25+    Let’s arrange the data in increasing order of survival time."
+  "description": "Suppose we have the following data.\ndf \u0026lt;- dplyr::tibble(patient_id = as.character(1:12), treatment = rep(c(\u0026quot;C\u0026quot;, \u0026quot;E\u0026quot;), each = 6), survival_time = survival::Surv(time = c(2,6,8,11,17,24,7,9,13,22,23,25), event = c(1,1,1,1,1,0,1,1,1,0,0,0))) knitr::kable(df) patient_id treatment survival_time 1 C 2 2 C 6 3 C 8 4 C 11 5 C 17 6 C 24+ 7 E 7 8 E 9 9 E 13 10 E 22+ 11 E 23+ 12 E 25+ Let’s arrange the data in increasing order of survival time."
 }
 </script>
 
@@ -957,7 +957,7 @@ rbind(logrank_fit$n, logrank_fit$obs - logrank_fit$exp)[2,]</code></pre>
     
     
     
-    <script src="/js/academic.min.b59fdb6275ef5e6e2859c30582fc271a.js"></script>
+    <script src="/js/academic.min.01f68d44d80310e669a1731b68a35481.js"></script>
 
     
 
